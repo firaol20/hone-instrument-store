@@ -1,7 +1,6 @@
 "use client";
 
-import { Metadata } from 'next';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import { Header } from '@/components/Header';
 import { ProductCard } from '@/components/ProductCard';
 import { FilterSidebar } from '@/components/FilterSidebar';
@@ -13,10 +12,7 @@ import { ShoppingBag } from 'lucide-react';
 import { toast } from 'sonner';
 import { useSearchParams } from 'next/navigation';
 
-
-
-
-export default function ProductsPage() {
+function ProductsContent() {
   const searchParams = useSearchParams();
   const [products, setProducts] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
@@ -72,12 +68,10 @@ export default function ProductsPage() {
     setSortBy('newest');
   };
 
-  // Calculate dynamic price boundaries from the products list
   const productPrices = products.map(p => p.price).filter(p => p > 0);
   const dynamicMin = productPrices.length > 0 ? Math.min(...productPrices) : 0;
   const dynamicMax = productPrices.length > 0 ? Math.max(...productPrices) : 5000000;
 
-  // Filter products locally by the price range set in the sidebar
   const filteredProducts = products.filter(p => p.price >= priceRange[0] && p.price <= priceRange[1]);
 
   return (
@@ -86,7 +80,6 @@ export default function ProductsPage() {
 
       <main className="flex-1">
         <div className="max-w-7xl mx-auto px-3 py-6 md:px-6">
-          {/* Compact Page Title */}
           <div className="mb-6 px-1">
             <h1 className="text-xl md:text-2xl font-black text-slate-900 uppercase tracking-tighter">
               Products<span className="text-orange-600">.</span>
@@ -97,7 +90,6 @@ export default function ProductsPage() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-8">
-            {/* Filter Sidebar */}
             <aside className="lg:col-span-3">
               <FilterSidebar
                 categories={categories}
@@ -109,9 +101,7 @@ export default function ProductsPage() {
               />
             </aside>
 
-            {/* Products Grid Section */}
             <section className="lg:col-span-9">
-              {/* Compact Sorting Bar */}
               <div className="flex justify-between items-center mb-4 bg-slate-50 p-2 rounded-lg border border-slate-100">
                 <div className="text-[9px] font-black uppercase text-slate-400 tracking-tighter ml-1">
                   {loading ? 'Fetching...' : `Results (${filteredProducts.length})`}
@@ -171,5 +161,20 @@ export default function ProductsPage() {
         </div>
       </footer>
     </div>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-10 h-10 border-4 border-orange-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Loading Catalog...</p>
+        </div>
+      </div>
+    }>
+      <ProductsContent />
+    </Suspense>
   );
 }
