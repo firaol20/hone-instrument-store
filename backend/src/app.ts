@@ -11,7 +11,7 @@ const app: Express = express();
 // Middleware
 app.use(helmet());
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+  origin: true, // This allows any origin that sends a request
   credentials: true,
 }));
 app.use(
