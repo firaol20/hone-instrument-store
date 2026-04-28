@@ -1,0 +1,384 @@
+[
+  {
+    "model": "Yamaha F52",
+    "condition": "New",
+    "price": "🤙",
+    "category": "PIANO",
+    "localImage": [
+      "PIANO/piano_yamaha.jpg",
+      "PIANO/piano_yamaha2.jpg"
+    ],
+    "sku": "PROD-1100",
+    "description": ""
+  },
+  {
+    "model": "Presonus",
+    "condition": "New",
+    "price": "🤙",
+    "category": "SOUND CARD",
+    "localImage": [
+      "SOUND CARD/soundcard_presonus.jpg",
+      "SOUND CARD/soundcard_presonus2.jpg"
+    ],
+    "sku": "PROD-1101",
+    "description": ""
+  },
+  {
+    "model": "Smiger",
+    "condition": "New",
+    "price": "35,000",
+    "category": "GUITAR",
+    "localImage": [
+      "GUITAR/guitar_smiger.jpg",
+      "GUITAR/guitar_smiger2.jpg"
+    ],
+    "sku": "PROD-1102",
+    "description": ""
+  },
+  {
+    "model": "Kirar",
+    "condition": "New",
+    "price": "30,000",
+    "category": "KIRAR",
+    "localImage": "KIRAR/kirar.jpg",
+    "sku": "PROD-1103",
+    "description": ""
+  },
+  {
+    "model": "Violin",
+    "condition": "New",
+    "price": "25,000",
+    "category": "VIOLIN",
+    "localImage": "VIOLIN/violin.jpg",
+    "description": "With Full accessories",
+    "sku": "PROD-1104"
+  },
+  {
+    "model": "Yamaha f6000",
+    "condition": "New",
+    "price": "35,000",
+    "category": "GUITAR",
+    "localImage": [
+      "GUITAR/guitar_Yamahaf6000.jpg",
+      "GUITAR/guitar_Yamahaf60002.jpg",
+      "GUITAR/guitar_Yamahaf6003.jpg"
+    ],
+    "description": "With Full accessories Bag, Extra String, Capo, Belt and Pick",
+    "sku": "PROD-1105"
+  },
+  {
+    "model": "Smiger",
+    "condition": "New",
+    "price": "45,000",
+    "category": "GUITAR",
+    "localImage": "GUITAR/guitar_smiger3.jpg",
+    "description": "With Full accessories Bag, Extra String, Capo, Belt and Pick",
+    "sku": "PROD-1106"
+  },
+  {
+    "model": "SAR/Tanghai",
+    "condition": "New",
+    "price": "20,000",
+    "category": "GUITAR",
+    "localImage": "GUITAR/guitar_Sar.jpg",
+    "description": "With Full accessories Bag, Extra String, Capo, Belt and Pick",
+    "sku": "PROD-1107"
+  },
+  {
+    "model": "Classical/Nylon",
+    "condition": "New",
+    "price": "25,000",
+    "category": "GUITAR",
+    "localImage": "GUITAR/guitar_classical.jpg",
+    "description": "With Full accessories",
+    "sku": "PROD-1108"
+  },
+  {
+    "model": "Focusrite/Scarlet",
+    "condition": "New",
+    "price": "🤙",
+    "category": "SOUND CARD",
+    "localImage": "SOUND CARD/soundcard_focusrite.jpg",
+    "sku": "PROD-1109",
+    "description": ""
+  },
+  {
+    "model": "Karl glaser",
+    "condition": "Almost New",
+    "price": "115,000",
+    "category": "SAXOPHONE",
+    "localImage": "SAXOPHONE/saxophone_Karlglaser.jpg",
+    "sku": "PROD-1110",
+    "description": ""
+  },
+  {
+    "model": "Rodent nt1",
+    "condition": "New",
+    "price": "65,000",
+    "category": "STUDIO MIC",
+    "localImage": "STUDIO MIC/studiomic_rodent1.jpg",
+    "sku": "PROD-1111",
+    "description": ""
+  },
+  {
+    "model": "Rodent nt1",
+    "condition": "New",
+    "price": "75,000",
+    "category": "STUDIO MIC",
+    "localImage": "STUDIO MIC/studiomic_rodent12.jpg",
+    "description": "5th generation With Full accessories",
+    "sku": "PROD-1112"
+  },
+  {
+    "model": "Max",
+    "condition": "New",
+    "price": "26,000",
+    "category": "BLUETOOTH SPEAKER",
+    "localImage": [
+      "BLUETOOTH SPEAKER/bluetoothspeaker_max.jpg",
+      "BLUETOOTH SPEAKER/bluetoothspeaker_max2.jpg"
+    ],
+    "sku": "PROD-1113",
+    "description": ""
+  },
+  {
+    "model": "Audio Technica AT2020",
+    "condition": "New",
+    "price": "32,000",
+    "category": "STUDIO MIC",
+    "localImage": "STUDIO MIC/studiomic_AT2020.jpg",
+    "sku": "PROD-1114",
+    "description": ""
+  },
+  {
+    "model": "Takstar",
+    "condition": "New",
+    "price": "22,000",
+    "category": "STUDIO MIC",
+    "localImage": [
+      "STUDIO MIC/studiomic_takstar.jpg",
+      "STUDIO MIC/studiomic_takstar2.jpg"
+    ],
+    "sku": "PROD-1115",
+    "description": ""
+  },
+  {
+    "model": "Behringer",
+    "condition": "New",
+    "price": "2,200",
+    "category": "STUDIO MIC",
+    "localImage": "STUDIO MIC/studiomic_behringer.jpg",
+    "sku": "PROD-1116",
+    "description": ""
+  },
+  {
+    "model": "Scarlet",
+    "condition": "Used",
+    "price": "1,100",
+    "category": "STUDIO MIC",
+    "localImage": "STUDIO MIC/studiomic_scarlet.jpg",
+    "sku": "PROD-1117",
+    "description": ""
+  },
+  {
+    "model": "HKG",
+    "condition": "New",
+    "price": "20,000",
+    "category": "STUDIO MIC",
+    "localImage": "STUDIO MIC/studiomic_HKG.jpg",
+    "sku": "PROD-1118",
+    "description": ""
+  },
+  {
+    "model": "Fr Antonio",
+    "condition": "New",
+    "price": "🤙",
+    "category": "GUITAR",
+    "localImage": [
+      "GUITAR/guitar_frAntonio.jpg",
+      "GUITAR/guitar_frAntonio2.jpg"
+    ],
+    "description": "With Full accessories Bag, Extra String, Capo, Belt and Pick",
+    "sku": "PROD-1119"
+  },
+  {
+    "model": "Senheiser",
+    "condition": "New",
+    "price": "25,000",
+    "category": "Drum kick Mic",
+    "localImage": "Drum kick Mic/studiomic_senheiser.jpg",
+    "sku": "PROD-1120",
+    "description": ""
+  },
+  {
+    "model": "Behringer SD16",
+    "condition": "New",
+    "price": "120,000",
+    "category": "DIGITAL STAGE BOX",
+    "localImage": "DIGITAL STAGE BOX/stagebox_benhinger.jpg",
+    "sku": "PROD-1121",
+    "description": ""
+  },
+  {
+    "model": "kustom for musicians",
+    "condition": "New",
+    "price": "140,000",
+    "category": "STUDIO MONITOR / SPEAKER",
+    "localImage": "STUDIO MONITOR  SPEAKER/speaker_good.jpg",
+    "sku": "PROD-1122",
+    "description": ""
+  },
+  {
+    "model": "kustom for musicians",
+    "condition": "New",
+    "price": "12,000",
+    "category": "STUDIO HEADSET",
+    "localImage": "STUDIO HEADSET/headset_good.jpg",
+    "description": "Best for mixing and mastering",
+    "sku": "PROD-1123"
+  },
+  {
+    "model": "Carbon 49 keys",
+    "condition": "New",
+    "price": "🤙",
+    "category": "STUDIO MIDI KEYBOARD",
+    "localImage": "STUDIO MIDI KEYBOARD/keyboard_carbon.jpg",
+    "sku": "PROD-1124",
+    "description": ""
+  },
+  {
+    "model": "Alesis",
+    "condition": "Slightly New",
+    "price": "🤙",
+    "category": "STUDIO MONITOR / SPEAKER",
+    "localImage": "STUDIO MONITOR  SPEAKER/speaker_alesis.jpg",
+    "description": "3.5 inch",
+    "sku": "PROD-1125"
+  },
+  {
+    "model": "SOUND PROOF",
+    "condition": "New",
+    "price": "800",
+    "category": "SOUND PROOF",
+    "localImage": "SOUND PROOF/soundproof_good.jpg",
+    "sku": "PROD-1126",
+    "description": ""
+  },
+  {
+    "model": "Yamaha psr e 373",
+    "condition": "New",
+    "price": "98,000",
+    "category": "KEYBOARD",
+    "localImage": [
+      "KEYBOARD/keyboard_Yamaha psr e 373.jpg",
+      "KEYBOARD/keyboard_Yamaha psr e 373 2.jpg"
+    ],
+    "description": "622 high-quality instrument voices.205 auto accompaniment Styles, touch sensitive ,USB Audio/MIDI Connectivity: Features a 'USB TO HOST' port that allows for two-way MIDI and digital audio transfer, enabling direct recording to a computer or mobile device without an external interface.",
+    "sku": "PROD-1127"
+  },
+  {
+    "model": "Lucky star",
+    "condition": "New",
+    "price": "5,000",
+    "category": "BASS GUITAR",
+    "localImage": [
+      "BASS GUITAR/guitar_bass.jpg",
+      "BASS GUITAR/guitar_bass2.jpg"
+    ],
+    "sku": "PROD-1128",
+    "description": ""
+  },
+  {
+    "model": "Kustom for musicians",
+    "condition": "New",
+    "price": "85,000",
+    "category": "SPEAKER",
+    "localImage": "SPEAKER/speaker_good.jpg",
+    "description": "Professional 12inch Stage speaker",
+    "sku": "PROD-1129"
+  },
+  {
+    "model": "STUDIO SPEAKERS STAND",
+    "condition": "New",
+    "price": "2,000",
+    "category": "STUDIO SPEAKERS STAND",
+    "localImage": [
+      "STUDIO SPEAKERS STAND/speakerstand_good.jpg",
+      "STUDIO SPEAKERS STAND/speakerstand_good2.jpg"
+    ],
+    "sku": "PROD-1130",
+    "description": ""
+  },
+  {
+    "model": "VIOLIN",
+    "condition": "New",
+    "price": "25,000",
+    "category": "VIOLIN",
+    "localImage": "VIOLIN/violin_good.jpg",
+    "sku": "PROD-1131",
+    "description": ""
+  },
+  {
+    "model": "Ibanez",
+    "condition": "New",
+    "price": "🤙",
+    "category": "BASS GUITAR",
+    "localImage": [
+      "BASS GUITAR/guitar_bass3.jpg",
+      "BASS GUITAR/guitar_bass4.jpg"
+    ],
+    "description": "5 string Original bass guitar",
+    "sku": "PROD-1132"
+  },
+  {
+    "model": "Behringer HPM 1000",
+    "condition": "New",
+    "price": "9,000",
+    "category": "STUDIO HEADSET",
+    "localImage": [
+      "STUDIO HEADSET/headset_HPM.jpg",
+      "STUDIO HEADSET/headset_HPM2.jpg"
+    ],
+    "sku": "PROD-1133",
+    "description": ""
+  },
+  {
+    "model": "Bullet",
+    "condition": "New",
+    "price": "🤙",
+    "category": "LEAD GUITAR AMPLIFIER",
+    "localImage": [
+      "LEAD GUITAR AMPLIFIER/leadguitar_amplifier.jpg",
+      "LEAD GUITAR AMPLIFIER/leadguitar_amplifier2.jpg"
+    ],
+    "sku": "PROD-1134",
+    "description": ""
+  },
+  {
+    "model": "Bullet",
+    "condition": "New",
+    "price": "🤙",
+    "category": "BASS AMPLIFIER",
+    "localImage": "BASS AMPLIFIER/bassguitar_amplifier.jpg",
+    "sku": "PROD-1135",
+    "description": ""
+  },
+  {
+    "model": "Cs",
+    "condition": "New",
+    "price": "3,000",
+    "category": "Instrument Cable",
+    "localImage": "Instrument Cable/cable_c6.jpg",
+    "description": "6 meter",
+    "sku": "PROD-1136"
+  },
+  {
+    "model": "Scarlet",
+    "condition": "New",
+    "price": "20,000",
+    "category": "STUDIO MIC",
+    "localImage": "Instrument Cable/cable_c6.jpg",
+    "sku": "PROD-1137",
+    "description": ""
+  }
+]

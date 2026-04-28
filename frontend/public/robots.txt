@@ -1,0 +1,12 @@
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Disallow admin and private paths
+Disallow: /admin/
+Disallow: /account/
+Disallow: /api/
+Disallow: /checkout/
+
+# Sitemap
+Sitemap: https://honestore.com/sitemap.xml

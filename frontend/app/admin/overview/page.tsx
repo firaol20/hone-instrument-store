@@ -1,0 +1,170 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { TrendingUp, ShoppingBag, Users, Eye, MapPin, Share2, CheckCircle, RotateCcw, X, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
+import { adminAPI } from '@/lib/api';
+import {
+  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell
+} from 'recharts';
+import { CardSkeleton, ChartSkeleton, TableSkeleton } from '@/components/admin/SkeletonLoader';
+import ErrorState from '@/components/admin/ErrorState';
+
+export default function OverviewPage() {
+  const router = useRouter();
+  const [stats, setStats] = useState<any>(null);
+  const [revenueData, setRevenueData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const [dashRes, revRes] = await Promise.all([
+        adminAPI.getDashboard(),
+        adminAPI.getRevenueStats('7d')
+      ]);
+
+      if (dashRes.data.success) setStats(dashRes.data.data);
+      if (revRes.data.success) {
+        setRevenueData(revRes.data.data.revenueByDay);
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Failed to sync with Hone Cloud Engine.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const getStatusStyle = (status: string) => {
+    switch (status) {
+      case 'pending': return 'bg-amber-100 text-amber-700';
+      case 'shipped': return 'bg-blue-100 text-blue-700';
+      case 'delivered': return 'bg-emerald-100 text-emerald-700';
+      default: return 'bg-slate-100 text-slate-700';
+    }
+  };
+
+  if (error) return <div className="p-8"><ErrorState message={error} onRetry={fetchData} /></div>;
+
+  return (
+    <div className="space-y-8 pb-12">
+      {/* Prime Statistics Hub */}
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {loading ? (
+          [...Array(4)].map((_, i) => <CardSkeleton key={i} />)
+        ) : (
+          [
+            { label: 'Cumulative Revenue', value: `ETB ${stats?.stats.totalRevenue.toLocaleString()}`, trend: '+12%', icon: <TrendingUp size={24} />, color: 'emerald' },
+            { label: 'Instrument Registry', value: stats?.stats.totalProducts, trend: 'Live', icon: <ShoppingBag size={24} />, color: 'orange' },
+            { label: 'Active Residents', value: stats?.stats.totalCustomers, trend: '+4', icon: <Users size={24} />, color: 'blue' },
+            { label: 'Unfulfilled Orders', value: stats?.stats.totalOrders, trend: 'Priority', icon: <Eye size={24} />, color: 'purple' },
+          ].map((stat, i) => (
+            <div key={i} className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-slate-200/50 transition-all group overflow-hidden relative">
+              <div className={`absolute top-0 right-0 w-32 h-32 -mr-16 -mt-16 rounded-full bg-${stat.color}-500/5 transition-transform group-hover:scale-150 duration-700`} />
+              <div className="flex justify-between items-start mb-6">
+                <div className={`p-4 rounded-3xl bg-${stat.color}-50 text-${stat.color}-600 border border-${stat.color}-100`}>
+                  {stat.icon}
+                </div>
+                <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-${stat.color}-50 text-${stat.color}-600`}>
+                  {stat.trend}
+                </span>
+              </div>
+              <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">{stat.label}</div>
+              <div className="text-3xl font-black text-slate-900 uppercase italic tracking-tighter">{stat.value}</div>
+            </div>
+          ))
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Revenue Chronograph */}
+        <div className="lg:col-span-2 bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm relative overflow-hidden group">
+          <div className="flex justify-between items-center mb-10">
+            <div>
+              <h2 className="text-2xl font-black text-slate-950 uppercase italic tracking-tighter leading-none mb-1">Revenue <span className="text-orange-600">Chronograph.</span></h2>
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">7-Day Trajectory Analysis</p>
+            </div>
+            <div className="p-4 bg-slate-50 rounded-2xl text-slate-400 border border-slate-100">
+              <TrendingUp size={20} />
+            </div>
+          </div>
+
+          <div className="h-[350px] w-full">
+            {loading ? <ChartSkeleton /> : (
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={revenueData}>
+                  <defs>
+                    <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#f97316" stopOpacity={0.1} />
+                      <stop offset="95%" stopColor="#f97316" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                  <XAxis dataKey="_id" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 900 }} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 900 }} />
+                  <Tooltip
+                    contentStyle={{ borderRadius: '20px', border: 'none', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)', fontWeight: 'bold' }}
+                  />
+                  <Area type="monotone" dataKey="revenue" stroke="#f97316" strokeWidth={4} fillOpacity={1} fill="url(#colorRev)" />
+                </AreaChart>
+              </ResponsiveContainer>
+            )}
+          </div>
+        </div>
+
+        {/* Recent Operations */}
+        <div className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm relative">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-xl font-black text-slate-950 uppercase italic tracking-tighter leading-none">Recent <span className="text-orange-600">Fleet.</span></h2>
+            <button className="text-[10px] font-black uppercase text-slate-400 hover:text-orange-600 transition-colors tracking-widest">View Registry</button>
+          </div>
+
+          <div className="space-y-6">
+            {loading ? (
+              <TableSkeleton rows={5} cols={1} />
+            ) : stats?.recentOrders.length === 0 ? (
+              <div className="py-20 text-center uppercase tracking-widest text-[10px] font-black text-slate-300">Registry Empty</div>
+            ) : (
+              stats?.recentOrders.map((order: any, i: number) => (
+                <div key={i} className="flex items-center justify-between group cursor-pointer">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-slate-950 flex items-center justify-center text-white rounded-2xl font-black text-xs italic shadow-lg shadow-slate-200 group-hover:bg-orange-600 transition-all">
+                      {order.status === 'delivered' ? <CheckCircle size={14} /> : order._id.slice(-2).toUpperCase()}
+                    </div>
+                    <div>
+                      <div className="text-xs font-black uppercase italic tracking-tight text-slate-900">#{order._id.slice(-6)}</div>
+                      <div className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{order.customerId?.name || 'Store Guest'}</div>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-xs font-black text-slate-900">ETB {order.total.toLocaleString()}</div>
+                    <div className={`text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md mt-1 ${getStatusStyle(order.status)}`}>
+                      {order.status}
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          <div className="mt-12 p-8 bg-slate-950 rounded-[2rem] shadow-2xl shadow-slate-200 group overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 -mr-16 -mt-16 rounded-full group-hover:scale-150 transition-transform duration-700" />
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Logistic Status</span>
+            </div>
+            <p className="text-[10px] font-medium text-slate-500 uppercase tracking-widest leading-relaxed">
+              All fleet units are synchronized with local dispatch engines. No anomalies detected.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

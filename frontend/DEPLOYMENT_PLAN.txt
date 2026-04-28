@@ -1,0 +1,611 @@
+================================================================================
+                    HONE INSTRUMENTAL STORE
+                 PRODUCTION DEPLOYMENT PLAN
+================================================================================
+
+Project: Hone Instrumental Store - eCommerce Platform
+Tech Stack: Next.js 16, Express.js, MongoDB, Chapa, Cloudinary, Telegram
+Date: April 28, 2026
+
+================================================================================
+                        TABLE OF CONTENTS
+================================================================================
+1. Pre-Deployment Checklist
+2. Environment Configuration
+3. Database Setup (MongoDB Atlas)
+4. Backend Deployment (Railway/Render)
+5. Frontend Deployment (Vercel)
+6. Domain & SSL Configuration
+7. Third-Party Services Configuration
+8. Security Checklist
+9. Post-Deployment Verification
+10. Rollback Plan
+
+================================================================================
+                SECTION 1: PRE-DEPLOYMENT CHECKLIST
+================================================================================
+
+[ ] 1.1 Code Quality
+    - [ ] Run TypeScript type checking: tsc --noEmit (both frontend & backend)
+    - [ ] Fix all TypeScript errors
+    - [ ] Ensure all ESLint errors/warnings are resolved
+    - [ ] Run pnpm build successfully for frontend
+    - [ ] Run tsc for backend to compile to JavaScript
+
+[ ] 1.2 Testing
+    - [ ] Test all critical user flows
+    - [ ] Verify payment flow works in sandbox
+    - [ ] Test admin panel functionality
+    - [ ] Verify user authentication flow
+
+[ ] 1.3 Data Preparation
+    - [ ] Backup existing development database
+    - [ ] Prepare production database (empty or seeded)
+    - [ ] Upload product images to Cloudinary
+    - [ ] Prepare seed data for categories/products
+
+[ ] 1.4 Documentation
+    - [ ] Document all environment variables
+    - [ ] Create admin credentials
+    - [ ] Prepare API documentation if needed
+
+================================================================================
+                SECTION 2: ENVIRONMENT CONFIGURATION
+================================================================================
+
+2.1 PRODUCTION ENVIRONMENT VARIABLES - BACKEND
+Create backend/.env with the following variables:
+
+# =====================
+# SERVER CONFIGURATION
+# =====================
+PORT=5000
+NODE_ENV=production
+FRONTEND_URL=https://your-domain.com
+
+# =====================
+# DATABASE (MongoDB Atlas)
+# =====================
+MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/hone_store?retryWrites=true&w=majority
+
+# =====================
+# AUTHENTICATION
+# =====================
+JWT_SECRET=<generate-64-char-random-string>
+JWT_EXPIRE=7d
+REFRESH_TOKEN_EXPIRE=30d
+
+# =====================
+# CLOUDINARY (Media Storage)
+# =====================
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+
+# =====================
+# CHAPA (Payments) - Get from https://dashboard.chapa.co
+# =====================
+CHAPA_SECRET_KEY=your_chapa_secret_key
+CHAPA_PUBLIC_KEY=your_chapa_public_key
+
+# =====================
+# TELEGRAM BOT
+# =====================
+TELEGRAM_BOT_TOKEN=your_telegram_bot_token
+
+# =====================
+# EMAIL (Optional - SMTP for notifications)
+# =====================
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your_email@gmail.com
+SMTP_PASS=your_app_password
+EMAIL_FROM=noreply@yourdomain.com
+
+# =====================
+# CORS
+# =====================
+CORS_ORIGIN=https://your-domain.com
+
+# =====================
+# RATE LIMITING
+# =====================
+RATE_LIMIT_WINDOW_MS=900000 (15 minutes)
+RATE_LIMIT_MAX_REQUESTS=100
+
+
+2.2 PRODUCTION ENVIRONMENT VARIABLES - FRONTEND
+Create frontend/.env.local with the following:
+
+# =====================
+# API URL
+# =====================
+NEXT_PUBLIC_API_URL=https://api.your-domain.com
+
+# =====================
+# CHAPA (Public Key for checkout)
+# =====================
+NEXT_PUBLIC_CHAPA_PUBLIC_KEY=your_chapa_public_key
+
+# =====================
+# TELEGRAM
+# =====================
+NEXT_PUBLIC_TELEGRAM_BOT_USERNAME=your_bot_username
+
+# =====================
+# GOOGLE MAPS (Optional)
+# =====================
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_key
+
+# =====================
+# ANALYTICS (Optional)
+# =====================
+NEXT_PUBLIC_GA_TRACKING_ID=G-XXXXXXXXXX
+
+
+2.3 GENERATE SECURE JWT SECRET
+Run this command to generate a secure 64-character secret:
+node -e "console.log(crypto.randomBytes(64).toString('hex'))"
+
+
+================================================================================
+                SECTION 3: DATABASE SETUP (MongoDB Atlas)
+================================================================================
+
+STEP 3.1: Create MongoDB Atlas Account
+    1. Go to https://www.mongodb.com/cloud/atlas
+    2. Create a free account or log in
+    3. Create a new project named "hone-store"
+
+STEP 3.2: Create Cluster
+    1. Click "Build a Database"
+    2. Select "Free" tier (M0)
+    3. Choose cloud provider (AWS recommended)
+    4. Select region closest to your users
+    5. Click "Create Cluster"
+
+STEP 3.3: Configure Security
+    1. Go to "Database Access" in left sidebar
+    2. Click "Add New Database User"
+    3. Username: hone_store_admin
+    4. Password: <generate-secure-password>
+    5. Select "Read and Write to any database"
+    6. Click "Add User"
+
+STEP 3.4: Network Access
+    1. Go to "Network Access"
+    2. Click "Add IP Address"
+    3. For production: Add your server IP addresses
+    4. For Vercel: Add Vercel's IP ranges (0.0.0.0/0 for dev, then restrict later)
+    5. Click "Allow Access"
+
+STEP 3.5: Get Connection String
+    1. Go to "Database" > "Connect"
+    2. Click "Connect your application"
+    3. Copy the connection string:
+       mongodb+srv://hone_store_admin:<password>@cluster0.xxxxx.mongodb.net/hone_store?retryWrites=true&w=majority
+    4. Replace <password> with your actual password
+    5. Update MONGODB_URI in backend/.env
+
+STEP 3.6: Seed Database (Optional)
+    Run these commands after deployment:
+    cd backend
+    pnpm seed-categories    # Seed product categories
+    pnpm seed-products       # Seed sample products
+    pnpm create-admin        # Create admin user
+
+
+================================================================================
+                SECTION 4: BACKEND DEPLOYMENT
+================================================================================
+
+OPTION A: Railway (Recommended)
+---------------------------------
+STEP 4A.1: Prepare Backend
+    1. Create backend/package.json production start script:
+       "start": "node dist/index.js"
+    2. Ensure tsc compiles to dist/ folder
+    3. Update tsconfig.json:
+       {
+         "compilerOptions": {
+           "outDir": "./dist",
+           "rootDir": "./src"
+         }
+       }
+
+STEP 4A.2: Deploy to Railway
+    1. Go to https://railway.app and sign up
+    2. Click "New Project" > "Deploy from GitHub repo"
+    3. Select your repository
+    4. Select the backend folder or configure root directory
+    5. Go to "Variables" tab
+    6. Add all environment variables from Section 2.1
+    7. Click "Deploy"
+
+STEP 4A.3: Configure Railway
+    1. Go to "Settings" > "Domains"
+    2. Add custom domain (optional): api.yourdomain.com
+    3. Note the Railway URL for frontend configuration
+
+
+OPTION B: Render
+---------------------------------
+STEP 4B.1: Create Web Service
+    1. Go to https://render.com
+    2. Click "New" > "Web Service"
+    3. Connect your GitHub repository
+    4. Configure:
+       - Root Directory: backend
+       - Build Command: npm install && npm run build
+       - Start Command: node dist/index.js
+
+STEP 4B.2: Environment Variables
+    1. Add all environment variables from Section 2.1
+    2. Scroll down and click "Create Web Service"
+
+STEP 4B.3: Custom Domain (Optional)
+    1. Go to "Settings" > "Custom Domains"
+    2. Add your domain and configure DNS
+
+
+OPTION C: VPS (DigitalOcean/Ubuntu)
+---------------------------------
+STEP 4C.1: Server Setup
+    1. Create a Droplet on DigitalOcean (Ubuntu 22.04)
+    2. Minimum: 2GB RAM, 50GB SSD
+    3. Add SSH key for authentication
+
+STEP 4C.2: Install Dependencies
+    # Connect via SSH
+    ssh root@your-server-ip
+
+    # Update system
+    apt update && apt upgrade -y
+
+    # Install Node.js 18+
+    curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+    apt install -y nodejs
+
+    # Install PM2 (process manager)
+    npm install -g pm2
+
+    # Install Nginx
+    apt install -y nginx
+
+STEP 4C.3: Deploy Backend
+    # Clone repository
+    cd /var/www
+    git clone your-repo-url hone-backend
+    cd hone-backend/backend
+
+    # Install dependencies
+    npm install --production
+
+    # Build TypeScript
+    npm run build
+
+    # Start with PM2
+    pm2 start dist/index.js --name hone-api
+
+    # Configure PM2 to start on boot
+    pm2 startup
+    pm2 save
+
+STEP 4C.4: Configure Nginx (Reverse Proxy)
+    # Create Nginx config
+    nano /etc/nginx/sites-available/hone-api
+
+    server {
+        listen 80;
+        server_name api.yourdomain.com;
+
+        location / {
+            proxy_pass http://localhost:5000;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header Host $host;
+            proxy_cache_bypass $http_upgrade;
+        }
+    }
+
+    # Enable the site
+    ln -s /etc/nginx/sites-available/hone-api /etc/nginx/sites-enabled
+
+    # Test and restart Nginx
+    nginx -t
+    systemctl restart nginx
+
+STEP 4C.5: SSL with Let's Encrypt
+    # Install Certbot
+    apt install -y certbot python3-certbot-nginx
+
+    # Get SSL certificate
+    certbot --nginx -d api.yourdomain.com
+
+    # Auto-renewal (certbot handles this automatically)
+
+
+================================================================================
+                SECTION 5: FRONTEND DEPLOYMENT (Vercel)
+================================================================================
+
+STEP 5.1: Prepare Frontend
+    1. Ensure all build scripts work locally
+    2. Update next.config.js for production if needed
+
+STEP 5.2: Deploy to Vercel
+    OPTION 1: GitHub Integration (Recommended)
+    -----------------------------------------
+    1. Push code to GitHub
+    2. Go to https://vercel.com and sign up
+    3. Click "Add New..." > "Project"
+    4. Import your GitHub repository
+    5. Configure:
+       - Framework Preset: Next.js
+       - Root Directory: frontend
+       - Build Command: next build (or pnpm build)
+       - Output Directory: .next
+
+    6. Add Environment Variables (Section 2.2)
+    7. Click "Deploy"
+
+    OPTION 2: Vercel CLI
+    --------------------
+    1. Install Vercel CLI: npm i -g vercel
+    2. Navigate to frontend directory
+    3. Run: vercel --prod
+    4. Follow prompts to configure
+
+STEP 5.3: Configure Custom Domain
+    1. Go to your project in Vercel
+    2. Go to "Settings" > "Domains"
+    3. Add your domain (e.g., yourdomain.com)
+    4. Follow DNS configuration instructions
+
+STEP 5.4: Environment Variables Check
+    Ensure these are set in Vercel:
+    - NEXT_PUBLIC_API_URL: https://api.yourdomain.com
+    - NEXT_PUBLIC_CHAPA_PUBLIC_KEY: (from Chapa dashboard)
+    - NEXT_PUBLIC_TELEGRAM_BOT_USERNAME: (your bot handle)
+
+
+================================================================================
+                SECTION 6: DOMAIN & SSL CONFIGURATION
+================================================================================
+
+STEP 6.1: Purchase Domain
+    1. Use GoDaddy, Namecheap, or Cloudflare
+    2. Recommended: Cloudflare for better security
+
+STEP 6.2: Configure DNS (Cloudflare Example)
+    For Frontend (yourdomain.com):
+    - Type: A
+    - Name: @
+    - Value: <Vercel IP> (or CNAME to cname.vercel-dns.com)
+
+    For Backend (api.yourdomain.com):
+    - Type: A
+    - Name: api
+    - Value: <Your Server IP> (or Railway/Render URL)
+
+    For WWW:
+    - Type: CNAME
+    - Name: www
+    - Value: cname.vercel-dns.com
+
+STEP 6.3: SSL Configuration
+    - Vercel: Automatic (Let's Encrypt)
+    - Railway/Render: Automatic
+    - VPS: Use Let's Encrypt (see Section 4C.5)
+
+STEP 6.4: Force HTTPS
+    - Vercel: Enabled by default
+    - Nginx: Add redirect in server block
+
+
+================================================================================
+            SECTION 7: THIRD-PARTY SERVICES CONFIGURATION
+================================================================================
+
+7.1 CHAPA (Payment Gateway)
+---------------------------------
+    1. Go to https://dashboard.chapa.co
+    2. Create account and verify email
+    3. Get API Keys:
+       - Secret Key (backend): For server-side
+       - Public Key (frontend): For checkout UI
+    4. Configure webhook:
+       - URL: https://api.yourdomain.com/api/payments/webhook
+       - Events: transaction.completed, transaction.failed
+    5. Set webhook secret in backend env
+
+7.2 CLOUDINARY (Media Storage)
+---------------------------------
+    1. Go to https://cloudinary.com
+    2. Create account/connect app
+    3. Get credentials from "Dashboard" > "Account Settings":
+       - Cloud Name
+       - API Key
+       - API Secret
+    4. Create upload preset:
+       - Go to "Settings" > "Upload"
+       - Add upload preset
+       - Set signing mode to "Unsigned" (for client uploads)
+       - Note the preset name for frontend
+
+7.3 TELEGRAM BOT
+---------------------------------
+    1. Open Telegram and chat with @BotFather
+    2. Use /newbot to create new bot
+    3. Copy the HTTP API token
+    4. Set webhook:
+       https://api.telegram.org/bot<TOKEN>/setWebhook?url=https://api.yourdomain.com/api/telegram/webhook
+    5. Get bot username for frontend NEXT_PUBLIC_TELEGRAM_BOT_USERNAME
+
+7.4 GOOGLE MAPS (Optional)
+---------------------------------
+    1. Go to https://console.cloud.google.com
+    2. Create project and enable Maps JavaScript API
+    3. Get API key
+    4. Add to frontend .env.local
+
+7.5 ANALYTICS (Optional - Vercel Analytics)
+---------------------------------
+    1. Vercel Analytics is included by default
+    2. Ensure @vercel/analytics is in package.json (it is)
+    3. Already configured in frontend code
+
+
+================================================================================
+                SECTION 8: SECURITY CHECKLIST
+================================================================================
+
+[ ] 8.1 Environment Variables
+    - [ ] Never commit .env files to git
+    - [ ] Use strong, unique passwords
+    - [ ] Rotate secrets periodically
+
+[ ] 8.2 Backend Security
+    - [ ] CORS restricted to production domain only
+    - [ ] Rate limiting enabled
+    - [ ] Helmet.js enabled (already in code)
+    - [ ] Input validation with Zod
+    - [ ] No stack traces in production errors
+    - [ ] JWT tokens with expiration
+    - [ ] Passwords hashed with bcrypt
+
+[ ] 8.3 Database Security
+    - [ ] Use MongoDB Atlas network access restrictions
+    - [ ] Use strong database credentials
+    - [ ] Enable Atlas encryption at rest
+
+[ ] 8.4 Payment Security
+    - [ ] Verify Chapa webhook signatures
+    - [ ] Never expose secret keys in frontend
+    - [ ] Use HTTPS for all payment traffic
+
+[ ] 8.5 General
+    - [ ] Force HTTPS everywhere
+    - [ ] Security headers configured
+    - [ ] No debug mode in production
+    - [ ] Clean error messages (no stack traces)
+
+
+================================================================================
+            SECTION 9: POST-DEPLOYMENT VERIFICATION
+================================================================================
+
+STEP 9.1: Health Checks
+    - [ ] Backend health: curl https://api.yourdomain.com/health
+    - [ ] Frontend loads: https://yourdomain.com
+    - [ ] Database connection: Check backend logs
+
+STEP 9.2: Functional Testing
+    - [ ] User registration/login works
+    - [ ] Product listing loads
+    - [ ] Add to cart works
+    - [ ] Checkout flow completes
+    - [ ] Payment processes (test mode)
+    - [ ] Admin panel accessible
+    - [ ] Telegram bot responds
+
+STEP 9.3: API Testing
+    Test all major endpoints:
+    - GET /api/products
+    - GET /api/categories
+    - POST /api/auth/login
+    - POST /api/orders
+    - GET /api/admin/dashboard
+
+STEP 9.4: Performance
+    - [ ] Page load time < 3 seconds
+    - [ ] API responses < 500ms
+    - [ ] No console errors
+
+STEP 9.5: Monitoring
+    - [ ] Set up error tracking (optional: Sentry)
+    - [ ] Monitor server logs
+    - [ ] Set up uptime monitoring
+
+
+================================================================================
+                SECTION 10: ROLLBACK PLAN
+================================================================================
+
+10.1 Frontend Rollback (Vercel)
+    1. Go to Vercel dashboard
+    2. Go to "Deployments"
+    3. Find last stable deployment
+    4. Click "..." > "Promote to Production"
+
+10.2 Backend Rollback (Railway/Render)
+    1. Go to Railway/Render dashboard
+    2. Go to "Deployments"
+    3. Click on previous deployment
+    4. Click "Redeploy"
+
+10.3 Database Rollback
+    - MongoDB Atlas provides point-in-time recovery
+    - Restore from latest backup if needed
+
+10.4 Emergency Contacts
+    - Backend hosting support: [Add contact]
+    - Domain registrar support: [Add contact]
+    - Chapa support: support@chapa.co
+
+
+================================================================================
+                    DEPLOYMENT COMPLETION CHECKLIST
+================================================================================
+
+Before marking deployment as complete, verify:
+
+[ ] All environment variables configured
+[ ] Frontend deployed and accessible
+[ ] Backend deployed and responding
+[ ] Database connected and accessible
+[ ] Custom domain configured with SSL
+[ ] Payment gateway working (test mode)
+[ ] All user flows tested
+[ ] Admin panel tested
+[ ] Security measures in place
+[ ] Monitoring set up
+[ ] Documentation updated
+[ ] Team notified of deployment
+
+================================================================================
+                    IMPORTANT NOTES
+================================================================================
+
+1. Always test in staging first before production
+2. Keep backups of database before major updates
+3. Document any custom configurations
+4. Keep all credentials secure and shared only with authorized team
+5. Set up a communication channel for production issues
+6. Schedule regular security updates
+
+================================================================================
+                       QUICK START COMMANDS
+================================================================================
+
+# Development
+npm run dev                    # Run both frontend and backend
+
+# Backend (in backend folder)
+npm run build                  # Compile TypeScript
+npm run start                  # Start production server
+
+# Frontend (in frontend folder)
+npm run build                  # Build for production
+npm run start                  # Start production server
+
+# Database Seeding (after deployment)
+cd backend
+npm run seed-categories        # Seed categories
+npm run seed-products          # Seed products
+npm run create-admin           # Create admin user
+
+================================================================================
+                         END OF DEPLOYMENT PLAN
+================================================================================
