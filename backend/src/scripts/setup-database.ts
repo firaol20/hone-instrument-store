@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import mongoose from 'mongoose';
 import User from '../models/User';
 import Customer from '../models/Customer';
@@ -5,12 +6,17 @@ import Category from '../models/Category';
 import Product from '../models/Product';
 import bcrypt from 'bcryptjs';
 
-// New MongoDB connection - with database name
-const MONGODB_URI = 'mongodb+srv://minasehonestore_db_user:gLV5hk5B5TaAoZVJ@cluster0.wm6cj2j.mongodb.net/hone_store?appName=Cluster0&retryWrites=true&w=majority';
+// Use environment variable
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+  console.error('❌ MONGODB_URI is not defined in environment variables');
+  process.exit(1);
+}
 
 async function setupDatabase() {
   console.log('Connecting to MongoDB...');
-  await mongoose.connect(MONGODB_URI);
+  await mongoose.connect(MONGODB_URI!);
   console.log('Connected to:', mongoose.connection.db.databaseName);
   
   // Create admin user if not exists

@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import mongoose from 'mongoose';
 import Category from '../models/Category';
 import Product from '../models/Product';
@@ -5,11 +6,16 @@ import fs from 'fs';
 import path from 'path';
 import { slugify } from '../utils/helpers';
 
-// New MongoDB connection
-const MONGODB_URI = 'mongodb+srv://minasehonestore_db_user:gLV5hk5B5TaAoZVJ@cluster0.wm6cj2j.mongodb.net/?appName=Cluster0&retryWrites=true&w=majority';
+// Use environment variable
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+  console.error('❌ MONGODB_URI is not defined in environment variables');
+  process.exit(1);
+}
 
 async function seedProducts() {
-  await mongoose.connect(MONGODB_URI);
+  await mongoose.connect(MONGODB_URI!);
   
   const inputFile = path.join(__dirname, 'products-ready-for-db.json');
   
