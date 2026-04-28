@@ -17,6 +17,10 @@ export interface IProduct extends Document {
   images: string[];
   audioDemo?: string;
   media: IProductMedia[];
+  rating?: {
+    averageRating: number;
+    totalRatings: number;
+  };
   createdAt: Date;
   updatedAt: Date;
 }
