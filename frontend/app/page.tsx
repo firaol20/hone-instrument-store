@@ -163,10 +163,10 @@ export default function Home() {
               </Link>
             </div>
 
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-10 min-h-[400px]">
+            <div className="flex flex-wrap justify-center gap-3 sm:gap-10">
               {loading
-                ? Array.from({ length: 8 }).map((_, i) => (
-                  <div key={`skel-${i}`} className="animate-pulse">
+                ? Array.from({ length: 4 }).map((_, i) => (
+                  <div key={`skel-${i}`} className="w-[calc(50%-6px)] sm:w-64 lg:w-[calc(25%-30px)] animate-pulse">
                     <div className="bg-slate-100 aspect-square rounded-2xl mb-4" />
                     <div className="h-4 bg-slate-100 rounded w-3/4 mb-2" />
                     <div className="h-4 bg-slate-100 rounded w-1/2" />
@@ -177,7 +177,7 @@ export default function Home() {
                     No products found.
                   </div>
                 ) : (
-                  <AnimatePresence mode="popLayout">
+                  <AnimatePresence mode="wait">
                     {products.map((product) => (
                       <motion.div
                         key={product._id}
@@ -185,6 +185,7 @@ export default function Home() {
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.9 }}
                         transition={{ duration: 0.2 }}
+                        className="w-[calc(50%-6px)] lg:w-[calc(25%-30px)] min-h-[300px]"
                       >
                         <ProductCard
                           id={product._id}
