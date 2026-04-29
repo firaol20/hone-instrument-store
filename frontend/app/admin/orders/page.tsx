@@ -170,7 +170,9 @@ export default function OrdersPage() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="font-bold text-slate-800 uppercase tracking-tight text-xs">{order.customerId?.name || 'Guest User'}</div>
-                        <div className="text-[10px] text-slate-400 font-medium mt-0.5">{order.address?.city}, {order.address?.street}</div>
+                        <div className="text-[10px] text-slate-400 font-medium mt-0.5 truncate max-w-[120px]" title={`${order.address?.city}, ${order.address?.street}`}>
+                          {order.address?.city}, {order.address?.street}
+                        </div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="font-black text-slate-900 text-sm">ETB {order.total.toLocaleString()}</div>
@@ -182,7 +184,7 @@ export default function OrdersPage() {
                         </span>
                       </td>
                       <td className="px-6 py-4 text-right">
-                        <div className="flex justify-end gap-2 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="flex justify-end gap-2 opacity-100 transition-opacity">
                           {order.status === 'pending' && (
                             <button
                               onClick={() => handleStatusUpdate(order._id, 'pending')}
@@ -220,7 +222,7 @@ export default function OrdersPage() {
                         </div>
                       </td>
                       <td className="px-6 py-4 text-right">
-                        <div className="flex justify-end gap-1 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="flex justify-end gap-1 opacity-100 transition-opacity">
                           <a
                             href={`https://www.google.com/maps?q=${order.address?.coordinates?.lat},${order.address?.coordinates?.lng}`}
                             target="_blank"
@@ -232,12 +234,20 @@ export default function OrdersPage() {
                           {/* Share Location Button */}
                           <button
                             onClick={() => {
-                              if (order.address?.coordinates?.lat && order.address?.coordinates?.lng) {
-                                navigator.clipboard.writeText(`https://www.google.com/maps?q=${order.address?.coordinates?.lat},${order.address?.coordinates?.lng}`).then(() => {
-                                  toast.success('Location copied to clipboard');
+                              const locationUrl = `https://www.google.com/maps?q=${order.address?.coordinates?.lat},${order.address?.coordinates?.lng}`;
+                              if (navigator.share) {
+                                navigator.share({
+                                  title: `Order Location: ${order.customerId?.name}`,
+                                  text: `Logistics Pin for Order #${order._id.slice(-6)}`,
+                                  url: locationUrl,
                                 }).catch(() => {
-                                  toast.error('Failed to copy location');
+                                  // Fallback to copy if share is cancelled or fails
+                                  navigator.clipboard.writeText(locationUrl);
+                                  toast.success('Location link copied');
                                 });
+                              } else {
+                                navigator.clipboard.writeText(locationUrl);
+                                toast.success('Location link copied to clipboard');
                               }
                             }}
                             className="p-2.5 text-slate-400 hover:text-orange-600 hover:bg-orange-50 rounded-xl transition-all"

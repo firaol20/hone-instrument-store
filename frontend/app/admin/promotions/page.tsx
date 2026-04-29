@@ -242,7 +242,7 @@ export default function PromotionsListPage() {
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             {/* View toggle */}
             <div className="flex bg-slate-800 rounded-xl p-1 gap-0.5">
               <button
@@ -263,7 +263,7 @@ export default function PromotionsListPage() {
 
             <Link
               href="/admin/promotions/form"
-              className="flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-orange-600 text-white rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-wider hover:bg-orange-500 active:scale-95 transition-all shadow-lg shadow-orange-600/30"
+              className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-6 py-2.5 sm:py-3 bg-orange-600 text-white rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-wider hover:bg-orange-500 active:scale-95 transition-all shadow-lg shadow-orange-600/30"
             >
               <Plus className="w-4 h-4" />
               <span className="hidden sm:inline">New Campaign</span>

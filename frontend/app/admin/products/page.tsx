@@ -175,15 +175,15 @@ export default function ProductsPage() {
   if (error) return <div className="p-8"><ErrorState message={error} onRetry={fetchProducts} /></div>;
 
   return (
-    <div className="relative p-4 sm:p-6 bg-slate-50 min-h-screen space-y-6">
+    <div className="relative p-2 sm:p-6 bg-slate-50 min-h-screen space-y-6">
       {/* Top Action Bar */}
-      <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-4 rounded-[1.5rem] border border-slate-100 shadow-sm">
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-3 sm:p-4 rounded-[1rem] sm:rounded-[1.5rem] border border-slate-100 shadow-sm">
         <div className="flex-1 md:flex-none flex items-center gap-4">
           <div className="relative w-full">
             <label className="text-[10px] font-black text-slate-500 uppercase tracking-wider mb-1">Category</label>
             <select
               value={selectedCategory || ''}
-              onChange={(e) => setSelectedCategory(e.target.value)}
+              onChange={(e) => { setSelectedCategory(e.target.value); setPage(1); }}
               className="w-full p-3 bg-slate-50 border-none rounded-xl text-sm font-bold focus:ring-2 focus:ring-orange-500/20 outline-none appearance-none"
             >
               <option value="">All Categories</option>
@@ -202,7 +202,7 @@ export default function ProductsPage() {
       </div>
 
       {/* Product Table Container */}
-      <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden min-h-[400px]">
+      <div className="bg-white rounded-[1.5rem] sm:rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden min-h-[400px]">
         {loading ? (
           <div className="p-8"><TableSkeleton rows={8} cols={4} /></div>
         ) : products.length === 0 ? (
@@ -221,16 +221,16 @@ export default function ProductsPage() {
               <table className="w-full text-sm">
                 <thead className="bg-slate-50/50 text-slate-400 text-[10px] font-black uppercase tracking-widest border-b border-slate-100">
                   <tr>
-                    <th className="px-6 py-4 text-left">Instrument</th>
-                    <th className="px-6 py-4 text-left">Category</th>
-                    <th className="px-6 py-4 text-left">Price</th>
-                    <th className="px-6 py-4 text-right">Actions</th>
+                    <th className="px-3 sm:px-6 py-4 text-left">Instrument</th>
+                    <th className="px-3 sm:px-6 py-4 text-left">Category</th>
+                    <th className="px-3 sm:px-6 py-4 text-left">Price</th>
+                    <th className="px-3 sm:px-6 py-4 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {products.map((product) => (
                     <tr key={product._id} className="hover:bg-slate-50/40 transition-colors">
-                      <td className="px-6 py-3">
+                      <td className="px-3 sm:px-6 py-3">
                         <div className="flex items-center gap-3">
                           <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center text-slate-300 flex-shrink-0 overflow-hidden border border-slate-50">
                             {product.images?.[0] ? (
@@ -245,15 +245,15 @@ export default function ProductsPage() {
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-3">
+                      <td className="px-3 sm:px-6 py-3">
                         <span className="text-[10px] font-black text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg uppercase tracking-tighter">
                           {product.categoryId?.name || 'Uncategorized'}
                         </span>
                       </td>
-                      <td className="px-6 py-3">
+                      <td className="px-3 sm:px-6 py-3">
                         <div className="font-black text-slate-900">${product.price.toLocaleString()}</div>
                       </td>
-                      <td className="px-6 py-3 text-right">
+                      <td className="px-3 sm:px-6 py-3 text-right">
                         <div className="flex justify-end gap-2">
                           <button
                             onClick={() => handleOpenEdit(product)}
