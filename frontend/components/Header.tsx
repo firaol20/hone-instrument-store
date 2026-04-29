@@ -185,7 +185,7 @@ export function Header() {
                 </button>
               </div>
 
-              <nav className="flex flex-col gap-8 flex-1 mt-6">
+              <nav className="flex flex-col gap-2 flex-1 mt-6">
                 <Link
                   href="/products"
                   onClick={() => setIsMobileMenuOpen(false)}
@@ -223,7 +223,7 @@ export function Header() {
                 </Link>
               </nav>
 
-              <div className="mt-auto flex flex-col gap-8 pt-6">
+              <div className="mt-auto flex flex-col gap-2 pt-6 pb-12">
                 <Link
                   href="/cart"
                   onClick={() => setIsMobileMenuOpen(false)}

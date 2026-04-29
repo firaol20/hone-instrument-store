@@ -108,11 +108,24 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
       {/* SIDEBAR */}
       <aside className={`
-        fixed inset-y-0 left-0 z-40 bg-slate-950 transition-all duration-300 ease-in-out
+        fixed inset-y-0 left-0 z-[60] bg-slate-950 transition-all duration-300 ease-in-out
         lg:translate-x-0 lg:static lg:w-72 p-6 flex flex-col justify-between
-        ${isMobileMenuOpen ? 'translate-x-0 w-[280px] pt-24' : '-translate-x-full lg:translate-x-0'}
+        ${isMobileMenuOpen ? 'translate-x-0 w-[280px]' : '-translate-x-full lg:translate-x-0'}
       `}>
         <div className="flex flex-col h-full">
+          {/* Mobile Close Header */}
+          <div className="lg:hidden flex items-center justify-between mb-8">
+            <span className="text-xl font-black tracking-tighter text-white uppercase">
+              HONE<span className="text-orange-600">.</span>
+            </span>
+            <button
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="p-2 -mr-2 text-slate-400 hover:text-white transition-colors"
+            >
+              <X className="h-5 w-5 stroke-[1.5]" />
+            </button>
+          </div>
+
           <div className="hidden lg:block mb-10 px-2">
             <h1 className="font-black text-2xl italic text-white uppercase">HONE<span className="text-orange-600">.</span></h1>
             <div className="flex items-center justify-between mt-1">

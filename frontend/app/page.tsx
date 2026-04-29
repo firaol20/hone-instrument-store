@@ -163,7 +163,7 @@ export default function Home() {
               </Link>
             </div>
 
-            <div className="flex flex-wrap justify-center gap-3 sm:gap-10">
+            <div className="flex flex-wrap justify-start gap-3 sm:gap-10">
               {loading
                 ? Array.from({ length: 4 }).map((_, i) => (
                   <div key={`skel-${i}`} className="w-[calc(50%-6px)] sm:w-64 lg:w-[calc(25%-30px)] animate-pulse">
@@ -240,7 +240,7 @@ export default function Home() {
               </motion.div>
 
               {/* Social Icons */}
-              <div className="flex flex-nowrap justify-start md:justify-center gap-5 overflow-x-auto pb-4 scrollbar-hide">
+              <div className="flex flex-nowrap justify-start md:justify-center gap-5 overflow-x-auto pb-4 no-scrollbar">
                 {socialLinks.map((social, index) => (
                   <motion.a
                     key={index}

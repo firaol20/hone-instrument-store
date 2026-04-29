@@ -112,8 +112,8 @@ function ProductsContent() {
                   className="px-2 py-1 bg-white border border-slate-200 rounded-md text-[10px] font-bold uppercase outline-none focus:border-orange-500"
                 >
                   <option value="newest">Newest</option>
-                  <option value="price-low">Price ↓</option>
-                  <option value="price-high">Price ↑</option>
+                  <option value="price-low">Price (Low to High)</option>
+                  <option value="price-high">Price (High to Low)</option>
                 </select>
               </div>
 
@@ -133,7 +133,7 @@ function ProductsContent() {
                   <Button onClick={handleReset} className="mt-3 h-7 text-[9px] bg-slate-900 px-4 uppercase rounded-md">Reset</Button>
                 </div>
               ) : (
-                <div className="flex flex-wrap justify-center gap-3 md:gap-4">
+                <div className="flex flex-wrap justify-start gap-3 md:gap-4">
                   {filteredProducts.map((product) => (
                     <div key={product._id} className="w-[calc(50%-6px)] md:w-64 lg:w-72">
                       <ProductCard

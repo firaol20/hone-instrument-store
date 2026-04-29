@@ -144,7 +144,7 @@ function CategoriesContent() {
                   <Button onClick={handleReset} className="mt-3 h-7 text-[9px] bg-slate-900 px-4 uppercase rounded-md">Reset</Button>
                 </div>
               ) : (
-                <div className="flex flex-wrap justify-center gap-3 md:gap-4">
+                <div className="flex flex-wrap justify-start gap-3 md:gap-4">
                   {filteredProducts.map((product) => (
                     <div key={product._id} className="w-[calc(50%-6px)] md:w-64 lg:w-72">
                       <ProductCard

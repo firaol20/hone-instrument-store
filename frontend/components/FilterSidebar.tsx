@@ -28,7 +28,7 @@ export function FilterSidebar({
 }: FilterSidebarProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
-  const [isCategoriesExpanded, setIsCategoriesExpanded] = useState(true);
+  const [isCategoriesExpanded, setIsCategoriesExpanded] = useState(false);
   const [isPriceExpanded, setIsPriceExpanded] = useState(true);
 
   // Update local range when product boundaries change (e.g. initial load)

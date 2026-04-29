@@ -109,7 +109,7 @@ export function ProductCard({
       viewport={{ once: true }}
       className={`w-full h-full ${className}`}
     >
-      <Card className="group border-slate-100 bg-white shadow-sm transition-all duration-300 flex flex-col h-full rounded-[1rem] md:rounded-[1.5rem] p-3 md:p-4 hover:border-slate-300">
+      <Card className="group border-slate-100 bg-white shadow-sm transition-all duration-300 flex flex-col h-full rounded-[1rem] md:rounded-[1.5rem] p-2 md:p-4 hover:border-slate-300">
         {/* Image Section */}
         <CardContent className="p-0">
           <Link
@@ -127,7 +127,7 @@ export function ProductCard({
         </CardContent>
 
         {/* Content Section */}
-        <div className="pt-3 pb-2 px-0.5 flex flex-col flex-1">
+        <div className="pt-1.5 pb-1 px-0.5 flex flex-col flex-1">
           <div className="flex flex-col gap-1 mb-1.5 md:mb-2">
             {/* Category */}
             <p className="text-[9px] md:text-[10px] font-black uppercase tracking-wider text-indigo-600 leading-none">
@@ -146,6 +146,7 @@ export function ProductCard({
                 rating={userRating}
                 onRatingChange={handleRate}
                 size={12}
+                readonly={userRating > 0}
               />
             </div>
           </div>
