@@ -118,7 +118,7 @@ export const uploadAPI = {
 export const adminAPI = {
   // Dashboard
   getDashboard: () => api.get('/admin/dashboard'),
-  getRevenueStats: (period: string) => api.get(`/admin/revenue-stats?period=${period}`),
+  getRevenueStats: (period: string, groupBy = 'day') => api.get(`/admin/revenue-stats?period=${period}&groupBy=${groupBy}`),
 
   // Products
   getProducts: (params?: any) => api.get('/admin/products', { params }),

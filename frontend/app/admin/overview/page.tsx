@@ -23,7 +23,7 @@ export default function OverviewPage() {
     try {
       const [dashRes, revRes] = await Promise.all([
         adminAPI.getDashboard(),
-        adminAPI.getRevenueStats('7d')
+        adminAPI.getRevenueStats('90d', 'week')
       ]);
 
       if (dashRes.data.success) setStats(dashRes.data.data);
@@ -88,7 +88,7 @@ export default function OverviewPage() {
           <div className="flex justify-between items-center mb-8 md:mb-10">
             <div>
               <h2 className="text-xl md:text-2xl font-black text-slate-950 uppercase italic tracking-tighter leading-none mb-1">Revenue <span className="text-orange-600">Chronograph.</span></h2>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">7-Day Trajectory Analysis</p>
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Multi-Week Performance Analysis</p>
             </div>
             <div className="p-3 md:p-4 bg-slate-50 rounded-2xl text-slate-400 border border-slate-100">
               <TrendingUp size={18} className="md:w-5 md:h-5" />

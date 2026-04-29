@@ -621,13 +621,16 @@ export const toggleMaintenanceMode = async (req: AuthRequest, res: Response) => 
 
 export const getRevenueStats = async (req: AuthRequest, res: Response) => {
   try {
-    const { period = '7d' } = req.query;
+    const { period = '7d', groupBy = 'day' } = req.query;
     
     let startDate = new Date();
     if (period === '7d') startDate.setDate(startDate.getDate() - 7);
     else if (period === '30d') startDate.setDate(startDate.getDate() - 30);
     else if (period === '90d') startDate.setDate(startDate.getDate() - 90);
+    else if (period === '12m') startDate.setFullYear(startDate.getFullYear() - 1);
     
+    const groupFormat = groupBy === 'week' ? '%Y-W%V' : groupBy === 'month' ? '%Y-%m' : '%Y-%m-%d';
+
     const revenueByDay = await Order.aggregate([
       {
         $match: {
@@ -637,7 +640,7 @@ export const getRevenueStats = async (req: AuthRequest, res: Response) => {
       },
       {
         $group: {
-          _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
+          _id: { $dateToString: { format: groupFormat, date: '$createdAt' } },
           revenue: { $sum: '$total' },
           orders: { $sum: 1 },
         },
