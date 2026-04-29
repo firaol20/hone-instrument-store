@@ -676,7 +676,8 @@ export async function sendToAdmin(text: string) {
 
 export async function setWebhook(req: Request, res: Response) {
   try {
-    const webhookUrl = `${process.env.API_URL}/api/telegram/webhook`;
+    const baseUrl = process.env.API_PUBLIC_URL || process.env.API_URL || 'https://your-production-url.com';
+    const webhookUrl = `${baseUrl}/api/telegram/webhook`;
     const response = await axios.post(`${TELEGRAM_API}/bot${BOT_TOKEN}/setWebhook`, { url: webhookUrl });
     res.json({ success: true, message: 'Webhook set successfully', url: webhookUrl, response: response.data });
   } catch (error) {

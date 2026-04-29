@@ -154,6 +154,7 @@ export const adminAPI = {
   updateSettings: (data: any) => api.put('/admin/settings', data),
   toggleMaintenanceMode: (enabled: boolean) =>
     api.post('/admin/settings/maintenance', { enabled }),
+  syncTelegramWebhook: () => api.post('/telegram/set-webhook'),
 };
 
 export const publicAPI = {

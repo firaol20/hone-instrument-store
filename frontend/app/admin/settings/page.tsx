@@ -188,7 +188,22 @@ export default function SettingsPage() {
             <p className="text-[10px] font-medium text-slate-500 uppercase tracking-widest mb-6 leading-relaxed">
               In case of critical system failure or logistics breach, please contact head office immediately.
             </p>
-            <button className="w-full py-4 bg-orange-600/10 text-orange-500 border border-orange-600/20 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-orange-600 hover:text-white transition-all">
+            <button 
+              onClick={async () => {
+                try {
+                  const res = await adminAPI.syncTelegramWebhook();
+                  if (res.data.success) {
+                    toast.success('Telegram bot synchronized with Hone Cloud');
+                  }
+                } catch {
+                  toast.error('Failed to sync Telegram bot');
+                }
+              }}
+              className="w-full py-4 bg-orange-600/10 text-orange-500 border border-orange-600/20 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-orange-600 hover:text-white transition-all mb-4"
+            >
+              Sync Telegram Bot
+            </button>
+            <button className="w-full py-4 bg-red-600/10 text-red-500 border border-red-600/20 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all">
               Initiate Lockdown
             </button>
           </div>
