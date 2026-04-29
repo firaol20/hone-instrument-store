@@ -133,18 +133,19 @@ function ProductsContent() {
                   <Button onClick={handleReset} className="mt-3 h-7 text-[9px] bg-slate-900 px-4 uppercase rounded-md">Reset</Button>
                 </div>
               ) : (
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+                <div className="flex flex-wrap justify-center gap-3 md:gap-4">
                   {filteredProducts.map((product) => (
-                    <ProductCard
-                      key={product._id}
-                      id={product._id}
-                      name={product.name}
-                      slug={product.slug}
-                      price={product.price}
-                      image={product.images?.[0] || '/placeholder.jpg'}
-                      category={product.categoryId?.name || 'Instrument'}
-                      rating={product.rating}
-                    />
+                    <div key={product._id} className="w-[calc(50%-6px)] md:w-64 lg:w-72">
+                      <ProductCard
+                        id={product._id}
+                        name={product.name}
+                        slug={product.slug}
+                        price={product.price}
+                        image={product.images?.[0] || '/placeholder.jpg'}
+                        category={product.categoryId?.name || 'Instrument'}
+                        rating={product.rating}
+                      />
+                    </div>
                   ))}
                 </div>
               )}
