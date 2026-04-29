@@ -106,7 +106,7 @@ export default function OverviewPage() {
                     cursor={{ fill: '#f8fafc' }}
                     contentStyle={{ borderRadius: '20px', border: 'none', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)', fontWeight: 'bold' }}
                   />
-                  <Bar dataKey="revenue" radius={[6, 6, 0, 0]}>
+                  <Bar dataKey="revenue" radius={[6, 6, 0, 0]} barSize={32}>
                     {revenueData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={index === revenueData.length - 1 ? '#f97316' : '#cbd5e1'} />
                     ))}
