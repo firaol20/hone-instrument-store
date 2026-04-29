@@ -109,7 +109,7 @@ export function ProductCard({
       viewport={{ once: true }}
       className={`w-full h-full ${className}`}
     >
-      <Card className="group border-slate-100 bg-white shadow-sm transition-all duration-300 flex flex-col h-full rounded-[0.75rem] md:rounded-[1.5rem] p-1.5 md:p-4 hover:border-slate-300">
+      <Card className="group border-slate-100 bg-white shadow-sm transition-all duration-300 flex flex-col h-full rounded-[1rem] md:rounded-[1.5rem] p-3 md:p-4 hover:border-slate-300">
         {/* Image Section */}
         <CardContent className="p-0">
           <Link
@@ -127,39 +127,39 @@ export function ProductCard({
         </CardContent>
 
         {/* Content Section */}
-        <div className="pt-2 pb-1.5 px-0.5 flex flex-col flex-1">
-          <div className="flex items-center justify-between mb-0.5 md:mb-1">
+        <div className="pt-3 pb-2 px-0.5 flex flex-col flex-1">
+          <div className="flex flex-col gap-1 mb-1.5 md:mb-2">
             {/* Category */}
-            <p className="text-[7px] md:text-[10px] font-black uppercase tracking-wider text-indigo-600 leading-none">
+            <p className="text-[9px] md:text-[10px] font-black uppercase tracking-wider text-indigo-600 leading-none">
               {category}
             </p>
             {/* Product Average Rating + User Interactive Rating */}
-            <div className="flex items-center gap-2 scale-75 md:scale-90 origin-right">
+            <div className="flex items-center gap-1.5">
               {rating && rating.totalRatings > 0 && (
                 <div className="flex items-center gap-1 bg-orange-50 px-1.5 py-0.5 rounded-full">
-                  <Star className="w-3 h-3 fill-orange-500 text-orange-500" />
-                  <span className="text-[10px] font-bold text-orange-700">{rating.averageRating}</span>
+                  <Star className="w-2.5 h-2.5 fill-orange-500 text-orange-500" />
+                  <span className="text-[9px] font-bold text-orange-700">{rating.averageRating}</span>
                   <span className="text-[8px] text-orange-400">({rating.totalRatings})</span>
                 </div>
               )}
               <StarRating
                 rating={userRating}
                 onRatingChange={handleRate}
-                size={14}
+                size={12}
               />
             </div>
           </div>
 
           {/* Product Name */}
           <Link href={`/products/${slug}`}>
-            <h3 className="font-bold text-[9px] md:text-base text-slate-800 line-clamp-1 leading-tight mb-0.5 md:mb-1 group-hover:text-orange-600 transition-colors">
+            <h3 className="font-bold text-[11px] md:text-base text-slate-800 line-clamp-1 leading-tight mb-1 md:mb-1.5 group-hover:text-orange-600 transition-colors">
               {name}
             </h3>
           </Link>
 
 
           {/* Price */}
-          <div className="text-[10px] md:text-lg font-black text-slate-900 tracking-tighter leading-none mb-2">
+          <div className="text-[12px] md:text-lg font-black text-slate-900 tracking-tighter leading-none mb-3">
             {priceLabel}
           </div>
         </div>
@@ -170,9 +170,9 @@ export function ProductCard({
             <Button
               variant="outline"
               onClick={handleAddToCart}
-              className="w-full rounded-full border-slate-200 text-slate-500 font-bold h-6 md:h-10 hover:bg-slate-50 transition-colors flex items-center justify-center gap-1 text-[8px] md:text-xs px-0"
+              className="w-full rounded-full border-slate-200 text-slate-500 font-bold h-9 md:h-10 hover:bg-slate-50 transition-colors flex items-center justify-center gap-1 text-[9px] md:text-xs px-0"
             >
-              <ShoppingCart className="w-2 md:w-3.5 h-2 md:h-3.5 text-slate-400" />
+              <ShoppingCart className="w-2.5 md:w-3.5 h-2.5 md:h-3.5 text-slate-400" />
               {addToCart}
             </Button>
           )}

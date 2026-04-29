@@ -163,7 +163,7 @@ export default function Home() {
               </Link>
             </div>
 
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-10 min-h-[400px]">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-10 min-h-[400px]">
               {loading
                 ? Array.from({ length: 8 }).map((_, i) => (
                   <div key={`skel-${i}`} className="animate-pulse">

@@ -96,10 +96,10 @@ export const CategoryScroll = ({ onSelect }: CategoryScrollProps = {}) => {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <p className="text-[10px] font-black uppercase tracking-[0.5em] text-orange-600 mb-2">
+            <p className="text-[9px] font-black uppercase tracking-[0.5em] text-orange-600 mb-2">
               {labels.browseBy}
             </p>
-            <h2 className="text-4xl md:text-6xl font-black tracking-tighter text-slate-950 uppercase">
+            <h2 className="text-3xl md:text-6xl font-black tracking-tighter text-slate-950 uppercase">
               {labels.categoriesTitle}
               <span className="text-orange-600">.</span>
             </h2>
@@ -116,7 +116,7 @@ export const CategoryScroll = ({ onSelect }: CategoryScrollProps = {}) => {
                 transition={{ delay: index * 0.04 }}
                 onClick={() => handleCategoryClick(cat.slug)}
                 className={`
-                  relative flex items-center gap-3 px-8 py-4 rounded-2xl whitespace-nowrap text-xs font-bold
+                  relative flex items-center gap-2 px-5 py-3 md:px-8 md:py-4 rounded-xl md:rounded-2xl whitespace-nowrap text-[11px] md:text-xs font-bold
                   transition-all duration-300 snap-start border-2
                   ${active === cat.slug
                     ? "bg-slate-950 border-slate-950 text-white shadow-2xl shadow-slate-900/20 scale-105 z-10"
