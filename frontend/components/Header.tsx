@@ -7,7 +7,7 @@ import { useAuthStore } from "@/lib/auth-store";
 import { useLangStore } from "@/lib/lang-store";
 import { useCartStore } from "@/lib/cart-store";
 import { LanguageCode, translations } from "@/lib/translations";
-import { Globe, ChevronDown, LogIn, X, ShoppingCart, AlignRight, LayoutDashboard } from "lucide-react";
+import { Globe, ChevronDown, LogIn, X, ShoppingCart, AlignRight, LayoutDashboard, Box, ArrowRightLeft, Heart } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { usePathname } from "next/navigation"; // ✅ added
 
@@ -171,8 +171,7 @@ export function Header() {
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 left-0 w-[280px] shadow-2xl border-r border-white/10 p-6 flex flex-col z-50 h-screen"
-              style={{ backgroundColor: "#120202ff" }}
+              className="fixed inset-y-0 left-0 w-[280px] shadow-2xl border-r border-white/5 p-6 flex flex-col z-50 h-screen bg-slate-950"
             >
               <div className="flex items-center justify-between mb-8">
                 <span className="text-xl font-black tracking-tighter text-white uppercase">
@@ -190,34 +189,37 @@ export function Header() {
                 <Link
                   href="/products"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`text-sm font-bold tracking-[0.15em] uppercase transition-colors px-4 py-3 rounded-xl ${pathname === "/products"
-                      ? "bg-orange-600 text-white"
-                      : "text-white hover:text-orange-500"
+                  className={`flex items-center gap-3 px-5 py-3.5 rounded-2xl font-bold transition-all ${pathname === "/products"
+                    ? "bg-orange-600 text-white shadow-lg shadow-orange-950/20"
+                    : "text-slate-400 hover:bg-white/5 hover:text-white"
                     }`}
                 >
-                  {t.headerInstruments}
+                  <Box className={`w-5 h-5 ${pathname === "/products" ? "text-white" : "text-slate-500"}`} />
+                  <span className="text-sm tracking-tight">{t.headerInstruments}</span>
                 </Link>
 
                 <Link
                   href="/compare"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`text-sm font-bold tracking-[0.15em] uppercase transition-colors px-4 py-3 rounded-xl ${pathname === "/compare"
-                      ? "bg-orange-600 text-white"
-                      : "text-white hover:text-orange-500"
+                  className={`flex items-center gap-3 px-5 py-3.5 rounded-2xl font-bold transition-all ${pathname === "/compare"
+                    ? "bg-orange-600 text-white shadow-lg shadow-orange-950/20"
+                    : "text-slate-400 hover:bg-white/5 hover:text-white"
                     }`}
                 >
-                  {t.headerCompare}
+                  <ArrowRightLeft className={`w-5 h-5 ${pathname === "/compare" ? "text-white" : "text-slate-500"}`} />
+                  <span className="text-sm tracking-tight">{t.headerCompare}</span>
                 </Link>
 
                 <Link
                   href="/wishlist"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`text-sm font-bold tracking-[0.15em] uppercase transition-colors px-4 py-3 rounded-xl ${pathname === "/wishlist"
-                      ? "bg-orange-600 text-white"
-                      : "text-white hover:text-orange-500"
+                  className={`flex items-center gap-3 px-5 py-3.5 rounded-2xl font-bold transition-all ${pathname === "/wishlist"
+                    ? "bg-orange-600 text-white shadow-lg shadow-orange-950/20"
+                    : "text-slate-400 hover:bg-white/5 hover:text-white"
                     }`}
                 >
-                  {(t as any).headerWishlist || (t as any).wishlistTitle || "Wishlist"}
+                  <Heart className={`w-5 h-5 ${pathname === "/wishlist" ? "text-white" : "text-slate-500"}`} />
+                  <span className="text-sm tracking-tight">{(t as any).headerWishlist || (t as any).wishlistTitle || "Wishlist"}</span>
                 </Link>
               </nav>
 
@@ -225,42 +227,42 @@ export function Header() {
                 <Link
                   href="/cart"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center gap-4 text-sm font-bold text-white hover:text-orange-500 transition-all"
+                  className="flex items-center gap-3 px-5 py-3.5 text-slate-400 hover:text-white font-bold hover:bg-white/5 rounded-2xl transition-all"
                 >
                   <div className="relative">
-                    <ShoppingCart className="w-6 h-6 text-orange-600" />
+                    <ShoppingCart className="w-5 h-5 text-slate-500" />
                     {items.length > 0 && (
-                      <span className="absolute -top-1 -right-2 w-4 h-4 bg-orange-600 text-white text-[10px] flex items-center justify-center rounded-full font-black">
+                      <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-orange-600 text-white text-[9px] flex items-center justify-center rounded-full font-black">
                         {items.length}
                       </span>
                     )}
                   </div>
-                  My Cart
+                  <span className="text-sm tracking-tight">My Cart</span>
                 </Link>
 
                 {!isAuthenticated ? (
                   <Link
                     href="/login"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center justify-center gap-3 w-full h-12 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-bold transition-all active:scale-95 shadow-xl shadow-orange-900/20 text-xs uppercase tracking-widest"
+                    className="flex items-center gap-3 px-5 py-3.5 bg-orange-600 hover:bg-orange-700 text-white rounded-2xl font-bold transition-all shadow-lg shadow-orange-950/20"
                   >
-                    <LogIn className="w-4 h-4" />
-                    {t.headerSignIn}
+                    <LogIn className="w-5 h-5" />
+                    <span className="text-sm tracking-tight">{t.headerSignIn}</span>
                   </Link>
                 ) : (
                   <Link
                     href="/account"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center gap-4 w-full p-4 bg-[#0A0A0A] hover:bg-[#111111] rounded-[1.25rem] transition-colors border border-white/5"
+                    className="flex items-center gap-3 w-full p-3 bg-white/5 hover:bg-white/10 rounded-2xl transition-all border border-white/5"
                   >
                     <div className="h-10 w-10 min-w-[40px] rounded-full bg-orange-600 flex items-center justify-center text-white text-base font-black shadow-md">
                       {user?.email?.[0]?.toUpperCase()}
                     </div>
                     <div className="flex flex-col overflow-hidden">
-                      <span className="text-xs font-bold text-white truncate">
+                      <span className="text-[11px] font-bold text-white truncate">
                         {user?.email}
                       </span>
-                      <span className="text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-1">
+                      <span className="text-[8px] font-black text-slate-500 uppercase tracking-[0.2em] mt-0.5">
                         View Profile
                       </span>
                     </div>
