@@ -149,13 +149,13 @@ export default function AccountPage() {
 
           {/* Profile Header */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
-            <div className="flex items-center gap-6">
-              <div className="w-20 h-20 bg-slate-950 rounded-[2rem] flex items-center justify-center border-4 border-white shadow-xl">
-                <User className="w-8 h-8 text-orange-600" />
+            <div className="flex items-center gap-4 md:gap-6 min-w-0 flex-1">
+              <div className="w-16 h-16 md:w-20 md:h-20 bg-slate-950 rounded-[1.5rem] md:rounded-[2rem] flex-shrink-0 flex items-center justify-center border-4 border-white shadow-xl">
+                <User className="w-6 h-6 md:w-8 md:h-8 text-orange-600" />
               </div>
-              <div>
-                <h1 className="text-3xl font-black uppercase tracking-tighter">{customer?.name}<span className="text-orange-600">.</span></h1>
-                <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{customer?.userId?.email}</p>
+              <div className="min-w-0 flex-1">
+                <h1 className="text-2xl md:text-3xl font-black uppercase tracking-tighter truncate">{customer?.name}<span className="text-orange-600">.</span></h1>
+                <p className="text-[9px] md:text-[11px] font-bold text-slate-400 uppercase tracking-widest break-all line-clamp-1 hover:line-clamp-none transition-all cursor-default">{customer?.userId?.email}</p>
               </div>
             </div>
             <button
@@ -352,7 +352,7 @@ export default function AccountPage() {
                     </div>
                     <div className="md:col-span-2">
                       <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 block mb-2">Email Address</label>
-                      <p className="text-sm font-bold text-slate-900">{customer.userId?.email}</p>
+                      <p className="text-xs md:text-sm font-bold text-slate-900 break-all">{customer.userId?.email}</p>
                     </div>
                   </div>
                 </CardContent>
