@@ -7,7 +7,6 @@ import { Hero } from "@/components/Hero";
 import { CategoryScroll } from "@/components/CategoryScroll";
 import { Services } from "@/components/Services";
 import { ProductCard } from "@/components/ProductCard";
-import { useLangStore } from "@/lib/lang-store";
 import { productsAPI } from "@/lib/api";
 import { Instagram, Send, Facebook, MessageCircle, MapIcon, MapPin, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -32,24 +31,40 @@ const TikTokIcon = ({ className }: { className?: string }) => (
 );
 
 export default function Home() {
-  const { currentLang } = useLangStore();
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState("all");
+
+  const content = {
+    ctaTitlePrefix: "Join Our",
+    ctaTitleAccent: "Social Community",
+    ctaDescription: "Follow us for the latest gear, musician highlights, and exclusive offers.",
+    footerBlurb: "The premier marketplace for Modern and Traditional musical instruments in Ethiopia. Crafting sound, delivering excellence.",
+    shop: "Shop",
+    allInstruments: "All Instruments",
+    guitars: "Guitars",
+    keyboards: "Keyboards",
+    company: "Company",
+    story: "Our Story",
+    terms: "Terms of Service",
+    privacy: "Privacy Policy",
+    support: "Support",
+    contact: "Contact Us",
+    helpCenter: "Help Center",
+    copyright: "Hone Instrumental Store. All rights reserved.",
+  };
 
   useEffect(() => {
     let isMounted = true;
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        // Fetch a larger set of products to allow for randomization on the frontend
         const params: any = { limit: 20 };
         if (selectedCategory !== "all") {
           params.category = selectedCategory;
         }
         const response = await productsAPI.getAll(params);
         if (isMounted && response.data && response.data.data) {
-          // Randomly shuffle the pool and take the first 8 items
           const shuffled = [...response.data.data].sort(() => Math.random() - 0.5);
           setProducts(shuffled.slice(0, 8));
         }
@@ -66,67 +81,10 @@ export default function Home() {
 
   const links = {
     facebook: "https://www.facebook.com/profile.php?id=100064707545307",
-    whatsapp: "https://api.whatsapp.com/send?phone=%2B251982616263&token=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEyNSJ9.eyJleHAiOjE3NzU0Nzc5NTMsInBob25lIjoiKzI1MTk4MjYxNjI2MyIsImNvbnRleHQiOiJBZmk5dXp1aVpuaU5pTWh1T0ZUZjRoT3k5NWJKX2V3T0dLZGFGVFpmSlJyOV9RdXZfbDZSYVR4b25JSVJVc0hPUjQ1TUpKcnhDalR4Tm5MY1JKR0lZTWF0TVBCT1BrV01TMWc1eHBwX0dHYjc2V0FZeHoxM3ExRDgteGNYYkdGUzdjNFRjTkdGVTF3Vll1WG43aEZpTXFRdzZRIiwic291cmNlIjoiRkJfUGFnZSIsImFwcCI6ImZhY2Vib29rIiwiZW50cnlfcG9pbnQiOiJwYWdlX2N0YSJ9.stO9FFXDYIkKPp9ng_btDkG6lh-g-_ylyLe_zpryLRUeTEreZPUoJKVUxDBxjKEXOJrfuNjn4zgkhl5Zd15UdQ&fbclid=IwY2xjawQ_MsJleHRuA2FlbQIxMABicmlkETB3MHpjM1NKUHRvRU5TMmI3c3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHjhCY8sTvoYwVQexb0UOj9WAWEqcAQCDldMbmd4BqTyj5qOA27YfZgZzLiRG_aem_tXVQFBTd8F7hQmWWeNmUmw",
+    whatsapp: "https://api.whatsapp.com/send?phone=%2B251982616263",
     telegram: "https://t.me/honemusicinstruments",
     tiktok: "https://www.tiktok.com/@honemusicinstruments"
   };
-
-  const content = {
-    ENG: {
-      ctaTitlePrefix: "Join Our",
-      ctaTitleAccent: "Social Community",
-      ctaDescription: "Follow us for the latest gear, musician highlights, and exclusive offers.",
-      footerBlurb: "The premier marketplace for Modern and Traditional musical instruments in Ethiopia. Crafting sound, delivering excellence.",
-      shop: "Shop",
-      allInstruments: "All Instruments",
-      guitars: "Guitars",
-      keyboards: "Keyboards",
-      company: "Company",
-      story: "Our Story",
-      terms: "Terms of Service",
-      privacy: "Privacy Policy",
-      support: "Support",
-      contact: "Contact Us",
-      helpCenter: "Help Center",
-      copyright: "Hone Instrumental Store. All rights reserved.",
-    },
-    AMH: {
-      ctaTitlePrefix: "ማህበራዊ ገጾቻችንን",
-      ctaTitleAccent: "ይቀላቀሉ",
-      ctaDescription: "አዳዲስ መሣሪያዎችን እና ልዩ ቅናሾችን ለማግኘት በማህበራዊ ሚዲያዎቻችን ይከተሉን።",
-      footerBlurb: "በኢትዮጵያ ያሉ የሙዚቃ መሣሪያዎች መሪ ገበያ። ድምፅ እንቀርጻለን፤ ልቀት እናቀርባለን።",
-      shop: "ግዢ",
-      allInstruments: "ሁሉም መሣሪያዎች",
-      guitars: "ጂታሮች",
-      keyboards: "ኪቦርዶች",
-      company: "ድርጅት",
-      story: "ታሪካችን",
-      terms: "የአገልግሎት ሕጎች",
-      privacy: "የግላዊነት ፖሊሲ",
-      support: "ድጋፍ",
-      contact: "ያግኙን",
-      helpCenter: "የእርዳታ ማዕከል",
-      copyright: "ሁሉ መብቶች የተጠበቁ ናቸው።",
-    },
-    ORO: {
-      ctaTitlePrefix: "Miidiyaa Hawaasaa",
-      ctaTitleAccent: "Keenyaatti Dabalami",
-      ctaDescription: "Meeshaalee haaraa fi kaffaltii addaa argachuuf miidiyaa hawaasaa keenya hordofaa.",
-      footerBlurb: "Itiyoophiyaa keessatti gabaa guddaa meeshaalee muuziqaatiif. Sagalee ijaarra, qulqullina geessina.",
-      shop: "Bittaa",
-      allInstruments: "Meeshaalee Hunda",
-      guitars: "Giitaarota",
-      keyboards: "Kiiboodota",
-      company: "Dhaabbata",
-      story: "Seenaa Keenya",
-      terms: "Heera Tajaajilaa",
-      privacy: "Imaammata Dhuunfaa",
-      support: "Deeggarsa",
-      contact: "Nu qunnamaa",
-      helpCenter: "Wiirtuu Gargaarsaa",
-      copyright: "Mirgi hundi seeraan eegameera.",
-    },
-  }[currentLang];
 
   const socialLinks = [
     { icon: <Facebook className="w-6 h-6 md:w-8 md:h-8" />, href: links.facebook, label: "Facebook" },

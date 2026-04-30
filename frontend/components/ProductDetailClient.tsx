@@ -25,7 +25,6 @@ import { ProductCard } from "@/components/ProductCard";
 import { productsAPI, ordersAPI, customersAPI, ratingsAPI } from "@/lib/api";
 import { useAuthStore } from "@/lib/auth-store";
 import { useCartStore } from "@/lib/cart-store";
-import { useLangStore } from "@/lib/lang-store";
 import { toast } from "sonner";
 import RatingSummary from "@/components/RatingSummary";
 import RatingCard from "@/components/RatingCard";
@@ -44,7 +43,6 @@ export default function ProductDetailClient() {
   const router = useRouter();
   const { isAuthenticated } = useAuthStore();
   const { addItem } = useCartStore();
-  const { currentLang } = useLangStore();
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [buyNowLoading, setBuyNowLoading] = useState(false);
@@ -163,46 +161,20 @@ export default function ProductDetailClient() {
   };
 
    const t = {
-     ENG: {
-       back: "Back to Home",
-       addToCart: "Cart",
-       audioDemo: "Listen to Demo",
-       shipping: "Free Shipping",
-       warranty: "1 Year Warranty",
-       returns: "30-Day Returns",
-       callUs: "Call for Price",
-       buyNow: "Buy Now",
-       relatedProducts: "You May Also Like",
-       reviews: "Reviews",
-       locationTitle: "Visit our Showroom",
-       addedToCart: "added to cart",
-       viewCart: "View Cart"
-     },
-     AMH: {
-       back: "ለዋጋ ይደውሉ",
-       addToCart: "ቅርጫት",
-       audioDemo: "ድምፁን ያዳምጡ",
-       shipping: "ነፃ መላኪያ",
-       warranty: "የ 1 ዓመት ዋስትና",
-       returns: "በ 30 ቀናት ውስጥ መመለስ",
-       callUs: "ለዋጋ ይደውሉ",
-       buyNow: "አሁኑኑ",
-       relatedProducts: "ተመሳሳይ መሣሪያዎች",
-       reviews: "አስተያየቶች",
-       locationTitle: "መሸጫችንን ይጎብኙ",
-       addedToCart: "ወደ ቅርጫት ተጨምሯል",
-       viewCart: "ቅርጫቱን ይመልከቱ"
-     },
-     ORO: {
-       back: "Gara manaatti",
-       addToCart: "Kaartii",
-       buyNow: "Ammas bitti",
-       reviews: "Yaada",
-       locationTitle: "Bakka keenya ilaalaa",
-       addedToCart: "gara kaartitti dabalameera",
-       viewCart: "Kaartii Ilaali"
-     }
-   }[currentLang as 'ENG' | 'AMH' | 'ORO'] || { back: "Back Home", addToCart: "Cart", buyNow: "Buy Now", reviews: "Reviews", locationTitle: "Our Showroom", addedToCart: "added to cart", viewCart: "View Cart" };
+     back: "Back to Home",
+     addToCart: "Cart",
+     audioDemo: "Listen to Demo",
+     shipping: "Free Shipping",
+     warranty: "1 Year Warranty",
+     returns: "30-Day Returns",
+     callUs: "Call for Price",
+     buyNow: "Buy Now",
+     relatedProducts: "You May Also Like",
+     reviews: "Reviews",
+     locationTitle: "Visit our Showroom",
+     addedToCart: "added to cart",
+     viewCart: "View Cart"
+   };
 
    // Price display: 0 means "Call Us" (price not listed)
    const priceLabel = product?.price === 0

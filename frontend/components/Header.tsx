@@ -4,23 +4,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "@/lib/auth-store";
-import { useLangStore } from "@/lib/lang-store";
 import { useCartStore } from "@/lib/cart-store";
-import { LanguageCode, translations } from "@/lib/translations";
-import { Globe, ChevronDown, LogIn, X, ShoppingCart, AlignRight, LayoutDashboard, Box, ArrowRightLeft, Heart } from "lucide-react";
+import { ShoppingCart, AlignRight, LayoutDashboard, Box, ArrowRightLeft, Heart, LogIn, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+import LanguageSwitcher from "./LanguageSwitcher";
 import { usePathname } from "next/navigation"; // ✅ added
 
 export function Header() {
   const [mounted, setMounted] = useState(false);
-  const { currentLang, setLang } = useLangStore();
   const { items } = useCartStore();
-  const [isLangOpen, setIsLangOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isAuthenticated, user } = useAuthStore();
-  const pathname = usePathname(); // ✅ added
-
-  const t = translations[currentLang];
+  const pathname = usePathname();
 
   useEffect(() => {
     setMounted(true);
@@ -47,61 +42,19 @@ export function Header() {
 
             <nav className="hidden md:flex items-center gap-10">
               <Link href="/products" className="text-xs font-bold text-slate-600 hover:text-orange-600 transition-colors">
-                {t.headerInstruments}
+                Instruments
               </Link>
               <Link href="/compare" className="text-xs font-bold text-slate-600 hover:text-orange-600 transition-colors">
-                {t.headerCompare}
+                Compare
               </Link>
               <Link href="/wishlist" className="text-xs font-bold text-slate-600 hover:text-orange-600 transition-colors">
-                {(t as any).headerWishlist || (t as any).wishlistTitle || "Wishlist"}
+                Wishlist
               </Link>
             </nav>
           </div>
 
           <div className="flex items-center gap-2 sm:gap-4">
-            <div className="relative">
-              <button
-                onClick={() => setIsLangOpen(!isLangOpen)}
-                className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-slate-100 transition-colors text-xs font-bold text-slate-700 active:scale-95"
-              >
-                <Globe className="h-4 w-4 text-slate-500" />
-                <span>{currentLang}</span>
-                <ChevronDown className={`h-3 w-3 transition-transform ${isLangOpen ? "rotate-180" : ""}`} />
-              </button>
-
-              <AnimatePresence>
-                {isLangOpen && (
-                  <>
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 md:hidden"
-                      onClick={() => setIsLangOpen(false)}
-                    />
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.95, y: -10 }}
-                      animate={{ opacity: 1, scale: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                      className="absolute right-0 mt-2 w-40 rounded-2xl bg-white border border-slate-100 shadow-2xl p-2 z-50"
-                    >
-                      {["ENG", "AMH", "ORO"].map((lang) => (
-                        <button
-                          key={lang}
-                          onClick={() => {
-                            setLang(lang as LanguageCode);
-                            setIsLangOpen(false);
-                          }}
-                          className="w-full text-left px-4 py-3 text-sm font-medium hover:bg-slate-50 rounded-xl transition-colors active:scale-95"
-                        >
-                          {lang === "ENG" ? "English" : lang === "AMH" ? t.headerAmharicLabel : "Afaan Oromoo"}
-                        </button>
-                      ))}
-                    </motion.div>
-                  </>
-                )}
-              </AnimatePresence>
-            </div>
+            <LanguageSwitcher />
 
             <Link
               href="/admin"
@@ -131,7 +84,7 @@ export function Header() {
                   className="hidden sm:inline-flex items-center gap-2 h-9 px-3 rounded-md text-sm font-medium text-slate-700 hover:text-orange-700 hover:bg-slate-100 transition-colors"
                 >
                   <LogIn className="w-4 h-4" />
-                  {t.headerSignIn}
+                  Sign In
                 </Link>
               ) : null}
 
@@ -195,7 +148,7 @@ export function Header() {
                     }`}
                 >
                   <Box className={`w-5 h-5 ${pathname === "/products" ? "text-white" : "text-slate-500"}`} />
-                  <span className="text-sm tracking-tight">{t.headerInstruments}</span>
+                  <span className="text-sm tracking-tight">Instruments</span>
                 </Link>
 
                 <Link
@@ -207,7 +160,7 @@ export function Header() {
                     }`}
                 >
                   <ArrowRightLeft className={`w-5 h-5 ${pathname === "/compare" ? "text-white" : "text-slate-500"}`} />
-                  <span className="text-sm tracking-tight">{t.headerCompare}</span>
+                  <span className="text-sm tracking-tight">Compare</span>
                 </Link>
 
                 <Link
@@ -219,7 +172,7 @@ export function Header() {
                     }`}
                 >
                   <Heart className={`w-5 h-5 ${pathname === "/wishlist" ? "text-white" : "text-slate-500"}`} />
-                  <span className="text-sm tracking-tight">{(t as any).headerWishlist || (t as any).wishlistTitle || "Wishlist"}</span>
+                  <span className="text-sm tracking-tight">Wishlist</span>
                 </Link>
               </nav>
 
@@ -240,14 +193,14 @@ export function Header() {
                   <span className="text-sm tracking-tight">My Cart</span>
                 </Link>
 
-                {!isAuthenticated ? (
+                 {!isAuthenticated ? (
                   <Link
                     href="/login"
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="flex items-center gap-3 px-5 py-3.5 bg-orange-600 hover:bg-orange-700 text-white rounded-2xl font-bold transition-all shadow-lg shadow-orange-950/20"
                   >
                     <LogIn className="w-5 h-5" />
-                    <span className="text-sm tracking-tight">{t.headerSignIn}</span>
+                    <span className="text-sm tracking-tight">Sign In</span>
                   </Link>
                 ) : (
                   <Link

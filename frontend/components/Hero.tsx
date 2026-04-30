@@ -5,24 +5,12 @@ import { ArrowRight, Play } from "lucide-react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Icon } from "@iconify/react";
-import { useLangStore } from "@/lib/lang-store";
-import { translations } from "@/lib/translations";
-
 import Link from "next/link";
 
 export const Hero: React.FC = () => {
-  const { currentLang } = useLangStore();
-  const t = translations[currentLang];
-
-  const hasEndingPunctuation = /[.!?።]$/.test(t.heroTitle);
-  const titleText = hasEndingPunctuation ? t.heroTitle.slice(0, -1) : t.heroTitle;
-  const titlePunctuation = hasEndingPunctuation ? t.heroTitle.slice(-1) : "";
-
-  const socialProof = {
-    ENG: "20k+ Musicians Trust Us",
-    AMH: "20k+ ሙዚቀኞች ያምኑናል",
-    ORO: "Muuziqistoonni 20k+ nu amanatu",
-  }[currentLang];
+  const titleText = "FIND YOUR RHYTHM";
+  const titlePunctuation = ".";
+  const socialProof = "20k+ Musicians Trust Us";
 
   return (
     <div
@@ -57,7 +45,7 @@ export const Hero: React.FC = () => {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
             </span>
-            {t.newArrival}
+            New Arrivals 2026
           </div>
 
           <h1 className="text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-tighter leading-[0.85] uppercase">
@@ -66,13 +54,13 @@ export const Hero: React.FC = () => {
           </h1>
 
           <p className="text-sm md:text-base text-slate-400 max-w-lg leading-relaxed font-medium">
-            {t.heroSub}
+            Discover the world&apos;s finest traditional and modern musical instruments.
           </p>
 
           <div className="flex gap-2 sm:gap-4 pt-4 w-full">
             <Link href="/products" className="flex-1">
               <button className="w-full justify-center flex items-center gap-1 sm:gap-3 px-2 sm:px-8 py-3 sm:py-4 bg-orange-600 text-white rounded-xl sm:rounded-2xl text-[9px] sm:text-xs font-black hover:bg-orange-700 transition-all group shadow-2xl shadow-orange-600/20 active:scale-95 uppercase tracking-wider text-center">
-                <span>{t.shopBtn}</span>
+                <span>Shop Collection</span>
                 <ArrowRight className="w-3 h-3 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform flex-shrink-0" />
               </button>
             </Link>
@@ -82,7 +70,7 @@ export const Hero: React.FC = () => {
                 <div className="hidden sm:flex w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-white/10 items-center justify-center flex-shrink-0">
                   <Play className="w-2 h-2 sm:w-3 sm:h-3 fill-white" />
                 </div>
-                <span>{t.compareBtn}</span>
+                <span>Compare Models</span>
               </button>
             </Link>
           </div>

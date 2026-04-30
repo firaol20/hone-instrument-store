@@ -18,10 +18,10 @@ const MAX_IMAGES_PER_PRODUCT = 3;      // maximum 3 images
  * Returns the existing product if found, null otherwise
  */
 async function checkDuplicateProduct(name: string, categoryName: string): Promise<any | null> {
-  const category = await Category.findOne({ 
-    name: { $regex: new RegExp(`^${categoryName}$`, 'i') } 
+  const category = await Category.findOne({
+    name: { $regex: new RegExp(`^${categoryName}$`, 'i') }
   });
-  
+
   if (!category) {
     return null; // No category = no duplicate
   }
@@ -345,7 +345,7 @@ async function handleChannelPost(message: TelegramMessage) {
     });
 
     const priceText = parsed.price === 0 ? 'Call for price' : `${parsed.price.toLocaleString()} ETB`;
-    const successMessage = 
+    const successMessage =
       `✅ Product Added!\n\n` +
       `Name: ${parsed.name}\n` +
       `Price: ${priceText}\n` +
@@ -353,7 +353,7 @@ async function handleChannelPost(message: TelegramMessage) {
       `Condition: ${parsed.condition}\n` +
       `SKU: ${sku}\n\n` +
       `Images: ${imageUrls.length} uploaded`;
-    
+
     // Send to admin only (not to channel)
     await sendToAdmin(successMessage);
   } catch (error) {
@@ -461,7 +461,7 @@ async function processPendingMediaGroup(mediaGroupId: string) {
     });
 
     const priceText = parsed.price === 0 ? 'Call for price' : `${parsed.price.toLocaleString()} ETB`;
-    const successMessage = 
+    const successMessage =
       `✅ Product Added!\n\n` +
       `Name: ${parsed.name}\n` +
       `Price: ${priceText}\n` +
@@ -469,7 +469,7 @@ async function processPendingMediaGroup(mediaGroupId: string) {
       `Condition: ${parsed.condition}\n` +
       `SKU: ${sku}\n\n` +
       `Images: ${imageUrls.length} uploaded`;
-    
+
     // Send to admin only (not to channel)
     await sendToAdmin(successMessage);
   } catch (error) {
@@ -490,7 +490,7 @@ function scheduleGroupDeletion(mediaGroupId: string) {
       pendingMediaGroups.delete(mediaGroupId);
       console.log(`🗑️ Deleted expired pending group ${mediaGroupId}`);
     }
-  },240000); // Keep group in memory for 240 seconds after processing to catch late images
+  }, 240000); // Keep group in memory for 240 seconds after processing to catch late images
 }
 
 // ---------- The rest of your existing functions (unchanged) ----------

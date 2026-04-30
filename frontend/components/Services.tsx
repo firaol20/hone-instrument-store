@@ -14,124 +14,44 @@ import {
 } from "lucide-react";
 
 export const Services = () => {
-  const { currentLang } = useLangStore();
-
   const sectionText = {
-    ENG: {
-      label: "Hone Services",
-      title: "Comprehensive",
-      titleHighlight: "Music Solutions.",
-      cta: "Learn More",
-      services: [
-        {
-          title: "Instrument Sales",
-          description:
-            "Premium selection of all musical instruments with global delivery service.",
-        },
-        {
-          title: "Sound & Lighting",
-          description:
-            "Professional sound systems and stage lighting available for sale or rental.",
-        },
-        {
-          title: "Studio & Production",
-          description:
-            "High-end studio equipment sales and certified music production courses.",
-        },
-        {
-          title: "Acoustic Engineering",
-          description:
-            "Professional soundproofing solutions and acoustic treatment for any space.",
-        },
-        {
-          title: "Maintenance",
-          description:
-            "Expert restoration and maintenance to keep your gear in peak condition.",
-        },
-        {
-          title: "Free Consultancy",
-          description:
-            "Expert advice on gear selection and setup at no cost to you.",
-        },
-      ],
-    },
-    AMH: {
-      label: "የሁሉ አገልግሎቶች",
-      title: "ሙሉ የሙዚቃ",
-      titleHighlight: "መፍትሄዎች።",
-      cta: "ተጨማሪ ይመልከቱ",
-      services: [
-        {
-          title: "የመሣሪያዎች ሽያጭ",
-          description:
-            "ማንኛቸውንም የሙዚቃ መሣሪያዎች ሽያጭ እና በዓለም ዙሪያ የማድረስ አገልግሎት።",
-        },
-        {
-          title: "ድምፅ እና መብራት",
-          description:
-            "የድምፅ ሲስተም እና የመድረክ መብራቶች ሽያጭ እንዲሁም ኪራይ።",
-        },
-        {
-          title: "ስቱዲዮ እና ትምህርት",
-          description:
-            "የስቱዲዮ እቃዎች ሽያጭ እና የሙዚቃ ፕሮዳክሽን ስልጠና።",
-        },
-        {
-          title: "የድምፅ መከላከያ",
-          description:
-            "ለማንኛቸውም ክፍል ሙያዊ የድምፅ መከላከያ (Soundproof) ስራዎች።",
-        },
-        {
-          title: "ጥገና እና እድሳት",
-          description:
-            "የመሣሪያዎች ጥገና፣ እድሳት እና አስተማማኝ እንክብካቤ።",
-        },
-        {
-          title: "ነፃ ምክር",
-          description:
-            "ስለ ሙዚቃ መሣሪያዎች ምርጫ እና አጠቃቀም ነፃ የባለሙያ ምክር።",
-        },
-      ],
-    },
-    ORO: {
-      label: "Tajaajila Hone",
-      title: "Furmaata Muuziqaa",
-      titleHighlight: "Guutuu.",
-      cta: "Bal'inaan",
-      services: [
-        {
-          title: "Gurgurtaa Meeshaalee",
-          description:
-            "Gurgurtaa meeshaalee muuziqaa hundaafi tajaajila dhiyeessaa addunyaa guutuu.",
-        },
-        {
-          title: "Sagalee fi Ifa",
-          description:
-            "Gurgurtaa fi kireeffannaa sirna sagalee fi ifa waltajjii ogeessaan.",
-        },
-        {
-          title: "Studio fi Barumsa",
-          description:
-            "Gurgurtaa meeshaalee studio fi koorsii qophii muuziqaa.",
-        },
-        {
-          title: "Soundproof",
-          description:
-            "Tajaajila sagalee ittisuu (Soundproof) bakka kamiyyuuf ogeessaan hojjetamu.",
-        },
-        {
-          title: "Suphaa fi Haaromsa",
-          description:
-            "Meeshaalee keessan suphuu, haaromsuu fi haala gaariin qabuu.",
-        },
-        {
-          title: "Gorsa Bilisaa",
-          description:
-            "Filannoo meeshaalee irratti gorsa ogeessaa kaffaltii malee ni kennina.",
-        },
-      ],
-    },
-  }[currentLang];
+    label: "Hone Services",
+    title: "Comprehensive",
+    titleHighlight: "Music Solutions.",
+    cta: "Learn More",
+    services: [
+      {
+        title: "Instrument Sales",
+        description:
+          "Premium selection of all musical instruments with global delivery service.",
+      },
+      {
+        title: "Sound & Lighting",
+        description:
+          "Professional sound systems and stage lighting available for sale or rental.",
+      },
+      {
+        title: "Studio & Production",
+        description:
+          "High-end studio equipment sales and certified music production courses.",
+      },
+      {
+        title: "Acoustic Engineering",
+        description:
+          "Professional soundproofing solutions and acoustic treatment for any space.",
+      },
+      {
+        title: "Maintenance",
+        description:
+          "Expert restoration and maintenance to keep your gear in peak condition.",
+      },
+      {
+        title: "Free Consultancy",
+        description:
+          "Expert advice on gear selection and setup at no cost to you.",
+      },
+    ],
+  };
 
   const serviceIcons = [
     <Truck key="delivery" className="w-6 h-6 text-orange-600" />,

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
+import { TranslationProvider } from "@/components/TranslationProvider";
 import LanguageBody from "@/components/LanguageBody";
 import { Toaster } from "sonner";
 
@@ -49,7 +50,9 @@ export default function RootLayout({
         className={`${geistSans.className} ${geistMono.className} font-sans antialiased`}
       >
         <Toaster position="top-right" richColors />
-        <LanguageBody>{children}</LanguageBody>
+        <TranslationProvider>
+          <LanguageBody>{children}</LanguageBody>
+        </TranslationProvider>
         <Analytics />
       </body>
     </html>

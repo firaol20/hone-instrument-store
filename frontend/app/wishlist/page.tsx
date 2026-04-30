@@ -5,8 +5,6 @@ import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { addToWishlist, removeFromWishlistById, isInWishlist } from "@/components/WishlistButton";
 import { useCartStore } from "@/lib/cart-store";
-import { useLangStore } from "@/lib/lang-store";
-import { translations } from "@/lib/translations";
 import { toast } from "sonner";
 import { Heart, ShoppingCart, Trash2, ArrowRight } from "lucide-react";
 import Image from "next/image";
@@ -24,8 +22,6 @@ export default function WishlistPage() {
     const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
     const [loading, setLoading] = useState(true);
     const { addItem } = useCartStore();
-    const { currentLang } = useLangStore();
-    const t = translations[currentLang];
 
     useEffect(() => {
         const saved = localStorage.getItem("hone_wishlist");
@@ -61,7 +57,7 @@ export default function WishlistPage() {
             <main className="max-w-7xl mx-auto px-4 py-8 md:px-8 md:py-12">
                 <div className="mb-8">
                     <h1 className="text-2xl md:text-4xl font-black uppercase tracking-tighter text-slate-900">
-                        {t.wishlistTitle || "Wishlist"}<span className="text-orange-600">.</span>
+                        Wishlist<span className="text-orange-600">.</span>
                     </h1>
                     <p className="text-sm font-medium text-slate-500 mt-1">
                         {wishlist.length} {wishlist.length === 1 ? 'item' : 'items'} saved
@@ -83,10 +79,10 @@ export default function WishlistPage() {
                         <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-6">
                             <Heart className="w-10 h-10 text-slate-300" />
                         </div>
-                        <p className="text-slate-500 font-medium mb-6">{t.wishlistEmpty || "Your wishlist is empty"}</p>
+                        <p className="text-slate-500 font-medium mb-6">Your wishlist is empty</p>
                         <Button asChild className="bg-orange-600 hover:bg-orange-700">
                             <Link href="/products">
-                                {t.browseProducts || "Browse Products"} <ArrowRight className="w-4 h-4 ml-2" />
+                                Browse Products <ArrowRight className="w-4 h-4 ml-2" />
                             </Link>
                         </Button>
                     </div>
@@ -130,7 +126,7 @@ export default function WishlistPage() {
                                         className="flex-1 h-9 bg-slate-950 hover:bg-orange-600 text-[10px]"
                                     >
                                         <ShoppingCart className="w-3 h-3 mr-1" />
-                                        {t.addToCart || "Add to Cart"}
+                                        Add to Cart
                                     </Button>
                                 </div>
                             </div>

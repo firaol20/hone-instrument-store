@@ -1,4 +1,38 @@
 @import "tailwindcss";
+
+/* Google Translate Overrides */
+.skiptranslate {
+  display: none !important;
+}
+
+body {
+  top: 0 !important;
+}
+
+#google_translate_element {
+  display: none !important;
+}
+
+.goog-te-banner-frame.skiptranslate {
+  display: none !important;
+}
+
+.goog-te-gadget-icon {
+  display: none !important;
+}
+
+.goog-te-menu-value span {
+  color: transparent !important;
+}
+
+.goog-te-menu-value:after {
+  content: '' !important;
+}
+
+/* Ensure our brand names don't get translated */
+.notranslate {
+  font-family: inherit !important;
+}
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));

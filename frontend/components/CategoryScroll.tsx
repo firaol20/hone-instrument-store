@@ -49,14 +49,9 @@ interface CategoryScrollProps {
 export const CategoryScroll = ({ onSelect }: CategoryScrollProps = {}) => {
   const [active, setActive] = React.useState("all");
   const [categories, setCategories] = useState<any[]>([]);
-  const { currentLang } = useLangStore();
   const router = useRouter();
 
-  const labels = {
-    ENG: { browseBy: "Browse by", categoriesTitle: "Categories", all: "All Instruments" },
-    AMH: { browseBy: "በምድብ ይፈልጉ", categoriesTitle: "ምድቦች", all: "ሁሎም መሳሪያዎች" },
-    ORO: { browseBy: "Ramaddiin barbaadi", categoriesTitle: "Ramaddiiwwan", all: "Meeshaalee Hunda" },
-  }[currentLang];
+  const labels = { browseBy: "Browse by", categoriesTitle: "Categories", all: "All Instruments" };
 
   useEffect(() => {
     const fetchCategories = async () => {
