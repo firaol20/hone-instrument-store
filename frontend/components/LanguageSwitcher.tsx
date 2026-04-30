@@ -21,9 +21,9 @@ export default function LanguageSwitcher() {
     <div className="relative z-50">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 md:gap-2 px-2.5 py-2 md:px-4 md:py-2 bg-slate-900/10 backdrop-blur-md border border-slate-900/20 rounded-full text-slate-900 md:text-orange-600 hover:bg-slate-900/20 transition-all group shadow-sm"
+        className="flex items-center gap-1.5 md:gap-2 px-2.5 py-2 md:px-4 md:py-2 bg-slate-900/10 backdrop-blur-md border border-slate-900/20 rounded-full text-slate-900 hover:bg-slate-900/20 hover:text-orange-600 transition-all group shadow-sm"
       >
-        <Globe size={16} className="text-orange-600 group-hover:rotate-12 transition-transform" />
+        <Globe size={16} className="group-hover:rotate-12 transition-transform" />
         <span className="text-[10px] font-black tracking-widest md:hidden mt-[1px]">
           {currentLang.shortName}
         </span>

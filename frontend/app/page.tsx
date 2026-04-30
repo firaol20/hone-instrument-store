@@ -268,7 +268,7 @@ export default function Home() {
             </div>
 
             {/* Links Columns */}
-            <div className="md:col-span-8 grid grid-cols-2 sm:grid-cols-3 gap-8 md:gap-12">
+            <div className="md:col-span-8 grid grid-cols-3 gap-4 sm:gap-8 md:gap-12">
               <div>
                 <h4 className="font-bold text-slate-900 mb-6 uppercase text-[10px] tracking-widest">
                   {content.shop}
