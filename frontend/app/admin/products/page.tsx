@@ -251,7 +251,7 @@ export default function ProductsPage() {
                         </span>
                       </td>
                       <td className="px-3 sm:px-6 py-3">
-                        <div className="font-black text-slate-900">ETB{product.price.toLocaleString()}</div>
+                        <div className="font-black text-slate-900">ETB {product.price.toLocaleString()}</div>
                       </td>
                       <td className="px-3 sm:px-6 py-3 text-right">
                         <div className="flex justify-end gap-2">
