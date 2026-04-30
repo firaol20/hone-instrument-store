@@ -35,7 +35,7 @@ export function Header() {
               <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-950 shadow-2xl group-hover:scale-105 transition-transform border border-white/10 overflow-hidden">
                 <Image src="https://res.cloudinary.com/dglvpzqcl/image/upload/v1776616291/hone_store/qz7rfmsvsyh8kcekqehj.jpg" alt="logo" fill className="object-cover brightness-110" unoptimized />
               </div>
-              <span className="text-xl font-black tracking-tighter text-slate-900 uppercase">
+              <span className="text-xl font-black tracking-tighter text-slate-900 uppercase notranslate">
                 HONE<span className="text-orange-600">.</span>
               </span>
             </Link>
@@ -129,7 +129,7 @@ export function Header() {
               className="fixed inset-y-0 left-0 w-[280px] shadow-2xl border-r border-white/5 p-6 flex flex-col z-50 h-screen bg-slate-950"
             >
               <div className="flex items-center justify-between mb-8">
-                <span className="text-xl font-black tracking-tighter text-white uppercase">
+                <span className="text-xl font-black tracking-tighter text-white uppercase notranslate">
                   HONE<span className="text-orange-600">.</span>
                 </span>
                 <button
