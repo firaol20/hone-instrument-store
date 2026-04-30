@@ -6,9 +6,9 @@ import { Globe, ChevronDown, Check } from 'lucide-react';
 import { useTranslation } from './TranslationProvider';
 
 const languages = [
-  { code: 'en', name: 'English', flag: '🇬🇧' },
-  { code: 'am', name: 'አማርኛ', flag: '🇪🇹' },
-  { code: 'om', name: 'Oromoo', flag: '🇪🇹' },
+  { code: 'en', name: 'English', shortName: 'EN', flag: '🇬🇧' },
+  { code: 'am', name: 'አማርኛ', shortName: 'AMH', flag: '🇪🇹' },
+  { code: 'om', name: 'Oromoo', shortName: 'ORO', flag: '🇪🇹' },
 ];
 
 export default function LanguageSwitcher() {
@@ -21,10 +21,13 @@ export default function LanguageSwitcher() {
     <div className="relative z-50">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 md:gap-2 px-2.5 py-2 md:px-4 md:py-2 bg-slate-900/10 md:bg-white/10 backdrop-blur-md border border-slate-900/20 md:border-white/20 rounded-full text-slate-900 md:text-white hover:bg-slate-900/20 md:hover:bg-white/20 transition-all group shadow-sm md:shadow-none"
+        className="flex items-center gap-1.5 md:gap-2 px-2.5 py-2 md:px-4 md:py-2 bg-slate-900/10 backdrop-blur-md border border-slate-900/20 rounded-full text-slate-900 md:text-orange-600 hover:bg-slate-900/20 transition-all group shadow-sm"
       >
-        <Globe size={16} className="text-orange-600 md:text-orange-500 group-hover:rotate-12 transition-transform" />
-        <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest hidden md:inline-block">
+        <Globe size={16} className="text-orange-600 group-hover:rotate-12 transition-transform" />
+        <span className="text-[10px] font-black tracking-widest md:hidden mt-[1px]">
+          {currentLang.shortName}
+        </span>
+        <span className="text-xs font-black uppercase tracking-widest hidden md:inline-block">
           {currentLang.name}
         </span>
         <ChevronDown size={14} className={`hidden md:block transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
