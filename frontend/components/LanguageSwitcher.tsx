@@ -21,11 +21,13 @@ export default function LanguageSwitcher() {
     <div className="relative z-50">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white hover:bg-white/20 transition-all group"
+        className="flex items-center gap-1.5 md:gap-2 px-2.5 py-2 md:px-4 md:py-2 bg-slate-900/10 md:bg-white/10 backdrop-blur-md border border-slate-900/20 md:border-white/20 rounded-full text-slate-900 md:text-white hover:bg-slate-900/20 md:hover:bg-white/20 transition-all group shadow-sm md:shadow-none"
       >
-        <Globe size={16} className="text-orange-500 group-hover:rotate-12 transition-transform" />
-        <span className="text-xs font-bold uppercase tracking-widest">{currentLang.name}</span>
-        <ChevronDown size={14} className={`transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+        <Globe size={16} className="text-orange-600 md:text-orange-500 group-hover:rotate-12 transition-transform" />
+        <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest hidden md:inline-block">
+          {currentLang.name}
+        </span>
+        <ChevronDown size={14} className={`hidden md:block transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       <AnimatePresence>
@@ -52,11 +54,10 @@ export default function LanguageSwitcher() {
                       setLanguage(lang.code);
                       setIsOpen(false);
                     }}
-                    className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all ${
-                      language === lang.code
+                    className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all ${language === lang.code
                         ? 'bg-orange-600 text-white'
                         : 'text-slate-300 hover:bg-white/10 hover:text-white'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center gap-3">
                       <span className="text-lg">{lang.flag}</span>

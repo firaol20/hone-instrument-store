@@ -56,12 +56,14 @@ export function Header() {
           <div className="flex items-center gap-2 sm:gap-4">
             <LanguageSwitcher />
 
-            <Link
-              href="/admin"
-              className="p-2 text-slate-600 hover:text-orange-600 transition-colors"
-            >
-              <LayoutDashboard className="w-5 h-5" />
-            </Link>
+            {isAuthenticated && user?.role === "admin" && (
+              <Link
+                href="/admin"
+                className="p-2 text-slate-600 hover:text-orange-600 transition-colors"
+              >
+                <LayoutDashboard className="w-5 h-5" />
+              </Link>
+            )}
 
             <Link
               href="/cart"

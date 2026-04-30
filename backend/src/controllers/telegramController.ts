@@ -258,10 +258,9 @@ async function handleChannelPost(message: TelegramMessage) {
     if (largestPhoto && !pending.photos.some(p => p.file_unique_id === largestPhoto!.file_unique_id)) {
       if (pending.photos.length >= MAX_IMAGES_PER_PRODUCT) {
         console.log(`⚠️ Already have ${MAX_IMAGES_PER_PRODUCT} images, ignoring extra`);
-        await sendMessage(chatId, `⚠️ Maximum ${MAX_IMAGES_PER_PRODUCT} images per product. Extra images ignored.`);
+        await sendToAdmin(`⚠️ Channel post ${mediaGroupId} has too many images. Only first ${MAX_IMAGES_PER_PRODUCT} used.`);
       } else {
         pending.photos.push(largestPhoto);
-        console.log(`📸 Group ${mediaGroupId} now has ${pending.photos.length} photo(s)`);
       }
     }
     return;
@@ -277,15 +276,15 @@ async function handleChannelPost(message: TelegramMessage) {
   }
 
   if (!caption.includes('⭐️')) {
-    await sendMessage(chatId, '❌ No product information found. Please use the correct format:\n⭐️ CATEGORY\nModel: Name\nCondition: New/Used\nPrice: Amount');
+    await sendToAdmin(`❌ Rejected channel post: No category (⭐️) found.\n\nCaption excerpt: ${caption.substring(0, 100)}...`);
     return;
   }
 
   try {
     const parsed = parseChannelCaption(caption);
 
-    if (!parsed.name || !parsed.categoryName) {
-      await sendMessage(chatId, '❌ Missing required fields. Please provide:\n⭐️ Category\nModel: Name\nPrice: Amount');
+    if (!parsed.categoryName) {
+      await sendToAdmin(`❌ Rejected channel post: Missing Category name after ⭐️.\n\nCaption: ${caption.substring(0, 150)}...`);
       return;
     }
 
@@ -307,7 +306,7 @@ async function handleChannelPost(message: TelegramMessage) {
         if (url) imageUrls.push(url);
       } catch (err) {
         console.error('Error uploading single photo:', err);
-        await sendMessage(chatId, '⚠️ Warning: Could not upload the image, but product will be created without it.');
+        await sendToAdmin('⚠️ Warning: Single post image upload failed. Product created without it.');
       }
     }
 
@@ -358,7 +357,7 @@ async function handleChannelPost(message: TelegramMessage) {
     await sendToAdmin(successMessage);
   } catch (error) {
     console.error('Single channel post error:', error);
-    await sendMessage(chatId, '❌ Error adding product. Please check the format and try again.');
+    await sendToAdmin(`❌ Critical error processing channel post: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }
 
@@ -376,13 +375,13 @@ async function processPendingMediaGroup(mediaGroupId: string) {
   console.log(`🔄 Processing media group ${mediaGroupId} with ${photos.length} photo(s)`);
 
   if (!caption) {
-    await sendMessage(chatId, '❌ No product information found in the album. Please include a caption with the required fields.');
+    await sendToAdmin(`❌ Media group ${mediaGroupId} rejected: Caption is empty.`);
     scheduleGroupDeletion(mediaGroupId);
     return;
   }
 
   if (!caption.includes('⭐️')) {
-    await sendMessage(chatId, '❌ No product information found. Please use the correct format:\n⭐️ CATEGORY\nModel: Name\nCondition: New/Used\nPrice: Amount');
+    await sendToAdmin(`❌ Media group ${mediaGroupId} rejected: No category (⭐️) found.`);
     scheduleGroupDeletion(mediaGroupId);
     return;
   }
@@ -390,8 +389,8 @@ async function processPendingMediaGroup(mediaGroupId: string) {
   try {
     const parsed = parseChannelCaption(caption);
 
-    if (!parsed.name || !parsed.categoryName) {
-      await sendMessage(chatId, '❌ Missing required fields. Please provide:\n⭐️ Category\nModel: Name\nPrice: Amount');
+    if (!parsed.categoryName) {
+      await sendToAdmin(`❌ Media group ${mediaGroupId} rejected: Missing category name.`);
       scheduleGroupDeletion(mediaGroupId);
       return;
     }
@@ -422,7 +421,7 @@ async function processPendingMediaGroup(mediaGroupId: string) {
     }
 
     if (imageUrls.length === 0) {
-      await sendMessage(chatId, '⚠️ Warning: No images could be uploaded, but product will be created without images.');
+      await sendToAdmin(`⚠️ Media group ${mediaGroupId}: No images could be uploaded. Product created without images.`);
     }
 
     const category = await getOrCreateCategory(parsed.categoryName);
@@ -474,7 +473,7 @@ async function processPendingMediaGroup(mediaGroupId: string) {
     await sendToAdmin(successMessage);
   } catch (error) {
     console.error(`Error processing media group ${mediaGroupId}:`, error);
-    await sendMessage(chatId, '❌ Error adding product from album. Please check the format and try again.');
+    await sendToAdmin(`❌ Critical error processing album ${mediaGroupId}: ${error instanceof Error ? error.message : 'Unknown error'}`);
   } finally {
     scheduleGroupDeletion(mediaGroupId);
   }
@@ -503,63 +502,119 @@ function parseChannelCaption(caption: string): ParsedProduct {
     description: '',
   };
 
-  const lines = caption.split('\n').map(line => line.trim()).filter(Boolean);
+  const lines = caption.split('\n').map(line => line.trim());
+  let currentCategory = '';
+  let modelName = '';
+  let priceValue = 0;
+  let conditionValue = 'New'; // Default
+  
+  // Segment lists
+  let preModelLines: string[] = [];
+  let postPriceLines: string[] = [];
+  
   let foundCategory = false;
   let foundModel = false;
   let foundPrice = false;
   let foundAddress = false;
-  let descriptionLines: string[] = [];
 
   for (const line of lines) {
-    const trimmedLine = line.trim();
-    if (trimmedLine.toLowerCase().startsWith('address') || line.startsWith('📍')) {
+    const l = line.trim();
+    if (!l) continue;
+
+    // Detect Address section - stop parsing relevant info here
+    if (l.toLowerCase().includes('address') || l.startsWith('📍') || l.includes('☎️')) {
+      // Check if this looks like a phone number line (usually starts with 09)
+      if (l.match(/^09\d{2}/) || l.includes('☎️')) {
+        foundAddress = true;
+        continue;
+      }
+      if (l.toLowerCase().startsWith('address')) {
+         foundAddress = true;
+         continue;
+      }
+    }
+    
+    if (foundAddress) continue;
+    if (l.toLowerCase().includes('inbox👉') || l.toLowerCase().includes('join 👉')) {
       foundAddress = true;
       continue;
     }
-    if (foundAddress) continue;
-    if (trimmedLine.startsWith('⭐️')) {
-      result.categoryName = trimmedLine.replace('⭐️', '').trim();
+
+    // 1. Detect Category (⭐️)
+    if (l.includes('⭐️')) {
+      currentCategory = l.replace('⭐️', '').trim();
       foundCategory = true;
       continue;
     }
-    if (trimmedLine.toLowerCase() === 'available' || trimmedLine.toLowerCase() === 'available ✅') continue;
-    const modelMatch = trimmedLine.match(/^✅?\s*model\s*:\s*/i);
+
+    // Skip "Available" lines
+    if (l.toLowerCase().includes('available')) continue;
+
+    // 2. Detect Model
+    const modelMatch = l.match(/^✅?\s*model\s*:\s*(.*)/i);
     if (modelMatch) {
+      modelName = modelMatch[1].trim();
       foundModel = true;
-      descriptionLines = [];
-      result.name = trimmedLine.replace(modelMatch[0], '').trim();
       continue;
     }
-    const conditionMatch = trimmedLine.match(/^✅?\s*condition\s*:\s*/i);
+
+    // 3. Detect Condition
+    const conditionMatch = l.match(/^✅?\s*condition\s*:\s*(.*)/i);
     if (conditionMatch) {
-      result.condition = trimmedLine.replace(conditionMatch[0], '').trim();
+      conditionValue = conditionMatch[1].trim();
       continue;
     }
-    const priceMatch = trimmedLine.match(/^✅?\s*price\s*:\s*/i);
+
+    // 4. Detect Price
+    const priceMatch = l.match(/^✅?\s*price\s*:\s*(.*)/i);
     if (priceMatch) {
-      foundPrice = true;
-      const priceStr = trimmedLine.replace(priceMatch[0], '').trim();
-      if (priceStr === '☎️' || priceStr.includes('☎️')) {
-        result.price = 0;
+      const pStr = priceMatch[1].trim();
+      if (pStr.includes('☎️')) {
+        priceValue = 0;
       } else {
-        const cleanPrice = priceStr.replace(/[^0-9,]/g, '').replace(/,/g, '');
-        result.price = parseInt(cleanPrice) || 0;
+        const cleanPrice = pStr.replace(/[^0-9]/g, '');
+        priceValue = parseInt(cleanPrice) || 0;
       }
+      foundPrice = true;
       continue;
     }
-    if (trimmedLine.startsWith('👉') || trimmedLine.startsWith('☎️') || trimmedLine.startsWith('Inbox') || trimmedLine.startsWith('Join') || trimmedLine.startsWith('http')) {
-      if (!foundModel && !foundPrice) descriptionLines.push(trimmedLine);
-      continue;
-    }
-    if (!foundModel && !foundPrice && foundCategory && trimmedLine.length > 0) {
-      descriptionLines.push(trimmedLine);
-    } else if (foundPrice && trimmedLine.length > 0 && trimmedLine.length < 200) {
-      descriptionLines.push(trimmedLine);
+
+    // 5. Collect potential description lines
+    // Pre-model (between category and model)
+    if (foundCategory && !foundModel && !foundPrice) {
+      preModelLines.push(l);
+    } 
+    // Post-price (between price and address)
+    else if (foundPrice && !foundAddress) {
+      postPriceLines.push(l);
     }
   }
 
-  result.description = descriptionLines.join('\n').trim();
-  console.log('🔍 Parsed result:', result);
+  // Fallback: If no model found, use category name as product name
+  result.name = modelName || currentCategory;
+  result.categoryName = currentCategory;
+  result.price = priceValue;
+  result.condition = conditionValue;
+
+  // Process and combine descriptions
+  const cleanLine = (str: string) => str.replace(/^[👉\s\-\*•]+/, '').trim();
+  
+  const processGroup = (group: string[]) => {
+    if (group.length === 0) return '';
+    // If all lines are short bullet points, join with comma
+    if (group.every(line => line.length < 30)) {
+      return group.map(cleanLine).join(', ');
+    }
+    // Otherwise keep newlines but clean prefixes
+    return group.map(cleanLine).join('\n');
+  };
+
+  const desc1 = processGroup(preModelLines);
+  const desc2 = processGroup(postPriceLines);
+
+  result.description = [desc1, desc2].filter(Boolean).join('\n\n');
+  
+  console.log('🔍 Parsed product:', result);
   return result;
 }
 
