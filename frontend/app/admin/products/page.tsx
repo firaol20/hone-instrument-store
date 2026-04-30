@@ -251,7 +251,7 @@ export default function ProductsPage() {
                         </span>
                       </td>
                       <td className="px-3 sm:px-6 py-3">
-                        <div className="font-black text-slate-900">${product.price.toLocaleString()}</div>
+                        <div className="font-black text-slate-900">ETB{product.price.toLocaleString()}</div>
                       </td>
                       <td className="px-3 sm:px-6 py-3 text-right">
                         <div className="flex justify-end gap-2">
@@ -370,7 +370,7 @@ export default function ProductsPage() {
                   <input required placeholder="gibson-les-paul" type="text" value={formData.slug} onChange={(e) => setFormData({ ...formData, slug: e.target.value })} className="w-full p-4 bg-slate-50 border-none rounded-2xl text-[10px] font-mono font-bold focus:ring-2 focus:ring-orange-500/20 outline-none" />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase text-slate-400 ml-2">Price ($)</label>
+                  <label className="text-[10px] font-black uppercase text-slate-400 ml-2">Price (ETB)</label>
                   <input required type="number" value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} className="w-full p-4 bg-slate-50 border-none rounded-2xl text-sm font-black focus:ring-2 focus:ring-orange-500/20 outline-none" />
                 </div>
 
@@ -407,7 +407,7 @@ export default function ProductsPage() {
                     Processing Catalogue...
                   </>
                 ) : (
-                  editingProduct ? 'Propagate Updates' : 'Publish to Catalogue'
+                  editingProduct ? 'Propagate Updates' : 'Publish to products'
                 )}
               </button>
             </div>
