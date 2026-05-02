@@ -156,6 +156,7 @@ export default function OrdersPage() {
                     <th className="px-6 py-4 text-left">Logistics Status</th>
                     <th className="px-6 py-4 text-left">Fulfillment</th>
                     <th className="px-6 py-4 text-left">Delivery Location</th>
+                    <th className="px-6 py-4 text-right">Details</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -256,6 +257,15 @@ export default function OrdersPage() {
                             <Share2 size={18} />
                           </button>
                         </div>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <button
+                          onClick={() => router.push(`/admin/orders/${order._id}`)}
+                          className="p-2.5 text-slate-400 hover:text-orange-600 hover:bg-orange-50 rounded-xl transition-all"
+                          title="View Complete Details"
+                        >
+                          <Eye size={18} />
+                        </button>
                       </td>
                     </tr>
                   ))}

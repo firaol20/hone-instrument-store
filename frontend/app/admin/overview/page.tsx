@@ -132,7 +132,11 @@ export default function OverviewPage() {
                 <div className="py-20 text-center uppercase tracking-widest text-[10px] font-black text-slate-300">Registry Empty</div>
               ) : (
                 stats?.recentOrders.map((order: any, i: number) => (
-                  <div key={i} className={`flex items-center justify-between group cursor-pointer ${i >= 2 ? 'flex lg:hidden' : 'flex'}`}>
+                  <div 
+                    key={i} 
+                    onClick={() => router.push(`/admin/orders/${order._id}`)}
+                    className={`flex items-center justify-between group cursor-pointer ${i >= 2 ? 'flex lg:hidden' : 'flex'}`}
+                  >
                     <div className="flex items-center gap-4">
                       <div className="w-10 h-10 md:w-12 md:h-12 bg-slate-950 flex items-center justify-center text-white rounded-xl md:rounded-2xl font-black text-[10px] md:text-xs italic shadow-lg shadow-slate-200 group-hover:bg-orange-600 transition-all">
                         {order.status === 'delivered' ? <CheckCircle size={14} /> : order._id.slice(-2).toUpperCase()}
