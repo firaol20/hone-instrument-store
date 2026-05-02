@@ -339,8 +339,6 @@ export default function OrderDetailPage() {
               </div>
             </div>
           </div>
-
-          </div>
         </div>
 
         {/* Logistics Destination - Wide on Desktop, appears below items */}
