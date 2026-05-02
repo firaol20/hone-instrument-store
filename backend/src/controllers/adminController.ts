@@ -17,10 +17,41 @@ export const getDashboard = async (req: AuthRequest, res: Response) => {
     const totalProducts = await Product.countDocuments();
     const totalOrders = await Order.countDocuments();
     const totalCustomers = await Customer.countDocuments();
-    const totalRevenue = await Order.aggregate([
+    const totalRevenueAgg = await Order.aggregate([
       { $match: { status: { $in: ['paid', 'processing', 'shipped', 'delivered'] } } },
       { $group: { _id: null, total: { $sum: '$total' } } },
     ]);
+    const totalRevenue = totalRevenueAgg[0]?.total || 0;
+
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    
+    const sixtyDaysAgo = new Date();
+    sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
+
+    // Current 30 days revenue
+    const currentMonthRevenueAgg = await Order.aggregate([
+      { $match: { status: { $in: ['paid', 'processing', 'shipped', 'delivered'] }, createdAt: { $gte: thirtyDaysAgo } } },
+      { $group: { _id: null, total: { $sum: '$total' } } },
+    ]);
+    const currentMonthRevenue = currentMonthRevenueAgg[0]?.total || 0;
+
+    // Previous 30 days revenue
+    const previousMonthRevenueAgg = await Order.aggregate([
+      { $match: { status: { $in: ['paid', 'processing', 'shipped', 'delivered'] }, createdAt: { $gte: sixtyDaysAgo, $lt: thirtyDaysAgo } } },
+      { $group: { _id: null, total: { $sum: '$total' } } },
+    ]);
+    const previousMonthRevenue = previousMonthRevenueAgg[0]?.total || 0;
+
+    let revenueChangePercentage = 0;
+    if (previousMonthRevenue === 0) {
+      revenueChangePercentage = currentMonthRevenue > 0 ? 100 : 0;
+    } else {
+      revenueChangePercentage = Math.round(((currentMonthRevenue - previousMonthRevenue) / previousMonthRevenue) * 100);
+    }
+
+    // New customers in last 30 days
+    const newCustomersThisMonth = await Customer.countDocuments({ createdAt: { $gte: thirtyDaysAgo } });
 
     const recentOrders = await Order.find()
       .sort({ createdAt: -1 })
@@ -44,7 +75,9 @@ export const getDashboard = async (req: AuthRequest, res: Response) => {
           totalProducts,
           totalOrders,
           totalCustomers,
-          totalRevenue: totalRevenue[0]?.total || 0,
+          totalRevenue,
+          revenueChangePercentage,
+          newCustomersThisMonth,
         },
         recentOrders,
         orderStats: Object.fromEntries(

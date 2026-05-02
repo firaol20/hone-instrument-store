@@ -173,7 +173,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
       {/* MAIN CONTENT */}
       <main className="flex-1 overflow-y-auto bg-[#FDFDFD] p-4 md:p-10">
-        <header className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <header className="mb-8 flex flex-row justify-between items-center gap-4">
           <h2 className="text-2xl md:text-4xl font-black text-slate-950 uppercase tracking-tighter">
             {currentPageName}<span className="text-orange-600">.</span>
           </h2>

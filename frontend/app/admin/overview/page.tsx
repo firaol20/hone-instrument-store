@@ -60,10 +60,10 @@ export default function OverviewPage() {
           [...Array(4)].map((_, i) => <CardSkeleton key={i} />)
         ) : (
           [
-            { label: 'Cumulative Revenue', value: `ETB ${stats?.stats.totalRevenue.toLocaleString()}`, trend: '+12%', icon: <TrendingUp size={24} />, color: 'emerald' },
-            { label: 'Instrument Registry', value: stats?.stats.totalProducts, trend: 'Live', icon: <ShoppingBag size={24} />, color: 'orange' },
-            { label: 'Active Residents', value: stats?.stats.totalCustomers, trend: '+4', icon: <Users size={24} />, color: 'blue' },
-            { label: 'Unfulfilled Orders', value: stats?.stats.totalOrders, trend: 'Priority', icon: <Eye size={24} />, color: 'purple' },
+            { label: 'Cumulative Revenue', value: `ETB ${stats?.stats.totalRevenue?.toLocaleString() || 0}`, trend: `${stats?.stats.revenueChangePercentage > 0 ? '+' : ''}${stats?.stats.revenueChangePercentage || 0}%`, icon: <TrendingUp size={24} />, color: 'emerald' },
+            { label: 'Instrument Registry', value: stats?.stats.totalProducts || 0, trend: 'Live', icon: <ShoppingBag size={24} />, color: 'orange' },
+            { label: 'Active Residents', value: stats?.stats.totalCustomers || 0, trend: `+${stats?.stats.newCustomersThisMonth || 0}`, icon: <Users size={24} />, color: 'blue' },
+            { label: 'Unfulfilled Orders', value: stats?.stats.totalOrders || 0, trend: 'Priority', icon: <Eye size={24} />, color: 'purple' },
           ].map((stat, i) => (
             <div key={i} className="bg-white p-4 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-slate-200/50 transition-all group overflow-hidden relative">
               <div className={`absolute top-0 right-0 w-32 h-32 -mr-16 -mt-16 rounded-full bg-${stat.color}-500/5 transition-transform group-hover:scale-150 duration-700`} />
