@@ -157,8 +157,8 @@ export default function OrderDetailPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Main Details (Left) */}
-        <div className="lg:col-span-2 space-y-8">
+        {/* Order Items - Wide on Desktop */}
+        <div className="lg:col-span-2 space-y-8 lg:order-1">
           {/* Order Items */}
           <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
             <div className="p-8 border-b border-slate-50 flex items-center justify-between">
@@ -254,8 +254,8 @@ export default function OrderDetailPage() {
           )}
         </div>
 
-        {/* Sidebar Info (Right) */}
-        <div className="space-y-8">
+        {/* Sidebar Components - Right on Desktop */}
+        <div className="space-y-8 lg:col-span-1 lg:order-2">
           {/* Status Management */}
           <div className="bg-slate-950 p-8 rounded-[2.5rem] shadow-2xl shadow-slate-200 text-white space-y-6 relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 -mr-16 -mt-16 rounded-full group-hover:scale-150 transition-transform duration-700" />
@@ -340,7 +340,11 @@ export default function OrderDetailPage() {
             </div>
           </div>
 
-          {/* Shipping & Delivery Location */}
+          </div>
+        </div>
+
+        {/* Logistics Destination - Wide on Desktop, appears below items */}
+        <div className="lg:col-span-2 lg:order-3">
           <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-6">
             <h3 className="font-black text-slate-950 uppercase italic tracking-tight text-lg">Logistics Destination.</h3>
             
