@@ -224,18 +224,47 @@ export default function OrderDetailPage() {
               </table>
             </div>
 
-            <div className="p-8 bg-slate-50/50 border-t border-slate-100 space-y-4">
-              <div className="flex justify-between items-center text-sm">
-                <span className="text-slate-400 font-black uppercase tracking-widest text-[10px]">Order Subtotal</span>
-                <span className="text-slate-900 font-bold italic">ETB {order.subtotal.toLocaleString()}</span>
+            <div className="p-8 bg-slate-50/50 border-t border-slate-100 grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Financial Summary */}
+              <div className="space-y-4">
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-slate-400 font-black uppercase tracking-widest text-[10px]">Order Subtotal</span>
+                  <span className="text-slate-900 font-bold italic">ETB {order.subtotal.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-slate-400 font-black uppercase tracking-widest text-[10px]">Shipping & Logistics</span>
+                  <span className="text-slate-900 font-bold italic">ETB {order.shippingFee.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between items-center pt-4 border-t border-slate-200">
+                  <span className="text-slate-950 font-black uppercase italic tracking-tighter text-xl">Grand Total.</span>
+                  <span className="text-orange-600 font-black italic text-2xl tracking-tighter">ETB {order.total.toLocaleString()}</span>
+                </div>
               </div>
-              <div className="flex justify-between items-center text-sm">
-                <span className="text-slate-400 font-black uppercase tracking-widest text-[10px]">Shipping & Logistics</span>
-                <span className="text-slate-900 font-bold italic">ETB {order.shippingFee.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between items-center pt-4 border-t border-slate-200">
-                <span className="text-slate-950 font-black uppercase italic tracking-tighter text-xl">Grand Total.</span>
-                <span className="text-orange-600 font-black italic text-2xl tracking-tighter">ETB {order.total.toLocaleString()}</span>
+
+              {/* Logistics Summary - Filling the "Empty Space" on Desktop */}
+              <div className="hidden lg:flex flex-col justify-center border-l border-slate-200 pl-8 space-y-4">
+                <div className="flex items-center gap-2">
+                  <MapPin className="text-orange-600" size={16} />
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Delivery Destination</span>
+                </div>
+                <div className="text-xs font-black text-slate-900 uppercase italic tracking-tight leading-relaxed">
+                  {order.address?.city}, {order.address?.street}
+                  {order.address?.apartment && <span className="block text-[8px] text-slate-400 mt-1">Apt/Suite: {order.address.apartment}</span>}
+                </div>
+                <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-slate-400 bg-white border border-slate-100 w-fit px-3 py-1.5 rounded-lg shadow-sm">
+                  <Truck size={12} />
+                  {order.deliveryOption.replace('_', ' ')}
+                </div>
+                
+                {order.address?.coordinates && (
+                  <a
+                    href={`https://www.google.com/maps?q=${order.address.coordinates.lat},${order.address.coordinates.lng}`}
+                    target="_blank"
+                    className="flex items-center gap-2 text-[8px] font-black uppercase tracking-[0.2em] text-orange-600 hover:text-slate-900 transition-colors mt-2"
+                  >
+                    <ExternalLink size={12} /> View Map Registry
+                  </a>
+                )}
               </div>
             </div>
           </div>
@@ -254,38 +283,6 @@ export default function OrderDetailPage() {
               </div>
             </div>
           )}
-
-          {/* LOGISTICS DESTINATION - DESKTOP VERSION */}
-          <div className="hidden lg:block">
-            <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-6">
-              <h3 className="font-black text-slate-950 uppercase italic tracking-tight text-lg">Logistics Destination.</h3>
-
-              <div className="p-6 bg-slate-50 rounded-3xl space-y-4">
-                <div className="flex items-start gap-3">
-                  <MapPin className="text-orange-600 mt-1 flex-shrink-0" size={18} />
-                  <div className="text-sm font-medium text-slate-600 leading-relaxed italic">
-                    {order.address?.city}, {order.address?.street}<br />
-                    {order.address?.apartment && `Apt/Suite: ${order.address.apartment}`}
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                  <Truck size={14} />
-                  {order.deliveryOption.replace('_', ' ')} Delivery
-                </div>
-              </div>
-
-              {order.address?.coordinates && (
-                <a
-                  href={`https://www.google.com/maps?q=${order.address.coordinates.lat},${order.address.coordinates.lng}`}
-                  target="_blank"
-                  className="w-full flex items-center justify-center gap-3 py-4 bg-slate-50 text-slate-950 font-black uppercase tracking-widest rounded-2xl border border-slate-100 hover:bg-slate-950 hover:text-white transition-all text-[10px] group shadow-sm"
-                >
-                  Open Geolocation Hub <ExternalLink size={14} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                </a>
-              )}
-            </div>
-          </div>
         </div>
 
         {/* RIGHT SIDEBAR - Desktop Right Column / Mobile Below Items */}
