@@ -1,0 +1,59 @@
+========================================================
+HONE STORE - TELEGRAM BOT SETUP INSTRUCTIONS
+========================================================
+
+Follow these exact steps to connect your real store channel to the website and ensure the bot acts as your silent manager, sending you private reports about uploaded products.
+
+Because of our recent updates, the bot will NEVER reply in the public channel. It will only send success/error logs directly to you (the admin).
+
+--------------------------------------------------------
+STEP 1: Add the Bot to Your Real Channel
+--------------------------------------------------------
+1. Open Telegram and go to your real Hone store channel.
+2. Tap on the channel name at the top to open the info screen.
+3. Tap "Administrators" -> "Add Admin".
+4. Search for your bot's username (the one you created in BotFather).
+5. Add it as an administrator. It MUST have the right to "Manage Messages" (so it can read the posts).
+
+--------------------------------------------------------
+STEP 2: Start a Private Chat with the Bot
+--------------------------------------------------------
+For the bot to send you private success/error logs, you must give it permission to message you directly:
+1. Search for your bot in the main Telegram search bar.
+2. Open the chat with your bot and tap "Start" (or type /start).
+* Note: If you want a different admin to receive the logs, THEY must do this step instead.
+
+--------------------------------------------------------
+STEP 3: Get Your Personal Telegram Chat ID
+--------------------------------------------------------
+The website needs to know exactly WHO the admin is so it can send the logs to the right place.
+1. In Telegram, search for a bot called @userinfobot or @raw_data_bot.
+2. Tap Start. It will instantly reply with your "Id" (a number like 6852989682).
+3. Copy this number.
+
+--------------------------------------------------------
+STEP 4: Update Your Live Server (Render)
+--------------------------------------------------------
+1. Log in to your Render dashboard where your backend is hosted.
+2. Go to your backend web service and click on "Environment Variables".
+3. Look for the variable named: TELEGRAM_ADMIN_CHAT_ID
+4. Paste the ID you copied in Step 3 as the value.
+5. Click "Save Changes" (Render will automatically restart the backend).
+
+--------------------------------------------------------
+HOW TO TEST IT
+--------------------------------------------------------
+Once Render finishes restarting, go to your real channel and post a product using the exact format we established:
+
+⭐️ KEYBOARDS
+✅MODEL: Yamaha PSR-E373
+✅CONDITION: New
+✅PRICE: 25000
+
+Great keyboard for beginners.
+
+
+What will happen:
+1. The post will appear in your public channel normally.
+2. The bot will silently read it and upload it to your website.
+3. The bot will then send a PRIVATE message directly to you saying: "✅ Successfully added product Yamaha PSR-E373". Your customers will never see this message.

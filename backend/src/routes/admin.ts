@@ -26,4 +26,10 @@ router.get('/settings', authenticate, requireAdmin, adminController.getSettings)
 router.put('/settings', authenticate, requireAdmin, adminController.updateSettings);
 router.post('/settings/maintenance', authenticate, requireAdmin, adminController.toggleMaintenanceMode);
 
+import * as notificationController from '../controllers/notificationController';
+
+router.get('/notifications', authenticate, requireAdmin, notificationController.getNotifications);
+router.get('/notifications/stream', authenticate, requireAdmin, notificationController.streamNotifications);
+router.put('/notifications/read', authenticate, requireAdmin, notificationController.markAsRead);
+
 export default router;

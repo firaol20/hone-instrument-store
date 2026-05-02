@@ -19,6 +19,7 @@ import {
 import { useAuthStore } from '@/lib/auth-store';
 import { authAPI } from '@/lib/api';
 import { toast } from 'sonner';
+import NotificationBell from '@/components/admin/NotificationBell';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -176,6 +177,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <h2 className="text-2xl md:text-4xl font-black text-slate-950 uppercase tracking-tighter">
             {currentPageName}<span className="text-orange-600">.</span>
           </h2>
+          <div className="flex items-center gap-4">
+            <NotificationBell />
+          </div>
         </header>
         {children}
       </main>

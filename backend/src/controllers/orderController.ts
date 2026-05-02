@@ -84,6 +84,16 @@ export const createOrder = async (req: AuthRequest, res: Response) => {
 
     await order.save();
 
+    // Trigger Notification & Telegram
+    try {
+      const { createAndBroadcastNotification, sendOrderTelegramNotification } = await import('../services/notificationService');
+      const msg = `🎉 New Order Placed!\n\nOrder ID: ${order._id}\nTotal: ${total} ETB\nDelivery: ${deliveryOption}\nStatus: Pending`;
+      await createAndBroadcastNotification('order', `New Order Placed: ${total} ETB`, { orderId: order._id });
+      await sendOrderTelegramNotification(msg);
+    } catch (notifErr) {
+      console.error('Notification error:', notifErr);
+    }
+
     res.status(201).json({
       success: true,
       data: order,
