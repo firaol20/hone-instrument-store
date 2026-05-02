@@ -110,7 +110,7 @@ export default function OrderDetailPage() {
       </div>
       <h2 className="text-2xl font-black text-slate-900 uppercase italic tracking-tighter mb-2">Registry Error.</h2>
       <p className="text-slate-500 text-sm font-medium mb-8 max-w-md">{error || 'Order not found in system database.'}</p>
-      <button 
+      <button
         onClick={() => router.push('/admin/orders')}
         className="px-8 py-3 bg-slate-950 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-orange-600 transition-all shadow-xl shadow-slate-200"
       >
@@ -121,12 +121,12 @@ export default function OrderDetailPage() {
 
   return (
     <div className="space-y-8 pb-20 max-w-7xl mx-auto">
-      {/* Navigation Header */}
+      {/* Navigation Header - Unchanged */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden">
         <div className="absolute top-0 right-0 w-32 h-32 -mr-16 -mt-16 rounded-full bg-slate-50 z-0" />
-        
+
         <div className="relative z-10 flex flex-col gap-1">
-          <button 
+          <button
             onClick={() => router.push('/admin/orders')}
             className="flex items-center gap-2 text-slate-400 hover:text-orange-600 transition-colors text-[10px] font-black uppercase tracking-widest mb-2"
           >
@@ -147,7 +147,7 @@ export default function OrderDetailPage() {
         </div>
 
         <div className="relative z-10 flex gap-3">
-          <button 
+          <button
             onClick={() => window.print()}
             className="p-4 bg-slate-50 text-slate-400 hover:text-slate-950 hover:bg-white border border-slate-100 rounded-2xl transition-all shadow-sm"
           >
@@ -156,10 +156,12 @@ export default function OrderDetailPage() {
         </div>
       </div>
 
+      {/* Main Grid - Improved Desktop Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Order Items - Wide on Desktop */}
-        <div className="lg:col-span-2 space-y-8 lg:order-1">
-          {/* Order Items */}
+
+        {/* ORDER ITEMS SECTION - Left Column (Desktop) / First on Mobile */}
+        <div className="lg:col-span-2 space-y-8">
+          {/* Order Items Card */}
           <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
             <div className="p-8 border-b border-slate-50 flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -238,7 +240,7 @@ export default function OrderDetailPage() {
             </div>
           </div>
 
-          {/* Delivery Note */}
+          {/* Delivery Note - Unchanged */}
           {order.notes && (
             <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-4">
               <div className="flex items-center gap-3">
@@ -254,12 +256,13 @@ export default function OrderDetailPage() {
           )}
         </div>
 
-        {/* Sidebar Components - Right on Desktop */}
-        <div className="space-y-8 lg:col-span-1 lg:order-2">
-          {/* Status Management */}
+        {/* RIGHT SIDEBAR - Desktop Right Column / Mobile Below Items */}
+        <div className="space-y-8 lg:col-span-1">
+
+          {/* Status Management Card - Unchanged */}
           <div className="bg-slate-950 p-8 rounded-[2.5rem] shadow-2xl shadow-slate-200 text-white space-y-6 relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 -mr-16 -mt-16 rounded-full group-hover:scale-150 transition-transform duration-700" />
-            
+
             <div className="relative z-10 flex items-center gap-3">
               <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
               <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Order Management</h3>
@@ -279,11 +282,10 @@ export default function OrderDetailPage() {
                     key={status.id}
                     disabled={isUpdating || order.status === status.id}
                     onClick={() => handleStatusUpdate(status.id)}
-                    className={`flex items-center justify-between p-4 rounded-2xl transition-all font-black uppercase text-[10px] tracking-widest ${
-                      order.status === status.id 
-                        ? `bg-orange-600 text-white shadow-lg shadow-orange-950/20` 
+                    className={`flex items-center justify-between p-4 rounded-2xl transition-all font-black uppercase text-[10px] tracking-widest ${order.status === status.id
+                        ? `bg-orange-600 text-white shadow-lg shadow-orange-950/20`
                         : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center gap-3">
                       {status.icon}
@@ -294,7 +296,7 @@ export default function OrderDetailPage() {
                 ))}
               </div>
             </div>
-            
+
             {isUpdating && (
               <div className="flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-orange-500">
                 <Loader2 className="animate-spin" size={14} />
@@ -303,10 +305,10 @@ export default function OrderDetailPage() {
             )}
           </div>
 
-          {/* Customer Information */}
+          {/* Customer Profiling Card - Unchanged */}
           <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-6">
             <h3 className="font-black text-slate-950 uppercase italic tracking-tight text-lg">Customer Profiling.</h3>
-            
+
             <div className="space-y-4">
               <div className="flex items-center gap-4 group">
                 <div className="w-12 h-12 bg-slate-50 text-slate-400 rounded-2xl flex items-center justify-center group-hover:bg-orange-50 group-hover:text-orange-600 transition-all border border-slate-100">
@@ -339,38 +341,71 @@ export default function OrderDetailPage() {
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Logistics Destination - Wide on Desktop, appears below items */}
-        <div className="lg:col-span-2 lg:order-3">
-          <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-6">
-            <h3 className="font-black text-slate-950 uppercase italic tracking-tight text-lg">Logistics Destination.</h3>
-            
-            <div className="p-6 bg-slate-50 rounded-3xl space-y-4">
-              <div className="flex items-start gap-3">
-                <MapPin className="text-orange-600 mt-1 flex-shrink-0" size={18} />
-                <div className="text-sm font-medium text-slate-600 leading-relaxed italic">
-                  {order.address?.city}, {order.address?.street}<br />
-                  {order.address?.apartment && `Apt/Suite: ${order.address.apartment}`}
+          {/* LOGISTICS DESTINATION - DESKTOP VERSION (Hidden on Mobile) */}
+          <div className="hidden lg:block">
+            <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-6">
+              <h3 className="font-black text-slate-950 uppercase italic tracking-tight text-lg">Logistics Destination.</h3>
+
+              <div className="p-6 bg-slate-50 rounded-3xl space-y-4">
+                <div className="flex items-start gap-3">
+                  <MapPin className="text-orange-600 mt-1 flex-shrink-0" size={18} />
+                  <div className="text-sm font-medium text-slate-600 leading-relaxed italic">
+                    {order.address?.city}, {order.address?.street}<br />
+                    {order.address?.apartment && `Apt/Suite: ${order.address.apartment}`}
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                  <Truck size={14} />
+                  {order.deliveryOption.replace('_', ' ')} Delivery
                 </div>
               </div>
-              
-              <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                <Truck size={14} />
-                {order.deliveryOption.replace('_', ' ')} Delivery
+
+              {order.address?.coordinates && (
+                <a
+                  href={`https://www.google.com/maps?q=${order.address.coordinates.lat},${order.address.coordinates.lng}`}
+                  target="_blank"
+                  className="w-full flex items-center justify-center gap-3 py-4 bg-slate-50 text-slate-950 font-black uppercase tracking-widest rounded-2xl border border-slate-100 hover:bg-slate-950 hover:text-white transition-all text-[10px] group shadow-sm"
+                >
+                  Open Geolocation Hub <ExternalLink size={14} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* LOGISTICS DESTINATION - MOBILE VERSION (Hidden on Desktop) */}
+      {/* This maintains exact original mobile order: appears after the main grid */}
+      <div className="block lg:hidden">
+        <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-6">
+          <h3 className="font-black text-slate-950 uppercase italic tracking-tight text-lg">Logistics Destination.</h3>
+
+          <div className="p-6 bg-slate-50 rounded-3xl space-y-4">
+            <div className="flex items-start gap-3">
+              <MapPin className="text-orange-600 mt-1 flex-shrink-0" size={18} />
+              <div className="text-sm font-medium text-slate-600 leading-relaxed italic">
+                {order.address?.city}, {order.address?.street}<br />
+                {order.address?.apartment && `Apt/Suite: ${order.address.apartment}`}
               </div>
             </div>
 
-            {order.address?.coordinates && (
-              <a 
-                href={`https://www.google.com/maps?q=${order.address.coordinates.lat},${order.address.coordinates.lng}`}
-                target="_blank"
-                className="w-full flex items-center justify-center gap-3 py-4 bg-slate-50 text-slate-950 font-black uppercase tracking-widest rounded-2xl border border-slate-100 hover:bg-slate-950 hover:text-white transition-all text-[10px] group shadow-sm"
-              >
-                Open Geolocation Hub <ExternalLink size={14} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-              </a>
-            )}
+            <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400">
+              <Truck size={14} />
+              {order.deliveryOption.replace('_', ' ')} Delivery
+            </div>
           </div>
+
+          {order.address?.coordinates && (
+            <a
+              href={`https://www.google.com/maps?q=${order.address.coordinates.lat},${order.address.coordinates.lng}`}
+              target="_blank"
+              className="w-full flex items-center justify-center gap-3 py-4 bg-slate-50 text-slate-950 font-black uppercase tracking-widest rounded-2xl border border-slate-100 hover:bg-slate-950 hover:text-white transition-all text-[10px] group shadow-sm"
+            >
+              Open Geolocation Hub <ExternalLink size={14} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+            </a>
+          )}
         </div>
       </div>
     </div>
