@@ -741,6 +741,55 @@ export async function setWebhook(req: Request, res: Response) {
   }
 }
 
+export async function setOrderWebhook(req: Request, res: Response) {
+  try {
+    const orderBotToken = process.env.TELEGRAM_ORDER_BOT_TOKEN;
+    if (!orderBotToken) {
+      return res.status(400).json({ success: false, error: 'TELEGRAM_ORDER_BOT_TOKEN is not configured' });
+    }
+    const baseUrl = process.env.API_PUBLIC_URL || process.env.API_URL || 'https://your-production-url.com';
+    const webhookUrl = `${baseUrl}/api/telegram/order-webhook`;
+    const response = await axios.post(`${TELEGRAM_API}/bot${orderBotToken}/setWebhook`, { url: webhookUrl });
+    res.json({ success: true, message: 'Order Webhook set successfully', url: webhookUrl, response: response.data });
+  } catch (error) {
+    console.error('Set order webhook error:', error);
+    res.status(500).json({ success: false, error: 'Failed to set order webhook' });
+  }
+}
+
+export async function handleOrderWebhook(req: Request, res: Response) {
+  try {
+    const update: TelegramUpdate = req.body;
+    
+    if (update.message) {
+      const { message } = update;
+      const chatId = message.chat.id;
+      const text = message.text || '';
+      const orderBotToken = process.env.TELEGRAM_ORDER_BOT_TOKEN;
+
+      if (!orderBotToken) {
+        return res.json({ ok: true });
+      }
+
+      if (text === '/start') {
+        try {
+          await axios.post(`${TELEGRAM_API}/bot${orderBotToken}/sendMessage`, {
+            chat_id: chatId,
+            text: 'welcome to Hone Order Bot , this is where your order appears and to complete the order go to the website. Hone Order Bot is for tracking purposes only',
+            parse_mode: 'HTML',
+          });
+        } catch (err) {
+          console.error('Error sending order bot welcome message:', err);
+        }
+      }
+    }
+    res.json({ ok: true });
+  } catch (error) {
+    console.error('Order webhook processing error:', error);
+    res.status(500).json({ ok: false, error: 'Webhook processing failed' });
+  }
+}
+
 export async function linkTelegramAccount(req: AuthRequest, res: Response) {
   try {
     const { telegramId, telegramUsername } = req.body;
