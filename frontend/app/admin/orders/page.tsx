@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   ShoppingBag,
   Search,
@@ -25,6 +26,7 @@ import EmptyState from '@/components/admin/EmptyState';
 import ErrorState from '@/components/admin/ErrorState';
 
 export default function OrdersPage() {
+  const router = useRouter();
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
