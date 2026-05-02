@@ -55,7 +55,7 @@ export const getDashboard = async (req: AuthRequest, res: Response) => {
 
     const recentOrders = await Order.find()
       .sort({ createdAt: -1 })
-      .limit(5)
+      .limit(6)
       .populate('customerId', 'name')
       .exec();
 

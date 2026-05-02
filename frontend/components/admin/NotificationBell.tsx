@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Bell } from 'lucide-react';
+import { Bell, ChevronDown, ChevronUp, ChevronRight } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@radix-ui/react-popover';
 import { toast } from 'sonner';
 import api from '@/lib/api';
@@ -21,6 +21,7 @@ export default function NotificationBell() {
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -124,28 +125,52 @@ export default function NotificationBell() {
             </div>
           ) : (
             <div className="flex flex-col divide-y divide-slate-50">
-              {notifications.map((notification) => (
-                <div 
-                  key={notification._id} 
-                  className={`p-4 transition-colors hover:bg-slate-50 flex gap-3 cursor-pointer ${!notification.isRead ? 'bg-orange-50/30' : ''}`}
-                  onClick={() => {
-                    setIsOpen(false);
-                    if (notification.data?.orderId) {
-                      router.push(`/admin/orders/${notification.data.orderId}`);
-                    }
-                  }}
-                >
-                  <div className={`mt-1 flex-shrink-0 w-2 h-2 rounded-full ${!notification.isRead ? 'bg-orange-500' : 'bg-transparent'}`} />
-                  <div className="flex-1 space-y-1">
-                    <p className={`text-sm ${!notification.isRead ? 'text-slate-900 font-bold' : 'text-slate-600 font-medium'}`}>
-                      {notification.message}
-                    </p>
-                    <p className="text-xs text-slate-400 font-medium">
-                      {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
-                    </p>
+              {notifications.map((notification) => {
+                const isExpanded = expandedId === notification._id;
+                return (
+                  <div 
+                    key={notification._id} 
+                    className={`p-4 transition-colors hover:bg-slate-50 flex gap-3 cursor-pointer ${!notification.isRead ? 'bg-orange-50/30' : ''}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setExpandedId(isExpanded ? null : notification._id);
+                    }}
+                  >
+                    <div className={`mt-1 flex-shrink-0 w-2 h-2 rounded-full ${!notification.isRead ? 'bg-orange-500' : 'bg-transparent'}`} />
+                    <div className="flex-1 space-y-1">
+                      <div className="flex justify-between items-start">
+                        <p className={`text-sm ${!notification.isRead ? 'text-slate-900 font-bold' : 'text-slate-600 font-medium'}`}>
+                          {notification.message}
+                        </p>
+                        {isExpanded ? <ChevronUp size={16} className="text-slate-400 flex-shrink-0 ml-2" /> : <ChevronDown size={16} className="text-slate-400 flex-shrink-0 ml-2" />}
+                      </div>
+                      <p className="text-xs text-slate-400 font-medium">
+                        {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
+                      </p>
+                      
+                      {isExpanded && (
+                        <div className="mt-3 pt-3 border-t border-slate-100 flex flex-col gap-2">
+                          <p className="text-xs text-slate-600">
+                            Order ID: <span className="font-mono">{notification.data?.orderId || 'Unknown'}</span>
+                          </p>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setIsOpen(false);
+                              if (notification.data?.orderId) {
+                                router.push(`/admin/orders/${notification.data.orderId}`);
+                              }
+                            }}
+                            className="flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-orange-600 mt-1 hover:text-orange-700"
+                          >
+                            View Order & Update Status <ChevronRight size={12} />
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
