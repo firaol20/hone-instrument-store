@@ -254,6 +254,38 @@ export default function OrderDetailPage() {
               </div>
             </div>
           )}
+
+          {/* LOGISTICS DESTINATION - DESKTOP VERSION */}
+          <div className="hidden lg:block">
+            <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-6">
+              <h3 className="font-black text-slate-950 uppercase italic tracking-tight text-lg">Logistics Destination.</h3>
+
+              <div className="p-6 bg-slate-50 rounded-3xl space-y-4">
+                <div className="flex items-start gap-3">
+                  <MapPin className="text-orange-600 mt-1 flex-shrink-0" size={18} />
+                  <div className="text-sm font-medium text-slate-600 leading-relaxed italic">
+                    {order.address?.city}, {order.address?.street}<br />
+                    {order.address?.apartment && `Apt/Suite: ${order.address.apartment}`}
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                  <Truck size={14} />
+                  {order.deliveryOption.replace('_', ' ')} Delivery
+                </div>
+              </div>
+
+              {order.address?.coordinates && (
+                <a
+                  href={`https://www.google.com/maps?q=${order.address.coordinates.lat},${order.address.coordinates.lng}`}
+                  target="_blank"
+                  className="w-full flex items-center justify-center gap-3 py-4 bg-slate-50 text-slate-950 font-black uppercase tracking-widest rounded-2xl border border-slate-100 hover:bg-slate-950 hover:text-white transition-all text-[10px] group shadow-sm"
+                >
+                  Open Geolocation Hub <ExternalLink size={14} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                </a>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* RIGHT SIDEBAR - Desktop Right Column / Mobile Below Items */}
@@ -342,35 +374,6 @@ export default function OrderDetailPage() {
             </div>
           </div>
 
-          {/* LOGISTICS DESTINATION - DESKTOP VERSION (Hidden on Mobile) */}
-          <div className="hidden lg:block">
-            <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-6">
-              <h3 className="font-black text-slate-950 uppercase italic tracking-tight text-lg">Logistics Destination.</h3>
-
-              <div className="p-6 bg-slate-50 rounded-3xl space-y-4">
-                <div className="flex items-start gap-3">
-                  <MapPin className="text-orange-600 mt-1 flex-shrink-0" size={18} />
-                  <div className="text-sm font-medium text-slate-600 leading-relaxed italic">
-                    {order.address?.city}, {order.address?.street}<br />
-                    {order.address?.apartment && `Apt/Suite: ${order.address.apartment}`}
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                  <Truck size={14} />
-                  {order.deliveryOption.replace('_', ' ')} Delivery
-                </div>
-              </div>
-
-              {order.address?.coordinates && (
-                <a
-                  href={`https://www.google.com/maps?q=${order.address.coordinates.lat},${order.address.coordinates.lng}`}
-                  target="_blank"
-                  className="w-full flex items-center justify-center gap-3 py-4 bg-slate-50 text-slate-950 font-black uppercase tracking-widest rounded-2xl border border-slate-100 hover:bg-slate-950 hover:text-white transition-all text-[10px] group shadow-sm"
-                >
-                  Open Geolocation Hub <ExternalLink size={14} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                </a>
-              )}
             </div>
           </div>
         </div>
