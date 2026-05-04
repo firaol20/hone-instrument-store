@@ -1,13 +1,17 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IAddress {
-  type: 'home' | 'work' | 'other';
+  type: string;
   street: string;
   city: string;
   state: string;
   zip: string;
   country: string;
   isDefault: boolean;
+  coordinates?: {
+    lat: number;
+    lng: number;
+  };
 }
 
 export interface ICustomer extends Document {
@@ -22,7 +26,6 @@ export interface ICustomer extends Document {
 const addressSchema = new Schema<IAddress>({
   type: {
     type: String,
-    enum: ['home', 'work', 'other'],
     default: 'home',
   },
   street: {
@@ -48,6 +51,10 @@ const addressSchema = new Schema<IAddress>({
   isDefault: {
     type: Boolean,
     default: false,
+  },
+  coordinates: {
+    lat: Number,
+    lng: Number,
   },
 });
 

@@ -60,6 +60,7 @@ export const authAPI = {
   googleAuth: (data: { idToken: string }) =>
     api.post('/auth/google', data),
   logout: () => api.post('/auth/logout'),
+  changePassword: (data: any) => api.post('/auth/change-password', data),
   refreshToken: (refreshToken: string) =>
     api.post('/auth/refresh', { refreshToken }),
   forgotPassword: (email: string) => 
@@ -101,6 +102,8 @@ export const customersAPI = {
   addAddress: (data: any) => api.post('/customers/addresses', data),
   updateAddress: (id: string, data: any) =>
     api.put(`/customers/addresses/${id}`, data),
+  deleteAddress: (id: string) =>
+    api.delete(`/customers/addresses/${id}`),
   getAddresses: () => api.get('/customers/addresses'),
 };
 

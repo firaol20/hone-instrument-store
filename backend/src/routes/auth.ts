@@ -56,12 +56,19 @@ const resetPasswordValidation = [
   validate
 ];
 
+const changePasswordValidation = [
+  body('currentPassword').notEmpty().withMessage('Current password is required'),
+  body('newPassword').isLength({ min: 6 }).withMessage('New password must be at least 6 characters long'),
+  validate
+];
+
 // Routes
 router.post('/signup', signupLimiter, signupValidation, authController.signup);
 router.post('/login', loginLimiter, loginValidation, authController.login);
 router.post('/google', loginLimiter, authController.googleAuth);
 router.post('/refresh', authController.refreshToken);
 router.post('/logout', authenticate, authController.logout);
+router.post('/change-password', authenticate, changePasswordValidation, authController.changePassword);
 router.post('/forgot-password', passwordResetLimiter, forgotPasswordValidation, authController.forgotPassword);
 router.post('/reset-password/:token', passwordResetLimiter, resetPasswordValidation, authController.resetPassword);
 

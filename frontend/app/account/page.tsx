@@ -30,16 +30,26 @@ export default function AccountPage() {
   const [loading, setLoading] = useState(true);
   const [isEditingPhone, setIsEditingPhone] = useState(false);
   const [phoneInput, setPhoneInput] = useState('');
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [nameInput, setNameInput] = useState('');
   const [isAddingAddress, setIsAddingAddress] = useState(false);
+  const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
   const [addressForm, setAddressForm] = useState({
     type: 'Home',
     street: '',
     city: 'Addis Ababa',
     state: 'AA',
     zip: '',
+    country: 'Ethiopia',
     isDefault: false,
     coordinates: null as { lat: number, lng: number } | null
   });
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('authToken');
@@ -78,6 +88,17 @@ export default function AccountPage() {
     }
   };
 
+  const handleUpdateName = async () => {
+    try {
+      await customersAPI.updateProfile({ name: nameInput });
+      setCustomer({ ...customer, name: nameInput });
+      setIsEditingName(false);
+      toast.success('Name updated');
+    } catch (error) {
+      toast.error('Failed to update name');
+    }
+  };
+
   const handleAddAddress = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -87,18 +108,92 @@ export default function AccountPage() {
         addresses: [...(customer.addresses || []), res.data.data]
       });
       setIsAddingAddress(false);
-      setAddressForm({
-        type: 'Home',
-        street: '',
-        city: 'Addis Ababa',
-        state: 'AA',
-        zip: '',
-        isDefault: false,
-        coordinates: null
-      });
+      resetAddressForm();
       toast.success('Address added successfully');
     } catch (error) {
       toast.error('Failed to add address');
+    }
+  };
+
+  const handleEditAddress = (address: any) => {
+    setEditingAddressId(address._id);
+    setAddressForm({
+      type: address.type,
+      street: address.street,
+      city: address.city,
+      state: address.state,
+      zip: address.zip,
+      country: address.country || 'Ethiopia',
+      isDefault: address.isDefault,
+      coordinates: address.coordinates || null
+    });
+    setIsAddingAddress(true);
+  };
+
+  const handleUpdateAddress = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingAddressId) return;
+    try {
+      const res = await customersAPI.updateAddress(editingAddressId, addressForm);
+      setCustomer({
+        ...customer,
+        addresses: customer.addresses.map((a: any) => a._id === editingAddressId ? res.data.data : a)
+      });
+      setIsAddingAddress(false);
+      setEditingAddressId(null);
+      resetAddressForm();
+      toast.success('Address updated successfully');
+    } catch (error) {
+      toast.error('Failed to update address');
+    }
+  };
+
+  const handleDeleteAddress = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this address?')) return;
+    try {
+      await customersAPI.deleteAddress(id);
+      setCustomer({
+        ...customer,
+        addresses: customer.addresses.filter((a: any) => a._id !== id)
+      });
+      toast.success('Address deleted');
+    } catch (error) {
+      toast.error('Failed to delete address');
+    }
+  };
+
+  const resetAddressForm = () => {
+    setAddressForm({
+      type: 'Home',
+      street: '',
+      city: 'Addis Ababa',
+      state: 'AA',
+      zip: '',
+      country: 'Ethiopia',
+      isDefault: false,
+      coordinates: null
+    });
+    setEditingAddressId(null);
+  };
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      toast.error('Passwords do not match');
+      return;
+    }
+    try {
+      setIsChangingPassword(true);
+      await authAPI.changePassword({
+        currentPassword: passwordForm.currentPassword,
+        newPassword: passwordForm.newPassword
+      });
+      setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      toast.success('Password changed successfully');
+    } catch (error: any) {
+      toast.error(error.response?.data?.error || 'Failed to change password');
+    } finally {
+      setIsChangingPassword(false);
     }
   };
 
@@ -175,6 +270,9 @@ export default function AccountPage() {
                 Shipping
               </TabsTrigger>
               <TabsTrigger value="profile" className="data-[state=active]:border-orange-600 data-[state=active]:text-slate-950 border-b-2 border-transparent rounded-none px-0 pb-4 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                Profile
+              </TabsTrigger>
+              <TabsTrigger value="security" className="data-[state=active]:border-orange-600 data-[state=active]:text-slate-950 border-b-2 border-transparent rounded-none px-0 pb-4 text-[10px] font-black uppercase tracking-widest text-slate-400">
                 Security
               </TabsTrigger>
             </TabsList>
@@ -243,11 +341,11 @@ export default function AccountPage() {
                 ) : (
                   <Card className="border-none shadow-xl rounded-[2rem] md:col-span-2 p-6 bg-white">
                     <div className="flex justify-between items-center mb-6">
-                      <h3 className="text-[10px] font-black uppercase tracking-widest text-orange-600">New Shipping Location</h3>
-                      <button onClick={() => setIsAddingAddress(false)} className="text-slate-300 hover:text-slate-900"><X className="w-4 h-4" /></button>
+                      <h3 className="text-[10px] font-black uppercase tracking-widest text-orange-600">{editingAddressId ? 'Edit Shipping Location' : 'New Shipping Location'}</h3>
+                      <button onClick={resetAddressForm} className="text-slate-300 hover:text-slate-900"><X className="w-4 h-4" /></button>
                     </div>
 
-                    <form onSubmit={handleAddAddress} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <form onSubmit={editingAddressId ? handleUpdateAddress : handleAddAddress} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                       <div className="space-y-4">
                         <div className="grid grid-cols-2 gap-4">
                           <div>
@@ -260,6 +358,7 @@ export default function AccountPage() {
                               <option>Home</option>
                               <option>Office</option>
                               <option>Studio</option>
+                              <option>Other</option>
                             </select>
                           </div>
                           <div>
@@ -271,13 +370,26 @@ export default function AccountPage() {
                           <label className="text-[9px] font-black uppercase text-slate-400 mb-1 block">Street Address</label>
                           <Input value={addressForm.street} onChange={(e) => setAddressForm({ ...addressForm, street: e.target.value })} placeholder="e.g. Bole, Churchill Rd" className="h-9 border-none bg-slate-50 text-xs font-bold" />
                         </div>
-                        <Button type="submit" className="w-full bg-slate-950 hover:bg-orange-600 h-10 rounded-xl text-[10px] font-black uppercase tracking-widest">Save Address</Button>
+                        <div className="flex items-center gap-2 mb-2">
+                           <input 
+                             type="checkbox" 
+                             id="isDefault" 
+                             checked={addressForm.isDefault} 
+                             onChange={(e) => setAddressForm({...addressForm, isDefault: e.target.checked})}
+                             className="rounded border-slate-300 text-orange-600 focus:ring-orange-500"
+                           />
+                           <label htmlFor="isDefault" className="text-[10px] font-bold text-slate-600 uppercase">Set as default address</label>
+                        </div>
+                        <Button type="submit" className="w-full bg-slate-950 hover:bg-orange-600 h-10 rounded-xl text-[10px] font-black uppercase tracking-widest">{editingAddressId ? 'Update Address' : 'Save Address'}</Button>
                       </div>
 
                       <div className="space-y-2">
                         <label className="text-[9px] font-black uppercase text-slate-400 mb-1 block">Select from Map</label>
                         <div className="h-40 bg-slate-50 rounded-2xl overflow-hidden border border-slate-100">
-                          <LocationPicker onLocationSelect={(coords) => setAddressForm({ ...addressForm, coordinates: coords })} />
+                          <LocationPicker 
+                            onLocationSelect={(coords) => setAddressForm({ ...addressForm, coordinates: coords })} 
+                            initialLocation={addressForm.coordinates}
+                          />
                         </div>
                         <p className="text-[8px] font-bold text-slate-400 uppercase text-center mt-2 leading-none">Use pin 📍 to pin exact location</p>
                       </div>
@@ -297,12 +409,12 @@ export default function AccountPage() {
                       <h3 className="font-black uppercase text-xs tracking-tight mb-2">{address.type}</h3>
                       <p className="text-[11px] text-slate-500 font-medium leading-relaxed">
                         {address.street}<br />
-                        {address.city}, {address.state} {address.zip}
+                        {address.city}, {address.state}
                       </p>
                     </div>
                     <div className="flex gap-4 border-t border-slate-50 pt-4 mt-4">
-                      <button className="text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-950">Edit</button>
-                      <button className="text-[9px] font-black uppercase tracking-widest text-red-400 hover:text-red-600">Delete</button>
+                      <button onClick={() => handleEditAddress(address)} className="text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-950">Edit</button>
+                      <button onClick={() => handleDeleteAddress(address._id)} className="text-[9px] font-black uppercase tracking-widest text-red-400 hover:text-red-600">Delete</button>
                     </div>
                   </Card>
                 ))}
@@ -314,16 +426,31 @@ export default function AccountPage() {
               <Card className="border-none shadow-sm rounded-[2rem] max-w-2xl">
                 <CardHeader className="p-8 pb-4">
                   <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2">
-                    <Settings className="w-3 h-3" /> Account Information
+                    <User className="w-3 h-3" /> Basic Profile
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-8 pt-0 space-y-8">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
                       <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 block mb-2">Full Name</label>
-                      <div className="flex justify-between items-center group">
-                        <p className="text-sm font-bold text-slate-900">{customer.name}</p>
-                      </div>
+                      {isEditingName ? (
+                        <div className="flex gap-2">
+                          <Input
+                            value={nameInput}
+                            onChange={(e) => setNameInput(e.target.value)}
+                            className="h-8 text-xs font-bold bg-slate-50 border-none"
+                          />
+                          <Button onClick={handleUpdateName} size="sm" className="h-8 bg-orange-600 hover:bg-orange-700 px-2"><Save className="w-3 h-3" /></Button>
+                          <Button onClick={() => setIsEditingName(false)} variant="ghost" size="sm" className="h-8 px-2"><X className="w-3 h-3" /></Button>
+                        </div>
+                      ) : (
+                        <div className="flex justify-between items-center group">
+                          <p className="text-sm font-bold text-slate-900">{customer.name}</p>
+                          <button onClick={() => { setIsEditingName(true); setNameInput(customer.name); }} className="text-[9px] font-black uppercase text-orange-600">
+                            Edit
+                          </button>
+                        </div>
+                      )}
                     </div>
                     <div>
                       <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 block mb-2">Contact Number</label>
@@ -333,7 +460,7 @@ export default function AccountPage() {
                             value={phoneInput}
                             onChange={(e) => setPhoneInput(e.target.value)}
                             className="h-8 text-xs font-bold bg-slate-50 border-none"
-                            placeholder="Enter phone number (e.g. +251...)"
+                            placeholder="+251..."
                           />
                           <Button onClick={handleUpdatePhone} size="sm" className="h-8 bg-orange-600 hover:bg-orange-700 px-2"><Save className="w-3 h-3" /></Button>
                           <Button onClick={() => setIsEditingPhone(false)} variant="ghost" size="sm" className="h-8 px-2"><X className="w-3 h-3" /></Button>
@@ -341,9 +468,9 @@ export default function AccountPage() {
                       ) : (
                         <div className="flex justify-between items-center group">
                           <p className={`text-sm font-bold ${customer?.phone ? 'text-slate-900' : 'text-slate-400 italic'}`}>
-                            {customer?.phone || 'No contact number added'}
+                            {customer?.phone || 'No contact number'}
                           </p>
-                          <button onClick={() => { setIsEditingPhone(true); setPhoneInput(customer?.phone || ''); }} className="text-[9px] font-black uppercase text-orange-600 transition-opacity">
+                          <button onClick={() => { setIsEditingPhone(true); setPhoneInput(customer?.phone || ''); }} className="text-[9px] font-black uppercase text-orange-600">
                             Update
                           </button>
                         </div>
@@ -354,6 +481,61 @@ export default function AccountPage() {
                       <p className="text-xs md:text-sm font-bold text-slate-900 break-all">{customer.userId?.email}</p>
                     </div>
                   </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Security Tab */}
+            <TabsContent value="security">
+              <Card className="border-none shadow-sm rounded-[2rem] max-w-2xl">
+                <CardHeader className="p-8 pb-4">
+                  <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2">
+                    <Settings className="w-3 h-3" /> Change Password
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-8 pt-0">
+                  <form onSubmit={handleChangePassword} className="space-y-4">
+                    <div className="space-y-2">
+                      <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 block">Current Password</label>
+                      <Input
+                        type="password"
+                        value={passwordForm.currentPassword}
+                        onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
+                        className="h-10 text-xs font-bold bg-slate-50 border-none"
+                        required
+                      />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 block">New Password</label>
+                        <Input
+                          type="password"
+                          value={passwordForm.newPassword}
+                          onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
+                          className="h-10 text-xs font-bold bg-slate-50 border-none"
+                          required
+                          minLength={6}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 block">Confirm New Password</label>
+                        <Input
+                          type="password"
+                          value={passwordForm.confirmPassword}
+                          onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
+                          className="h-10 text-xs font-bold bg-slate-50 border-none"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <Button
+                      type="submit"
+                      disabled={isChangingPassword}
+                      className="w-full bg-slate-950 hover:bg-orange-600 h-10 rounded-xl text-[10px] font-black uppercase tracking-widest mt-4"
+                    >
+                      {isChangingPassword ? 'Processing...' : 'Update Password'}
+                    </Button>
+                  </form>
                 </CardContent>
               </Card>
             </TabsContent>

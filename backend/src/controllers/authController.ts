@@ -279,3 +279,25 @@ export const resetPassword = asyncHandler(async (req: AuthRequest, res: Response
 
   res.status(200).json({ success: true, data: 'Password updated successfully' });
 });
+export const changePassword = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const { currentPassword, newPassword } = req.body;
+
+  if (!currentPassword || !newPassword) {
+    throw new ApiError(400, 'Current and new password are required');
+  }
+
+  const user = await User.findById(req.userId).select('+password');
+  if (!user) {
+    throw new ApiError(404, 'User not found');
+  }
+
+  const isPasswordValid = await user.comparePassword(currentPassword);
+  if (!isPasswordValid) {
+    throw new ApiError(401, 'Invalid current password');
+  }
+
+  user.password = newPassword;
+  await user.save();
+
+  res.status(200).json({ success: true, data: 'Password changed successfully' });
+});
