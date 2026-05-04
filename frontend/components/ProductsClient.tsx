@@ -5,7 +5,7 @@ import { Header } from '@/components/Header';
 import { ProductCard } from '@/components/ProductCard';
 import { FilterSidebar } from '@/components/FilterSidebar';
 import { useCartStore } from '@/lib/cart-store';
-import { productsAPI } from '@/lib/api';
+import { productsAPI, categoriesAPI } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ShoppingBag } from 'lucide-react';
@@ -25,6 +25,16 @@ function ProductsContent({ initialProducts, initialCategories }: { initialProduc
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const { addItem } = useCartStore();
   const isFirstRender = useRef(true);
+
+  // Always re-fetch categories fresh on mount so newly added ones (via Telegram) appear immediately
+  useEffect(() => {
+    categoriesAPI.getAll()
+      .then(res => {
+        const fresh = res.data?.data || res.data || [];
+        if (fresh.length > 0) setCategories(fresh);
+      })
+      .catch(err => console.error('Failed to refresh categories:', err));
+  }, []);
 
   const loadProducts = useCallback(async () => {
     setLoading(true);

@@ -15,7 +15,7 @@ async function getInitialData(searchParams: { category?: string, search?: string
   try {
     const [prodRes, catRes] = await Promise.all([
       fetch(productsUrl, { next: { revalidate: 60 } }),
-      fetch(`${apiUrl}/api/categories`, { next: { revalidate: 3600 } })
+      fetch(`${apiUrl}/api/categories`, { next: { revalidate: 60 } })
     ]);
 
     const productsData = prodRes.ok ? await prodRes.json() : { data: [] };
