@@ -120,7 +120,6 @@ export default function ProductDetailClient() {
 
   const handleBuyNow = async () => {
     if (!isAuthenticated) {
-      toast.error("Please log in to continue");
       router.push(`/login?redirect=/products/${slug}`);
       return;
     }
@@ -148,7 +147,7 @@ export default function ProductDetailClient() {
 
   const handleRateQuick = async (val: number) => {
     if (!isAuthenticated) {
-      toast.error('Please log in to rate this product', { description: 'Sign in to save your instrument ratings.' });
+      router.push(`/login?redirect=/products/${slug}`);
       return;
     }
     try {

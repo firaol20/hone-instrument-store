@@ -52,7 +52,7 @@ export function ProductCard({
 
   const handleRate = async (val: number) => {
     if (!isAuthenticated) {
-      toast.error('Please log in to rate this product', { description: 'Sign in to save your instrument ratings.' });
+      router.push(`/login`);
       return;
     }
     try {

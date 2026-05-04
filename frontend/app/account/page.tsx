@@ -61,7 +61,6 @@ export default function AccountPage() {
       setOrders(ordersRes.data.data || []);
     } catch (error) {
       console.error('Failed to load data:', error);
-      toast.error('Session expired. Please log in again.');
       handleLogout();
     } finally {
       setLoading(false);

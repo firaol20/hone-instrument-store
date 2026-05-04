@@ -6,12 +6,15 @@ import { useRatingStore } from '@/lib/rating-store';
 import { toast } from 'sonner';
 import { Loader2, Send } from 'lucide-react';
 
+import { useRouter } from 'next/navigation';
+
 interface RatingFormProps {
   productId: string;
   onSuccess?: () => void;
 }
 
 export default function RatingForm({ productId, onSuccess }: RatingFormProps) {
+  const router = useRouter();
   const [rating, setRatingValue] = useState(0);
   const [review, setReview] = useState('');
   const [loading, setLoading] = useState(false);
@@ -32,7 +35,7 @@ export default function RatingForm({ productId, onSuccess }: RatingFormProps) {
       onSuccess?.();
     } catch (err: any) {
       if (err.response?.status === 401 || err.message === 'Authentication required') {
-        toast.error('Session expired', { description: 'Please log in again to save your rating.' });
+        router.push('/login');
       } else {
         toast.error(err.response?.data?.error || 'Failed to submit rating');
       }
