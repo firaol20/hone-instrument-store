@@ -745,7 +745,28 @@ export async function setWebhook(req: Request, res: Response) {
     const baseUrl = process.env.API_PUBLIC_URL || process.env.API_URL || 'https://your-production-url.com';
     const webhookUrl = `${baseUrl}/api/telegram/webhook`;
     const response = await axios.post(`${TELEGRAM_API}/bot${BOT_TOKEN}/setWebhook`, { url: webhookUrl });
-    res.json({ success: true, message: 'Webhook set successfully', url: webhookUrl, response: response.data });
+
+    // Set bot commands
+    await axios.post(`${TELEGRAM_API}/bot${BOT_TOKEN}/setMyCommands`, {
+      commands: [
+        { command: 'start', description: 'Start the bot and open menu' },
+        { command: 'add_product', description: 'Add a new product (Admin only)' },
+        { command: 'list_products', description: 'View all products' },
+        { command: 'contact', description: 'Contact store owners' }
+      ]
+    });
+
+    const STORE_URL = process.env.STORE_URL || process.env.FRONTEND_URL || 'https://hone-instrument-store-frontend.vercel.app/';
+    // Set Menu Button to Web App
+    await axios.post(`${TELEGRAM_API}/bot${BOT_TOKEN}/setChatMenuButton`, {
+      menu_button: {
+        type: 'web_app',
+        text: 'Store',
+        web_app: { url: STORE_URL }
+      }
+    });
+
+    res.json({ success: true, message: 'Webhook and Menu set successfully', url: webhookUrl, response: response.data });
   } catch (error) {
     console.error('Set webhook error:', error);
     res.status(500).json({ success: false, error: 'Failed to set webhook' });
@@ -761,7 +782,25 @@ export async function setOrderWebhook(req: Request, res: Response) {
     const baseUrl = process.env.API_PUBLIC_URL || process.env.API_URL || 'https://your-production-url.com';
     const webhookUrl = `${baseUrl}/api/telegram/order-webhook`;
     const response = await axios.post(`${TELEGRAM_API}/bot${orderBotToken}/setWebhook`, { url: webhookUrl });
-    res.json({ success: true, message: 'Order Webhook set successfully', url: webhookUrl, response: response.data });
+
+    // Set order bot commands
+    await axios.post(`${TELEGRAM_API}/bot${orderBotToken}/setMyCommands`, {
+      commands: [
+        { command: 'start', description: 'Start the order bot' }
+      ]
+    });
+
+    const STORE_URL = process.env.STORE_URL || process.env.FRONTEND_URL || 'https://hone-instrument-store-frontend.vercel.app/';
+    // Set Menu Button to Web App
+    await axios.post(`${TELEGRAM_API}/bot${orderBotToken}/setChatMenuButton`, {
+      menu_button: {
+        type: 'web_app',
+        text: 'Store',
+        web_app: { url: STORE_URL }
+      }
+    });
+
+    res.json({ success: true, message: 'Order Webhook and Menu set successfully', url: webhookUrl, response: response.data });
   } catch (error) {
     console.error('Set order webhook error:', error);
     res.status(500).json({ success: false, error: 'Failed to set order webhook' });
