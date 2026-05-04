@@ -7,7 +7,7 @@ import { productsAPI } from '@/lib/api';
 import { useCartStore } from '@/lib/cart-store';
 import { useAuthStore } from '@/lib/auth-store';
 import { toast } from 'sonner';
-import { Sparkles, X, Plus, Star, Heart, Grid2X2, LayoutGrid } from 'lucide-react';
+import { Sparkles, X, Plus, Star, Heart, Grid2X2, LayoutGrid, Trophy, Gem, Layers } from 'lucide-react';
 import { addToWishlist, isInWishlist, removeFromWishlistById } from "@/components/WishlistButton";
 import Image from 'next/image';
 import ModernTiltCard from '@/components/TiltCard';
@@ -117,6 +117,63 @@ export default function ComparisonDuoPage() {
     }
   };
 
+  // Best-For tag logic
+  const getBestForTags = (activeProducts: any[]): Record<string, { label: string; icon: React.ReactNode; colors: string }[]> => {
+    if (activeProducts.length < 2) return {};
+
+    const tags: Record<string, { label: string; icon: React.ReactNode; colors: string }[]> = {};
+    const init = (id: string) => { if (!tags[id]) tags[id] = []; };
+
+    // Best Value — lowest price
+    const byPrice = [...activeProducts].sort((a, b) => a.price - b.price);
+    const minPrice = byPrice[0].price;
+    const bestValueProducts = activeProducts.filter(p => p.price === minPrice);
+    bestValueProducts.forEach(p => {
+      init(p._id);
+      tags[p._id].push({
+        label: 'Best Value',
+        icon: <Trophy className="w-3 h-3" />,
+        colors: 'bg-emerald-500 text-white',
+      });
+    });
+
+    // Best Rated — highest average rating
+    const withRating = activeProducts.filter(p => p.rating?.averageRating > 0);
+    if (withRating.length > 0) {
+      const maxRating = Math.max(...withRating.map(p => p.rating.averageRating));
+      const bestRatedProducts = withRating.filter(p => p.rating.averageRating === maxRating);
+      bestRatedProducts.forEach(p => {
+        init(p._id);
+        tags[p._id].push({
+          label: 'Best Rated',
+          icon: <Star className="w-3 h-3 fill-current" />,
+          colors: 'bg-amber-500 text-white',
+        });
+      });
+    }
+
+    // Most Featured — most spec keys defined
+    const specCounts = activeProducts.map(p => ({
+      id: p._id,
+      count: Object.keys(p.specs || {}).filter(k => p.specs[k]).length,
+    }));
+    const maxSpecs = Math.max(...specCounts.map(s => s.count));
+    if (maxSpecs > 0) {
+      specCounts
+        .filter(s => s.count === maxSpecs)
+        .forEach(({ id }) => {
+          init(id);
+          tags[id].push({
+            label: 'Most Featured',
+            icon: <Layers className="w-3 h-3" />,
+            colors: 'bg-violet-500 text-white',
+          });
+        });
+    }
+
+    return tags;
+  };
+
   const renderProductSlot = (product: any, slotIndex: number, options: any[], label: string) => {
     if (!product) {
       return (
@@ -133,10 +190,12 @@ export default function ComparisonDuoPage() {
       );
     }
 
-    // const aiInfo = dynamicData[product._id];
     const activeSlots = mode === 'duo' ? slots.slice(0, 2) : slots;
-    const allPrices = activeSlots.filter(Boolean).map((s: any) => s.price);
+    const activeProducts = activeSlots.filter(Boolean);
+    const allPrices = activeProducts.map((s: any) => s.price);
     const priceDiff = getPriceDiff(product.price, allPrices);
+    const bestForMap = getBestForTags(activeProducts);
+    const myTags = bestForMap[product._id] || [];
 
     return (
       <div key={slotIndex} className="flex-1 bg-white rounded-[2rem] p-3 md:p-6 border border-slate-100 relative shadow-sm">
@@ -161,6 +220,21 @@ export default function ComparisonDuoPage() {
 
         <h2 className="text-sm md:text-xl font-black uppercase tracking-tighter leading-tight mb-1">{product.name}</h2>
         <p className="text-orange-600 font-black text-xs md:text-sm mb-2">ETB {product.price.toLocaleString()}</p>
+
+        {/* Best-For Tags */}
+        {myTags.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mb-3">
+            {myTags.map((tag, i) => (
+              <span
+                key={i}
+                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[8px] font-black uppercase tracking-wider shadow-sm ${tag.colors}`}
+              >
+                {tag.icon}
+                {tag.label}
+              </span>
+            ))}
+          </div>
+        )}
 
         {priceDiff && (
           <div className={`inline-block px-2 py-1 rounded-full text-[8px] font-black uppercase tracking-wider mb-3 ${priceDiff.class}`}>
