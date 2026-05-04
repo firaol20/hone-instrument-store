@@ -528,28 +528,27 @@ function parseChannelCaption(caption: string): ParsedProduct {
   let foundPrice = false;
   let foundAddress = false;
 
+  // Helper: detect lines that belong to the address/contact/noise section
+  const isAddressOrNoise = (l: string): boolean => {
+    const lower = l.toLowerCase();
+    if (lower.includes('address') || l.includes('📍') || l.includes('📌')) return true;
+    if (l.match(/^(☎️|📞|🏠|\+251|09\d{2}[\s\-]?\d{2}[\s\-]?\d{2}[\s\-]?\d{2})/)) return true;
+    if (lower.includes('inbox') || lower.includes('join 👉') || lower.includes('join👉')) return true;
+    if (l.startsWith('https://') || l.startsWith('http://')) return true;
+    if (lower.includes('whatsapp') || lower.includes('t.me/') || lower.includes('@hone')) return true;
+    return false;
+  };
+
   for (const line of lines) {
     const l = line.trim();
     if (!l) continue;
 
-    // Detect Address section - stop parsing relevant info here
-    if (l.toLowerCase().includes('address') || l.startsWith('📍') || l.includes('☎️')) {
-      // Check if this looks like a phone number line (usually starts with 09)
-      if (l.match(/^09\d{2}/) || l.includes('☎️')) {
-        foundAddress = true;
-        continue;
-      }
-      if (l.toLowerCase().startsWith('address')) {
-         foundAddress = true;
-         continue;
-      }
-    }
-    
-    if (foundAddress) continue;
-    if (l.toLowerCase().includes('inbox👉') || l.toLowerCase().includes('join 👉')) {
+    // Once we hit address/contact section, skip everything after
+    if (!foundAddress && isAddressOrNoise(l)) {
       foundAddress = true;
       continue;
     }
+    if (foundAddress) continue;
 
     // 1. Detect Category (⭐️)
     if (l.includes('⭐️')) {
@@ -594,7 +593,7 @@ function parseChannelCaption(caption: string): ParsedProduct {
     // Pre-model (between category and model)
     if (foundCategory && !foundModel && !foundPrice) {
       preModelLines.push(l);
-    } 
+    }
     // Post-price (between price and address)
     else if (foundPrice && !foundAddress) {
       postPriceLines.push(l);
