@@ -37,11 +37,19 @@ export const sendOrderTelegramNotification = async (text: string) => {
   }
 
   try {
+    const STORE_URL = process.env.STORE_URL || process.env.FRONTEND_URL || 'https://hone-instrument-store-frontend.vercel.app/';
     const TELEGRAM_API = 'https://api.telegram.org';
     await axios.post(`${TELEGRAM_API}/bot${botToken}/sendMessage`, {
       chat_id: chatId,
       text,
       parse_mode: 'HTML',
+      reply_markup: {
+        inline_keyboard: [
+          [
+            { text: '🌐 View on Website', url: STORE_URL }
+          ]
+        ]
+      }
     });
   } catch (error) {
     console.error('Error sending order Telegram notification:', error);

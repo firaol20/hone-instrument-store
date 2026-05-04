@@ -110,14 +110,25 @@ export async function handleWebhook(req: Request, res: Response) {
       const text = message.caption || message.text || '';
 
       if (text === '/start') {
-        await sendMessage(
-          chatId,
-          `Welcome ${firstName}! 🎵\n\nI'm the Hone Instrumental Store bot. Here's what I can do:\n\n` +
-          `/add_product - Add a new product to the store\n` +
-          `/list_products - View all products\n` +
-          `/contact - Contact store owners\n\n` +
-          `Use /add_product to start adding instruments!`
-        );
+        const STORE_URL = process.env.STORE_URL || process.env.FRONTEND_URL || 'https://hone-instrument-store-frontend.vercel.app/';
+        await axios.post(`${TELEGRAM_API}/bot${BOT_TOKEN}/sendMessage`, {
+          chat_id: chatId,
+          text: `Welcome ${firstName}! 🎵\n\nI'm the Hone Instrumental Store bot. Here's what I can do:\n\n` +
+                `/add_product - Add a new product to the store\n` +
+                `/list_products - View all products\n` +
+                `/contact - Contact store owners\n\n` +
+                `Use /add_product to start adding instruments!`,
+          parse_mode: 'HTML',
+          reply_markup: {
+            keyboard: [
+              [
+                { text: '🌐 Visit Website', web_app: { url: STORE_URL } }
+              ]
+            ],
+            resize_keyboard: true,
+            is_persistent: true
+          }
+        });
         return res.json({ ok: true });
       }
 
@@ -773,10 +784,20 @@ export async function handleOrderWebhook(req: Request, res: Response) {
 
       if (text === '/start') {
         try {
+          const STORE_URL = process.env.STORE_URL || process.env.FRONTEND_URL || 'https://hone-instrument-store-frontend.vercel.app/';
           await axios.post(`${TELEGRAM_API}/bot${orderBotToken}/sendMessage`, {
             chat_id: chatId,
             text: 'welcome to Hone Order Bot , this is where your order appears and to complete the order go to the website. Hone Order Bot is for tracking purposes only',
             parse_mode: 'HTML',
+            reply_markup: {
+              keyboard: [
+                [
+                  { text: '🌐 Visit Website', web_app: { url: STORE_URL } }
+                ]
+              ],
+              resize_keyboard: true,
+              is_persistent: true
+            }
           });
         } catch (err) {
           console.error('Error sending order bot welcome message:', err);
