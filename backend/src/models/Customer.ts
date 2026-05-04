@@ -18,7 +18,7 @@ export interface ICustomer extends Document {
   userId: mongoose.Types.ObjectId | string;
   phone: string;
   name: string;
-  addresses: IAddress[];
+  addresses: mongoose.Types.DocumentArray<IAddress & mongoose.Document>;
   createdAt: Date;
   updatedAt: Date;
 }

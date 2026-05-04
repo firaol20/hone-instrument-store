@@ -1,14 +1,15 @@
-import express from 'express';
+import express, { Response } from 'express';
 import { authenticate, AuthRequest } from '../middleware/auth';
-import Customer from '../models/Customer';
+import Customer, { ICustomer } from '../models/Customer';
 import * as orderController from '../controllers/orderController';
-import { asyncHandler } from '../utils/asyncHandler';
-import { ApiError } from '../middleware/errorHandler';
+import { asyncHandler, ApiError } from '../middleware/errorHandler';
 
 const router = express.Router();
 
 // Get customer profile
-router.get('/profile', authenticate, asyncHandler(async (req: AuthRequest, res) => {
+router.get('/profile', authenticate, asyncHandler(async (req: AuthRequest, res: Response) => {
+  if (!req.userId) throw new ApiError(401, 'Unauthorized');
+  
   const customer = await Customer.findOne({ userId: req.userId }).populate('userId', 'email role');
   if (!customer) {
     throw new ApiError(404, 'Customer not found');
@@ -17,7 +18,9 @@ router.get('/profile', authenticate, asyncHandler(async (req: AuthRequest, res) 
 }));
 
 // Update customer profile
-router.put('/profile', authenticate, asyncHandler(async (req: AuthRequest, res) => {
+router.put('/profile', authenticate, asyncHandler(async (req: AuthRequest, res: Response) => {
+  if (!req.userId) throw new ApiError(401, 'Unauthorized');
+
   const { name, phone } = req.body;
   const customer = await Customer.findOneAndUpdate(
     { userId: req.userId },
@@ -34,7 +37,9 @@ router.put('/profile', authenticate, asyncHandler(async (req: AuthRequest, res) 
 router.get('/orders', authenticate, orderController.getCustomerOrders);
 
 // Add address
-router.post('/addresses', authenticate, asyncHandler(async (req: AuthRequest, res) => {
+router.post('/addresses', authenticate, asyncHandler(async (req: AuthRequest, res: Response) => {
+  if (!req.userId) throw new ApiError(401, 'Unauthorized');
+
   const { type, street, city, state, zip, country, isDefault, coordinates } = req.body;
   
   const customer = await Customer.findOne({ userId: req.userId });
@@ -44,7 +49,7 @@ router.post('/addresses', authenticate, asyncHandler(async (req: AuthRequest, re
 
   // If this is the first address or isDefault is true, manage other default flags
   if (isDefault) {
-    customer.addresses.forEach(addr => addr.isDefault = false);
+    customer.addresses.forEach(addr => { addr.isDefault = false; });
   }
 
   customer.addresses.push({ 
@@ -63,7 +68,9 @@ router.post('/addresses', authenticate, asyncHandler(async (req: AuthRequest, re
 }));
 
 // Update address
-router.put('/addresses/:id', authenticate, asyncHandler(async (req: AuthRequest, res) => {
+router.put('/addresses/:id', authenticate, asyncHandler(async (req: AuthRequest, res: Response) => {
+  if (!req.userId) throw new ApiError(401, 'Unauthorized');
+
   const { type, street, city, state, zip, country, isDefault, coordinates } = req.body;
   
   const customer = await Customer.findOne({ userId: req.userId });
@@ -77,7 +84,7 @@ router.put('/addresses/:id', authenticate, asyncHandler(async (req: AuthRequest,
   }
 
   if (isDefault) {
-    customer.addresses.forEach(addr => addr.isDefault = false);
+    customer.addresses.forEach(addr => { addr.isDefault = false; });
   }
 
   Object.assign(address, { type, street, city, state, zip, country, isDefault, coordinates });
@@ -87,7 +94,9 @@ router.put('/addresses/:id', authenticate, asyncHandler(async (req: AuthRequest,
 }));
 
 // Delete address
-router.delete('/addresses/:id', authenticate, asyncHandler(async (req: AuthRequest, res) => {
+router.delete('/addresses/:id', authenticate, asyncHandler(async (req: AuthRequest, res: Response) => {
+  if (!req.userId) throw new ApiError(401, 'Unauthorized');
+
   const customer = await Customer.findOne({ userId: req.userId });
   if (!customer) {
     throw new ApiError(404, 'Customer not found');
@@ -100,7 +109,9 @@ router.delete('/addresses/:id', authenticate, asyncHandler(async (req: AuthReque
 }));
 
 // Get addresses
-router.get('/addresses', authenticate, asyncHandler(async (req: AuthRequest, res) => {
+router.get('/addresses', authenticate, asyncHandler(async (req: AuthRequest, res: Response) => {
+  if (!req.userId) throw new ApiError(401, 'Unauthorized');
+
   const customer = await Customer.findOne({ userId: req.userId });
   if (!customer) {
     throw new ApiError(404, 'Customer not found');

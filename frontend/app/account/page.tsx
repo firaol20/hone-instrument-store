@@ -262,17 +262,17 @@ export default function AccountPage() {
           </div>
 
           <Tabs defaultValue="orders" className="space-y-8">
-            <TabsList className="bg-transparent border-b border-slate-200 w-full justify-start rounded-none h-auto p-0 gap-8">
-              <TabsTrigger value="orders" className="data-[state=active]:border-orange-600 data-[state=active]:text-slate-950 border-b-2 border-transparent rounded-none px-0 pb-4 text-[10px] font-black uppercase tracking-widest text-slate-400">
+            <TabsList className="bg-transparent border-b border-slate-200 w-full justify-start rounded-none h-auto p-0 gap-4 md:gap-8 overflow-x-auto overflow-y-hidden no-scrollbar">
+              <TabsTrigger value="orders" className="data-[state=active]:border-orange-600 data-[state=active]:text-slate-950 border-b-2 border-transparent rounded-none px-0 pb-4 text-[10px] font-black uppercase tracking-widest text-slate-400 flex-shrink-0">
                 Order History
               </TabsTrigger>
-              <TabsTrigger value="addresses" className="data-[state=active]:border-orange-600 data-[state=active]:text-slate-950 border-b-2 border-transparent rounded-none px-0 pb-4 text-[10px] font-black uppercase tracking-widest text-slate-400">
+              <TabsTrigger value="addresses" className="data-[state=active]:border-orange-600 data-[state=active]:text-slate-950 border-b-2 border-transparent rounded-none px-0 pb-4 text-[10px] font-black uppercase tracking-widest text-slate-400 flex-shrink-0">
                 Shipping
               </TabsTrigger>
-              <TabsTrigger value="profile" className="data-[state=active]:border-orange-600 data-[state=active]:text-slate-950 border-b-2 border-transparent rounded-none px-0 pb-4 text-[10px] font-black uppercase tracking-widest text-slate-400">
+              <TabsTrigger value="profile" className="data-[state=active]:border-orange-600 data-[state=active]:text-slate-950 border-b-2 border-transparent rounded-none px-0 pb-4 text-[10px] font-black uppercase tracking-widest text-slate-400 flex-shrink-0">
                 Profile
               </TabsTrigger>
-              <TabsTrigger value="security" className="data-[state=active]:border-orange-600 data-[state=active]:text-slate-950 border-b-2 border-transparent rounded-none px-0 pb-4 text-[10px] font-black uppercase tracking-widest text-slate-400">
+              <TabsTrigger value="security" className="data-[state=active]:border-orange-600 data-[state=active]:text-slate-950 border-b-2 border-transparent rounded-none px-0 pb-4 text-[10px] font-black uppercase tracking-widest text-slate-400 flex-shrink-0">
                 Security
               </TabsTrigger>
             </TabsList>

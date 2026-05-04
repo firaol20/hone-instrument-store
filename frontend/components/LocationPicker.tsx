@@ -29,6 +29,7 @@ interface LocationPickerProps {
   mode?: 'deliver' | 'pickup';
   geoRequestToken?: number;
   staticMarkers?: StaticMarker[];
+  initialLocation?: { lat: number; lng: number } | null;
 }
 
 export function LocationPicker({
@@ -40,8 +41,9 @@ export function LocationPicker({
   className,
   style,
   staticMarkers = [],
+  initialLocation = null,
 }: LocationPickerProps) {
-  const [position, setPosition] = useState(mode === 'pickup' ? storeCenter : defaultCenter);
+  const [position, setPosition] = useState(initialLocation || (mode === 'pickup' ? storeCenter : defaultCenter));
   const [searchResults, setSearchResults] = useState<GeocodeResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showResults, setShowResults] = useState(true);
@@ -131,6 +133,18 @@ export function LocationPicker({
   useEffect(() => {
     setInternalAddress(address || '');
   }, [address]);
+
+  useEffect(() => {
+    if (initialLocation && (initialLocation.lat !== position.lat || initialLocation.lng !== position.lng)) {
+      setPosition(initialLocation);
+      if (markerRef.current) {
+        markerRef.current.setLatLng([initialLocation.lat, initialLocation.lng]);
+      }
+      if (mapRef.current) {
+        mapRef.current.setView([initialLocation.lat, initialLocation.lng], 16);
+      }
+    }
+  }, [initialLocation]);
 
   useEffect(() => {
     if (mode === 'deliver' && internalAddress && internalAddress.length > 2) {
