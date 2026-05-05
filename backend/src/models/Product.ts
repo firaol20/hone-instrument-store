@@ -21,6 +21,7 @@ export interface IProduct extends Document {
     averageRating: number;
     totalRatings: number;
   };
+  status: 'available' | 'sold';
   createdAt: Date;
   updatedAt: Date;
 }
@@ -88,6 +89,11 @@ const productSchema = new Schema<IProduct>(
     audioDemo: {
       type: String,
       default: '',
+    },
+    status: {
+      type: String,
+      enum: ['available', 'sold'],
+      default: 'available',
     },
     media: [productMediaSchema],
   },

@@ -108,7 +108,8 @@ export default function ProductDetailClient() {
       image: product.images?.[0] || "/placeholder.jpg",
       quantity: 1,
       sku: product.sku || "",
-      category: product.categoryId?.name || "Instrument"
+      category: product.categoryId?.name || "Instrument",
+      status: product.status
     });
     toast.success(`${product.name} ${t.addedToCart}`, {
       action: {
@@ -261,7 +262,7 @@ export default function ProductDetailClient() {
                 src={product.images?.[activeImage] || "/placeholder.jpg"} 
                 alt={product.name} 
                 fill 
-                className="object-contain p-8" 
+                className={`object-contain p-8 transition-all duration-500 ${product.status === 'sold' ? "grayscale opacity-50" : ""}`} 
                 priority 
               />
               <Badge className="absolute top-6 left-6 bg-white/80 backdrop-blur-md text-slate-900 border-none px-4 py-2 rounded-full font-bold">
@@ -319,18 +320,27 @@ export default function ProductDetailClient() {
               >
                 <Button
                   onClick={handleBuyNow}
-                  disabled={buyNowLoading || product.price === 0}
-                  className="flex-[2] h-14 md:h-16 rounded-2xl bg-orange-600 text-white font-black uppercase tracking-widest hover:bg-orange-700 transition-all gap-2 text-[10px] md:text-sm shadow-xl shadow-orange-600/20"
+                  disabled={buyNowLoading || product.price === 0 || product.status === 'sold'}
+                  className={`flex-[2] h-14 md:h-16 rounded-2xl font-black uppercase tracking-widest transition-all gap-2 text-[10px] md:text-sm shadow-xl ${
+                    product.status === 'sold'
+                    ? "bg-slate-100 text-slate-400 cursor-not-allowed shadow-none"
+                    : "bg-orange-600 text-white hover:bg-orange-700 shadow-orange-600/20"
+                  }`}
                 >
-                  {buyNowLoading ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <Zap className="w-4 h-4 md:w-5 md:h-5 fill-white" />}
-                  <span className="truncate">{t.buyNow}</span>
+                  {buyNowLoading ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> : product.status === 'sold' ? null : <Zap className="w-4 h-4 md:w-5 md:h-5 fill-white" />}
+                  <span className="truncate">{product.status === 'sold' ? "Sold Out" : t.buyNow}</span>
                 </Button>
                 <Button
                   onClick={handleAddToCart}
-                  className="flex-1 h-14 md:h-16 rounded-2xl bg-slate-950 text-white font-black uppercase tracking-widest hover:bg-slate-800 transition-all gap-2 text-[10px] md:text-sm shadow-xl shadow-slate-950/20"
+                  disabled={product.status === 'sold'}
+                  className={`flex-1 h-14 md:h-16 rounded-2xl font-black uppercase tracking-widest transition-all gap-2 text-[10px] md:text-sm shadow-xl ${
+                    product.status === 'sold'
+                    ? "bg-slate-200 text-slate-500 cursor-not-allowed shadow-none"
+                    : "bg-slate-950 text-white hover:bg-slate-800 shadow-slate-950/20"
+                  }`}
                 >
-                  <ShoppingCart className="w-4 h-4 md:w-5 md:h-5" />
-                  <span className="truncate">{t.addToCart}</span>
+                  {product.status !== 'sold' && <ShoppingCart className="w-4 h-4 md:w-5 md:h-5" />}
+                  <span className="truncate">{product.status === 'sold' ? "Sold Out" : t.addToCart}</span>
                 </Button>
               </motion.div>
             </div>
@@ -420,7 +430,7 @@ export default function ProductDetailClient() {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-10">
               {relatedProducts.map((p) => (
                 <motion.div key={p._id} whileHover={{ y: -5 }} transition={{ duration: 0.3 }}>
-                  <ProductCard id={p._id} name={p.name} slug={p.slug} price={p.price} image={p.images?.[0] || "/placeholder.jpg"} category={p.categoryId?.name || "Instrument"} rating={p.rating} />
+                  <ProductCard id={p._id} name={p.name} slug={p.slug} price={p.price} image={p.images?.[0] || "/placeholder.jpg"} category={p.categoryId?.name || "Instrument"} rating={p.rating} status={p.status} />
                 </motion.div>
               ))}
             </div>

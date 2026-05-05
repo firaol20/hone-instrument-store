@@ -39,6 +39,8 @@ interface TelegramUpdate {
   update_id: number;
   message?: TelegramMessage;
   channel_post?: TelegramMessage;
+  edited_channel_post?: TelegramMessage;
+  edited_message?: TelegramMessage;
 }
 
 interface TelegramMessage {
@@ -80,6 +82,7 @@ interface ParsedProduct {
 const pendingMediaGroups = new Map<string, {
   caption: string;
   chatId: number;
+  messageId: number;
   photos: Array<{ file_id: string; file_unique_id: string }>;
   timer: NodeJS.Timeout;
   processed: boolean;
@@ -95,9 +98,14 @@ export async function handleWebhook(req: Request, res: Response) {
       await handleChannelPost(update.channel_post);
       return res.json({ ok: true });
     }
+    
+    if (update.edited_channel_post) {
+      await handleChannelPost(update.edited_channel_post, true);
+      return res.json({ ok: true });
+    }
 
-    if (update.message) {
-      const { message } = update;
+    const message = update.message || update.edited_message;
+    if (message) {
       const chatId = message.chat.id;
 
       if (!message.from) {
@@ -108,6 +116,11 @@ export async function handleWebhook(req: Request, res: Response) {
       const firstName = message.from.first_name;
 
       const text = message.caption || message.text || '';
+
+      if (isSold(text)) {
+        await handleSoldStatus(message);
+        return res.json({ ok: true });
+      }
 
       if (text === '/start') {
         const STORE_URL = process.env.STORE_URL || process.env.FRONTEND_URL || 'https://hone-instrument-store-frontend.vercel.app/';
@@ -172,10 +185,23 @@ export async function handleWebhook(req: Request, res: Response) {
   }
 }
 
-async function handleChannelPost(message: TelegramMessage) {
+async function handleChannelPost(message: TelegramMessage, isEdited: boolean = false) {
   const chatId = message.chat.id;
   const caption = message.caption || '';
   const mediaGroupId = message.media_group_id;
+
+  // 0. Detect "Sold" status
+  if (isSold(caption)) {
+    console.log(`🔴 Sold status detected for message ${message.message_id} in chat ${chatId}`);
+    await handleSoldStatus(message);
+    return;
+  }
+
+  // If it's an edit but not "Sold", we don't process it as a new product
+  if (isEdited) {
+    console.log(`📝 Skipping edited message ${message.message_id} (not a Sold update)`);
+    return;
+  }
 
   console.log(`📨 Channel post: media_group_id=${mediaGroupId || 'none'}, hasCaption=${!!caption}, photoCount=${message.photo?.length || 0}`);
 
@@ -203,6 +229,7 @@ async function handleChannelPost(message: TelegramMessage) {
       pending = {
         caption: '',
         chatId,
+        messageId: message.message_id,
         photos: [],
         timer: setTimeout(() => {
           console.log(`⏰ Timer expired for ${mediaGroupId}, processing group`);
@@ -301,13 +328,15 @@ async function handleChannelPost(message: TelegramMessage) {
 
     // Check for duplicate product
     const existingProduct = await checkDuplicateProduct(parsed.name, parsed.categoryName);
-    if (existingProduct) {
+    if (existingProduct && existingProduct.status === 'available') {
       console.log(`⚠️ Duplicate product found: ${parsed.name} in category ${parsed.categoryName}`);
       const duplicateMessage = `⚠️ Duplicate Product Attempt!\n\nName: ${parsed.name}\nCategory: ${parsed.categoryName}\n\nAlready exists as:\nSKU: ${existingProduct.sku}\nPrice: ${existingProduct.price} ETB`;
       // Send to admin only, not to channel
       await sendToAdmin(duplicateMessage);
       return;
     }
+
+    const isRestock = existingProduct && existingProduct.status === 'sold';
 
     let imageUrls: string[] = [];
     if (message.photo && message.photo.length > 0) {
@@ -322,47 +351,66 @@ async function handleChannelPost(message: TelegramMessage) {
     }
 
     const category = await getOrCreateCategory(parsed.categoryName);
-    const latestProduct = await Product.findOne({}).sort({ createdAt: -1 });
-    let nextSkuNum = 1;
-    if (latestProduct && latestProduct.sku) {
-      const match = latestProduct.sku.match(/PROD-(\d+)/);
-      if (match) nextSkuNum = parseInt(match[1]) + 1;
+    let product;
+
+    if (isRestock) {
+      // Update existing product
+      product = existingProduct;
+      product.price = parsed.price;
+      product.description = parsed.description || '';
+      product.status = 'available';
+      if (imageUrls.length > 0) product.images = imageUrls;
+      await product.save();
+      console.log(`♻️ Restocked product: ${product.name}`);
+    } else {
+      // Create new product
+      const latestProduct = await Product.findOne({}).sort({ createdAt: -1 });
+      let nextSkuNum = 1;
+      if (latestProduct && latestProduct.sku) {
+        const match = latestProduct.sku.match(/PROD-(\d+)/);
+        if (match) nextSkuNum = parseInt(match[1]) + 1;
+      }
+      const sku = `PROD-${String(nextSkuNum).padStart(4, '0')}`;
+      const slug = parsed.name
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-') +
+        '-prod-' +
+        nextSkuNum;
+
+      product = new Product({
+        name: parsed.name,
+        categoryId: category._id,
+        price: parsed.price,
+        description: parsed.description || '',
+        slug,
+        sku,
+        images: imageUrls,
+        status: 'available',
+      });
+      await product.save();
     }
-    const sku = `PROD-${String(nextSkuNum).padStart(4, '0')}`;
-    const slug = parsed.name
-      .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-') +
-      '-prod-' +
-      nextSkuNum;
 
-    const product = new Product({
-      name: parsed.name,
-      categoryId: category._id,
-      price: parsed.price,
-      description: parsed.description || '',
-      slug,
-      sku,
-      images: imageUrls,
-    });
-
-    await product.save();
-    await TelegramLink.create({
-      userId: 0,
-      productId: product._id,
-      telegramChatId: chatId,
-      importMethod: 'channel_post',
-    });
+    await TelegramLink.findOneAndUpdate(
+      { productId: product._id },
+      {
+        userId: 0,
+        telegramChatId: chatId.toString(),
+        telegramMessageId: message.message_id.toString(),
+        importMethod: 'channel_post',
+      },
+      { upsert: true }
+    );
 
     const priceText = parsed.price === 0 ? 'Call for price' : `${parsed.price.toLocaleString()} ETB`;
     const successMessage =
-      `✅ Product Added!\n\n` +
+      `${isRestock ? '♻️ Product Restocked!' : '✅ Product Added!'}\n\n` +
       `Name: ${parsed.name}\n` +
       `Price: ${priceText}\n` +
       `Category: ${parsed.categoryName}\n` +
       `Condition: ${parsed.condition}\n` +
-      `SKU: ${sku}\n\n` +
-      `Images: ${imageUrls.length} uploaded`;
+      `SKU: ${product.sku}\n\n` +
+      `Status: Available 🎵`;
 
     // Send to admin only (not to channel)
     await sendToAdmin(successMessage);
@@ -408,7 +456,7 @@ async function processPendingMediaGroup(mediaGroupId: string) {
 
     // Check for duplicate product
     const existingProduct = await checkDuplicateProduct(parsed.name, parsed.categoryName);
-    if (existingProduct) {
+    if (existingProduct && existingProduct.status === 'available') {
       console.log(`⚠️ Duplicate product found: ${parsed.name} in category ${parsed.categoryName}`);
       const duplicateMessage = `⚠️ Duplicate Product Attempt!\n\nName: ${parsed.name}\nCategory: ${parsed.categoryName}\n\nAlready exists as:\nSKU: ${existingProduct.sku}\nPrice: ${existingProduct.price} ETB`;
       // Send to admin only, not to channel
@@ -416,6 +464,8 @@ async function processPendingMediaGroup(mediaGroupId: string) {
       scheduleGroupDeletion(mediaGroupId);
       return;
     }
+
+    const isRestock = existingProduct && existingProduct.status === 'sold';
 
     const imageUrls: string[] = [];
     for (const photo of photos) {
@@ -436,49 +486,68 @@ async function processPendingMediaGroup(mediaGroupId: string) {
     }
 
     const category = await getOrCreateCategory(parsed.categoryName);
-    const latestProduct = await Product.findOne({}).sort({ createdAt: -1 });
-    let nextSkuNum = 1;
-    if (latestProduct && latestProduct.sku) {
-      const match = latestProduct.sku.match(/PROD-(\d+)/);
-      if (match) nextSkuNum = parseInt(match[1]) + 1;
+    let product;
+
+    if (isRestock) {
+      // Update existing product
+      product = existingProduct;
+      product.price = parsed.price;
+      product.description = parsed.description || '';
+      product.status = 'available';
+      if (imageUrls.length > 0) product.images = imageUrls;
+      await product.save();
+      console.log(`♻️ Restocked product: ${product.name}`);
+    } else {
+      // Create new product
+      const latestProduct = await Product.findOne({}).sort({ createdAt: -1 });
+      let nextSkuNum = 1;
+      if (latestProduct && latestProduct.sku) {
+        const match = latestProduct.sku.match(/PROD-(\d+)/);
+        if (match) nextSkuNum = parseInt(match[1]) + 1;
+      }
+      const sku = `PROD-${String(nextSkuNum).padStart(4, '0')}`;
+      const slug = parsed.name
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-') +
+        '-prod-' +
+        nextSkuNum;
+
+      product = new Product({
+        name: parsed.name,
+        categoryId: category._id,
+        price: parsed.price,
+        description: parsed.description || '',
+        slug,
+        sku,
+        images: imageUrls,
+        status: 'available',
+      });
+      await product.save();
     }
-    const sku = `PROD-${String(nextSkuNum).padStart(4, '0')}`;
-    const slug = parsed.name
-      .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-') +
-      '-prod-' +
-      nextSkuNum;
 
-    const product = new Product({
-      name: parsed.name,
-      categoryId: category._id,
-      price: parsed.price,
-      description: parsed.description || '',
-      slug,
-      sku,
-      images: imageUrls,
-    });
-
-    await product.save();
     // Store the product ID in the pending group for late image addition
     pending.productId = product._id.toString();
-    await TelegramLink.create({
-      userId: 0,
-      productId: product._id,
-      telegramChatId: chatId,
-      importMethod: 'channel_post',
-    });
+    await TelegramLink.findOneAndUpdate(
+      { productId: product._id },
+      {
+        userId: 0,
+        telegramChatId: chatId.toString(),
+        telegramMessageId: pending.messageId.toString(),
+        importMethod: 'channel_post',
+      },
+      { upsert: true }
+    );
 
     const priceText = parsed.price === 0 ? 'Call for price' : `${parsed.price.toLocaleString()} ETB`;
     const successMessage =
-      `✅ Product Added!\n\n` +
+      `${isRestock ? '♻️ Product Restocked!' : '✅ Product Added!'}\n\n` +
       `Name: ${parsed.name}\n` +
       `Price: ${priceText}\n` +
       `Category: ${parsed.categoryName}\n` +
       `Condition: ${parsed.condition}\n` +
-      `SKU: ${sku}\n\n` +
-      `Images: ${imageUrls.length} uploaded`;
+      `SKU: ${product.sku}\n\n` +
+      `Status: Available 🎵`;
 
     // Send to admin only (not to channel)
     await sendToAdmin(successMessage);
@@ -736,6 +805,63 @@ export async function sendToAdmin(text: string) {
     });
   } catch (error) {
     console.error('Error sending to admin:', error);
+  }
+}
+
+/**
+ * Checks if a caption indicates that an item is sold
+ */
+function isSold(caption: string): boolean {
+  const lower = caption.toLowerCase();
+  // Check for English "sold" or Amharic "ተሸጧል"
+  return lower.includes('sold') || lower.includes('ተሸጧል');
+}
+
+/**
+ * Handles the logic for removing a sold product from the database
+ */
+async function handleSoldStatus(message: TelegramMessage) {
+  const messageId = message.message_id.toString();
+  const chatId = message.chat.id.toString();
+  const caption = message.caption || '';
+
+  console.log(`🗑️ Attempting to remove sold item from message ${messageId} in chat ${chatId}`);
+
+  try {
+    // 1. Try to find by TelegramLink (most accurate)
+    let link = await TelegramLink.findOne({ 
+      telegramMessageId: messageId, 
+      telegramChatId: chatId 
+    });
+
+    if (link) {
+      const product = await Product.findByIdAndUpdate(link.productId, { status: 'sold' }, { new: true });
+      if (product) {
+        console.log(`✅ Marked product "${product.name}" as sold (ID: ${product._id}) via TelegramLink`);
+        await sendToAdmin(`✅ Product <b>"${product.name}"</b> marked as 🛑 <b>Sold Out</b>. (Updated via channel edit)`);
+      }
+      return;
+    }
+
+    // 2. Fallback: Parse the caption to find the product by name and category
+    console.log('⚠️ No TelegramLink found, falling back to name/category parsing...');
+    const parsed = parseChannelCaption(caption);
+    
+    if (parsed.name) {
+      const existingProduct = await checkDuplicateProduct(parsed.name, parsed.categoryName);
+      if (existingProduct) {
+        existingProduct.status = 'sold';
+        await existingProduct.save();
+        console.log(`✅ Marked product "${existingProduct.name}" as sold (ID: ${existingProduct._id}) via fallback parsing`);
+        await sendToAdmin(`✅ Product <b>"${existingProduct.name}"</b> marked as 🛑 <b>Sold Out</b>. (Identified by name)`);
+      } else {
+        console.log(`❌ Could not find product matching "${parsed.name}" in category "${parsed.categoryName}"`);
+        await sendToAdmin(`⚠️ Could not find product to remove for "Sold" update: <b>"${parsed.name}"</b>`);
+      }
+    }
+  } catch (error) {
+    console.error('Error in handleSoldStatus:', error);
+    await sendToAdmin(`❌ Error processing "Sold" update: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }
 

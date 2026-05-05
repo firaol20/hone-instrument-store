@@ -1,11 +1,13 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { translations } from '@/lib/translations';
 
 interface TranslationContextType {
   language: string;
   setLanguage: (lang: string) => void;
   isInitialized: boolean;
+  t: (key: string) => string;
 }
 
 const TranslationContext = createContext<TranslationContextType | undefined>(undefined);
@@ -63,8 +65,17 @@ export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     window.location.reload();
   };
 
+  const t = (key: string): string => {
+    const langKey = 
+      language === 'am' ? 'AMH' : 
+      language === 'om' ? 'ORO' : 'ENG';
+    
+    // @ts-ignore
+    return translations[langKey][key] || key;
+  };
+
   return (
-    <TranslationContext.Provider value={{ language, setLanguage: changeLanguage, isInitialized }}>
+    <TranslationContext.Provider value={{ language, setLanguage: changeLanguage, isInitialized, t }}>
       <div id="google_translate_element" style={{ display: 'none' }} />
       {children}
     </TranslationContext.Provider>

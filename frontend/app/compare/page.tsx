@@ -8,7 +8,7 @@ import { useCartStore } from '@/lib/cart-store';
 import { useAuthStore } from '@/lib/auth-store';
 import { toast } from 'sonner';
 import { Sparkles, X, Plus, Star, Heart, Grid2X2, LayoutGrid, Trophy, Gem, Layers } from 'lucide-react';
-import { addToWishlist, isInWishlist, removeFromWishlistById } from "@/components/WishlistButton";
+import { addToFavorites, isInFavorites, removeFromFavoritesById } from "@/components/FavoriteButton";
 import Image from 'next/image';
 import ModernTiltCard from '@/components/TiltCard';
 
@@ -18,7 +18,7 @@ export default function ComparisonDuoPage() {
   const [allProducts, setAllProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [dynamicData, setDynamicData] = useState<Record<string, { desc: string; loading: boolean }>>({});
-  const [wishlist, setWishlist] = useState<string[]>([]);
+  const [favorites, setFavorites] = useState<string[]>([]);
   const { addItem } = useCartStore();
   const { isAuthenticated } = useAuthStore();
 
@@ -57,22 +57,22 @@ export default function ComparisonDuoPage() {
     if (product) generateAIDescription(product);
   };
 
-  const handleWishlist = (product: any) => {
-    if (isInWishlist(product._id)) {
-      removeFromWishlistById(product._id);
-      toast.success('Removed from wishlist');
+  const handleFavorite = (product: any) => {
+    if (isInFavorites(product._id)) {
+      removeFromFavoritesById(product._id);
+      toast.success('Removed from favorites');
     } else {
-      addToWishlist({
+      addToFavorites({
         _id: product._id,
         name: product.name,
         price: product.price,
         image: product.images?.[0] || '/placeholder.jpg',
         slug: product.slug
       });
-      toast.success('Added to wishlist');
+      toast.success('Added to favorites');
     }
-    setWishlist((prev: string[]) => {
-      if (isInWishlist(product._id)) {
+    setFavorites((prev: string[]) => {
+      if (isInFavorites(product._id)) {
         return prev.filter(id => id !== product._id);
       }
       return [...prev, product._id];
@@ -201,10 +201,10 @@ export default function ComparisonDuoPage() {
       <div key={slotIndex} className="flex-1 bg-white rounded-[2rem] p-3 md:p-6 border border-slate-100 relative shadow-sm">
         <div className="absolute top-4 right-4 flex gap-2 z-10">
           <button
-            onClick={() => handleWishlist(product)}
-            className={`p-2 rounded-full ${wishlist.includes(product._id) ? 'bg-red-500 text-white' : 'bg-slate-100 text-slate-400 hover:text-red-500'}`}
+            onClick={() => handleFavorite(product)}
+            className={`p-2 rounded-full ${favorites.includes(product._id) ? 'bg-orange-600 text-white' : 'bg-slate-100 text-slate-400 hover:text-orange-600'}`}
           >
-            <Heart className={`w-4 h-4 ${wishlist.includes(product._id) ? 'fill-white' : ''}`} />
+            <Heart className={`w-4 h-4 ${favorites.includes(product._id) ? 'fill-white' : ''}`} />
           </button>
           <button
             onClick={() => handleSelect(null, slotIndex)}

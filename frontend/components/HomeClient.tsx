@@ -50,7 +50,7 @@ export default function HomeClient({ initialProducts }: { initialProducts: any[]
     support: "Support",
     contact: "Contact Us",
     helpCenter: "Help Center",
-    copyright: "Hone Instrumental Store. All rights reserved.",
+    copyright: "Hone Musical Instruments. All rights reserved.",
   };
 
   useEffect(() => {
@@ -87,11 +87,13 @@ export default function HomeClient({ initialProducts }: { initialProducts: any[]
     facebook: "https://www.facebook.com/profile.php?id=100064707545307",
     whatsapp: "https://api.whatsapp.com/send?phone=%2B251982616263",
     telegram: "https://t.me/honemusicinstruments",
-    tiktok: "https://www.tiktok.com/@honemusicinstruments"
+    tiktok: "https://www.tiktok.com/@honemusicinstruments",
+    instagram: "https://www.instagram.com/honemusicalinstruments?igsh=eHZoaGF4bHp3d2hy"
   };
 
   const socialLinks = [
     { icon: <Facebook className="w-6 h-6 md:w-8 md:h-8" />, href: links.facebook, label: "Facebook" },
+    { icon: <Instagram className="w-6 h-6 md:w-8 md:h-8" />, href: links.instagram, label: "Instagram" },
     { icon: <TikTokIcon className="w-6 h-6 md:w-8 md:h-8" />, href: links.tiktok, label: "TikTok" },
     { icon: <MessageCircle className="w-6 h-6 md:w-8 md:h-8" />, href: links.whatsapp, label: "WhatsApp" },
     { icon: <Send className="w-6 h-6 md:w-8 md:h-8" />, href: links.telegram, label: "Telegram" },
@@ -156,6 +158,7 @@ export default function HomeClient({ initialProducts }: { initialProducts: any[]
                           image={product.images?.[0] || "/placeholder.jpg"}
                           category={product.categoryId?.name || "Instrument"}
                           rating={product.rating}
+                          status={product.status}
                         />
                       </motion.div>
                     ))}

@@ -10,6 +10,7 @@ export interface CartItem {
   quantity: number;
   image: string;
   sku: string;
+  status?: 'available' | 'sold';
 }
 
 interface CartState {

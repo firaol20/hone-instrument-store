@@ -3,14 +3,15 @@
 import { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
-import { addToWishlist, removeFromWishlistById, isInWishlist } from "@/components/WishlistButton";
+import { removeFromFavoritesById } from "@/components/FavoriteButton";
 import { useCartStore } from "@/lib/cart-store";
 import { toast } from "sonner";
 import { Heart, ShoppingCart, Trash2, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslation } from "@/components/TranslationProvider";
 
-interface WishlistItem {
+interface FavoriteItem {
     _id: string;
     name: string;
     price: number;
@@ -18,26 +19,27 @@ interface WishlistItem {
     slug: string;
 }
 
-export default function WishlistPage() {
-    const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
+export default function FavoritePage() {
+    const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
     const [loading, setLoading] = useState(true);
     const { addItem } = useCartStore();
+    const { t } = useTranslation();
 
     useEffect(() => {
-        const saved = localStorage.getItem("hone_wishlist");
+        const saved = localStorage.getItem("hone_favorites");
         if (saved) {
-            setWishlist(JSON.parse(saved));
+            setFavorites(JSON.parse(saved));
         }
         setLoading(false);
     }, []);
 
     const handleRemove = (id: string) => {
-        removeFromWishlistById(id);
-        setWishlist(prev => prev.filter(item => item._id !== id));
-        toast.success("Removed from wishlist");
+        removeFromFavoritesById(id);
+        setFavorites(prev => prev.filter(item => item._id !== id));
+        toast.success("Removed from favorites");
     };
 
-    const handleAddToCart = (item: WishlistItem) => {
+    const handleAddToCart = (item: FavoriteItem) => {
         addItem({
             productId: item._id,
             name: item.name,
@@ -57,10 +59,10 @@ export default function WishlistPage() {
             <main className="max-w-7xl mx-auto px-4 py-8 md:px-8 md:py-12">
                 <div className="mb-8">
                     <h1 className="text-2xl md:text-4xl font-black uppercase tracking-tighter text-slate-900">
-                        Wishlist<span className="text-orange-600">.</span>
+                        {t('favoriteTitle')}<span className="text-orange-600">.</span>
                     </h1>
                     <p className="text-sm font-medium text-slate-500 mt-1">
-                        {wishlist.length} {wishlist.length === 1 ? 'item' : 'items'} saved
+                        {favorites.length} {favorites.length === 1 ? 'item' : 'items'} saved
                     </p>
                 </div>
 
@@ -74,21 +76,21 @@ export default function WishlistPage() {
                             </div>
                         ))}
                     </div>
-                ) : wishlist.length === 0 ? (
+                ) : favorites.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-20 text-center">
                         <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-6">
                             <Heart className="w-10 h-10 text-slate-300" />
                         </div>
-                        <p className="text-slate-500 font-medium mb-6">Your wishlist is empty</p>
+                        <p className="text-slate-500 font-medium mb-6">{t('favoriteEmpty')}</p>
                         <Button asChild className="bg-orange-600 hover:bg-orange-700">
                             <Link href="/products">
-                                Browse Products <ArrowRight className="w-4 h-4 ml-2" />
+                                {t('browseProducts')} <ArrowRight className="w-4 h-4 ml-2" />
                             </Link>
                         </Button>
                     </div>
                 ) : (
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-                        {wishlist.map((item) => (
+                        {favorites.map((item) => (
                             <div
                                 key={item._id}
                                 className="bg-white rounded-2xl p-3 md:p-4 border border-slate-100 shadow-sm"
@@ -126,7 +128,7 @@ export default function WishlistPage() {
                                         className="flex-1 h-9 bg-slate-950 hover:bg-orange-600 text-[10px]"
                                     >
                                         <ShoppingCart className="w-3 h-3 mr-1" />
-                                        Add to Cart
+                                        {t('addToCart')}
                                     </Button>
                                 </div>
                             </div>

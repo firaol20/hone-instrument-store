@@ -151,6 +151,7 @@ function ProductsContent({ initialProducts, initialCategories }: { initialProduc
                         image={product.images?.[0] || '/placeholder.jpg'}
                         category={product.categoryId?.name || 'Instrument'}
                         rating={product.rating}
+                        status={product.status}
                       />
                     </div>
                   ))}
@@ -164,7 +165,7 @@ function ProductsContent({ initialProducts, initialCategories }: { initialProduc
       <footer className="border-t border-slate-100 py-8 mt-12 bg-white">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <p className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-300">
-            &copy; {new Date().getFullYear()} Hone Instruments Store
+            &copy; {new Date().getFullYear()} Hone Musical Instruments
           </p>
         </div>
       </footer>

@@ -1,4 +1,10 @@
 import HomeClient from "@/components/HomeClient";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Best Musical Instruments in Ethiopia - Traditional & Modern | Hone",
+  description: "Explore the best musical instruments in Ethiopia. From traditional Kirar and Masinqo to modern Guitars and Keyboards, find everything you need at Hone Musical Instruments.",
+};
 
 async function getInitialProducts() {
   try {

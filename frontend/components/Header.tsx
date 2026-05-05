@@ -47,8 +47,8 @@ export function Header() {
               <Link href="/compare" className="text-xs font-bold text-slate-600 hover:text-orange-600 transition-colors">
                 Compare
               </Link>
-              <Link href="/wishlist" className="text-xs font-bold text-slate-600 hover:text-orange-600 transition-colors">
-                Wishlist
+              <Link href="/favorite" className="text-xs font-bold text-slate-600 hover:text-orange-600 transition-colors">
+                Favorite
               </Link>
             </nav>
           </div>
@@ -166,15 +166,15 @@ export function Header() {
                 </Link>
 
                 <Link
-                  href="/wishlist"
+                  href="/favorite"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`flex items-center gap-3 px-5 py-3.5 rounded-2xl font-bold transition-all ${pathname === "/wishlist"
+                  className={`flex items-center gap-3 px-5 py-3.5 rounded-2xl font-bold transition-all ${pathname === "/favorite"
                     ? "bg-orange-600 text-white shadow-lg shadow-orange-950/20"
                     : "text-slate-400 hover:bg-white/5 hover:text-white"
                     }`}
                 >
-                  <Heart className={`w-5 h-5 ${pathname === "/wishlist" ? "text-white" : "text-slate-500"}`} />
-                  <span className="text-sm tracking-tight">Wishlist</span>
+                  <Heart className={`w-5 h-5 ${pathname === "/favorite" ? "text-white" : "text-slate-500"}`} />
+                  <span className="text-sm tracking-tight">Favorite</span>
                 </Link>
               </nav>
 

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description: 'Browse our musical instruments by category. Find pianos, guitars, drums, and audio equipment organized by type.',
   openGraph: {
     title: 'Hone Instruments - Categories',
-    description: 'Explore musical instruments organized by category at Hone Instruments Store',
+    description: 'Explore musical instruments organized by category at Hone Musical Instruments',
     images: [
       {
         url: 'https://honestore.com/og-categories.png',
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
         alt: 'Hone Instruments Categories'
       }
     ],
-    siteName: 'Hone Instruments Store'
+    siteName: 'Hone Musical Instruments'
   },
   robots: {
     index: true,

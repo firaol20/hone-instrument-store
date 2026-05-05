@@ -15,7 +15,7 @@ export const metadata: Metadata = {
         alt: 'Hone Instruments Product Detail'
       }
     ],
-    siteName: 'Hone Instruments Store'
+    siteName: 'Hone Musical Instruments'
   },
   robots: {
     index: true,

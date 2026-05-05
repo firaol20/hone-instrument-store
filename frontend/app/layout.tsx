@@ -14,22 +14,23 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Hone Musical Instruments, Studio Gear & Sound Systems",
+  title: "Best Musical Instruments in Ethiopia - Traditional & Modern | Hone Musical Instruments",
   description:
-    "Hone Music offers modern and traditional musical instruments, studio equipment, and soundproofing services. Enjoy worldwide delivery, music production courses, and free consultancy.",
+    "Discover the best musical instruments in Ethiopia at Hone Musical Instruments. We offer a wide range of traditional and modern instruments, professional sound systems, and studio gear. Shop online for quality, expertise, and worldwide delivery.",
   keywords:
-    "Best Musical Instrument in Ethiopia ,musical instruments, sound system rental, studio equipment, stage lighting, music production course, instrument maintenance, soundproofing services, buy instruments online",
+    "Best Musical Instrument in Ethiopia, traditional Ethiopian instruments, modern musical instruments Ethiopia, buy instruments Addis Ababa, sound system rental Ethiopia, studio equipment Ethiopia, Hone Musical Instruments",
   openGraph: {
-    title: "Hone Musical Instruments - Modern & Traditional Musical Instruments",
-    description: "Your global source for musical instruments, professional sound systems, and studio equipment. We offer worldwide delivery and expert consultancy.",
+    title: "Hone Musical Instruments - Best Traditional & Modern Instruments in Ethiopia",
+    description: "Your premier destination for quality musical instruments and professional audio gear in Ethiopia. Traditional craftsmanship meets modern technology.",
     url: "https://honestore.com",
+    siteName: "Hone Musical Instruments",
     type: "website",
     images: [
       {
         url: "https://res.cloudinary.com/dglvpzqcl/image/upload/v1776616291/hone_store/qz7rfmsvsyh8kcekqehj.jpg",
         width: 1200,
         height: 630,
-        alt: "Hone Music Storefront",
+        alt: "Hone Musical Instruments Storefront",
       },
     ],
   },
@@ -49,6 +50,40 @@ export default function RootLayout({
       <body
         className={`${geistSans.className} ${geistMono.className} font-sans antialiased`}
       >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "MusicStore",
+              "name": "Hone Musical Instruments",
+              "description": "The best musical instruments in Ethiopia, offering traditional and modern instruments, studio gear, and professional sound systems.",
+              "url": "https://honestore.com",
+              "logo": "https://honestore.com/logo.png",
+              "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+251982616263",
+                "contactType": "customer service",
+                "areaServed": "ET",
+                "availableLanguage": ["Amharic", "English", "Oromo"]
+              },
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Near Bethlehem plaza 2nd floor, Megenagna",
+                "addressLocality": "Addis Ababa",
+                "addressRegion": "Addis Ababa",
+                "postalCode": "1000",
+                "addressCountry": "ET"
+              },
+              "sameAs": [
+                "https://www.facebook.com/profile.php?id=100064707545307",
+                "https://www.instagram.com/honemusicalinstruments",
+                "https://www.tiktok.com/@honemusicinstruments",
+                "https://t.me/honemusicinstruments"
+              ]
+            })
+          }}
+        />
         <Toaster position="top-right" richColors />
         <TranslationProvider>
           <LanguageBody>{children}</LanguageBody>

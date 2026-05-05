@@ -25,8 +25,8 @@ export default function SettingsPage() {
   const [error, setError] = useState<string | null>(null);
   
   const [settings, setSettings] = useState({
-    storeName: 'Hone Instrumental Store',
-    contactEmail: 'support@hone.com',
+    storeName: 'Hone Musical Instruments',
+    contactEmail: 'honemusicinstruments@gmail.com',
     maintenanceMode: false,
     orderPrefix: 'HN-',
     currency: 'USD'

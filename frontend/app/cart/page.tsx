@@ -107,6 +107,7 @@ export default function CartPage() {
                     image={item.image || "/placeholder.jpg"}
                     category={item.category || "Instrument"}
                     showAddToCart={false}
+                    status={item.status}
                     actions={
                       <div className="flex flex-col gap-3 mt-4 pt-4 border-t border-slate-50">
                         <div className="flex items-center justify-between">
