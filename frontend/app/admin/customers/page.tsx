@@ -20,6 +20,7 @@ import { toast } from 'sonner';
 import { TableSkeleton } from '@/components/admin/SkeletonLoader';
 import EmptyState from '@/components/admin/EmptyState';
 import ErrorState from '@/components/admin/ErrorState';
+import { useAuthStore } from '@/lib/auth-store';
 
 export default function CustomersPage() {
   const [customers, setCustomers] = useState<AdminCustomer[]>([]);
@@ -27,6 +28,7 @@ export default function CustomersPage() {
   const [error, setError] = useState<string | null>(null);
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
   const [search, setSearch] = useState('');
+  const { isOwner } = useAuthStore();
 
   // Pagination
   const [page, setPage] = useState(1);
@@ -160,7 +162,12 @@ export default function CustomersPage() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          {customer.userId?.role === 'admin' ? (
+                          {customer.userId?.role === 'owner' ? (
+                            <div className="flex items-center gap-2 px-3 py-1.5 bg-indigo-600 text-white rounded-xl shadow-md shadow-indigo-100">
+                              <Shield size={12} />
+                              <span className="text-[10px] font-black uppercase tracking-widest">OWNER</span>
+                            </div>
+                          ) : customer.userId?.role === 'admin' ? (
                             <div className="flex items-center gap-2 px-3 py-1.5 bg-orange-600 text-white rounded-xl shadow-md shadow-orange-100">
                               <Shield size={12} />
                               <span className="text-[10px] font-black uppercase tracking-widest">ADMIN</span>
@@ -175,24 +182,26 @@ export default function CustomersPage() {
                       </td>
                       <td className="px-6 py-4 text-right">
                         <div className="flex justify-end gap-1 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button
-                            onClick={() => handleToggleAdmin(customer)}
-                            disabled={isUpdating === customer._id}
-                            className={`flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all ${customer.userId?.role === 'admin'
-                              ? 'text-red-500 hover:bg-red-50'
-                              : 'text-blue-500 hover:bg-blue-50'
-                              }`}
-                            title={customer.userId?.role === 'admin' ? 'Revoke Admin' : 'Make Admin'}
-                          >
-                            {isUpdating === customer._id ? (
-                              <Loader2 className="animate-spin" size={14} />
-                            ) : (
-                              <Shield size={14} />
-                            )}
-                            <span className="text-[10px] font-bold uppercase tracking-widest whitespace-nowrap">
-                              {customer.userId?.role === 'admin' ? 'Revoke Admin' : 'Promote to Admin'}
-                            </span>
-                          </button>
+                          {isOwner() && customer.userId?.role !== 'owner' && (
+                            <button
+                              onClick={() => handleToggleAdmin(customer)}
+                              disabled={isUpdating === customer._id}
+                              className={`flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all ${customer.userId?.role === 'admin'
+                                ? 'text-red-500 hover:bg-red-50'
+                                : 'text-blue-500 hover:bg-blue-50'
+                                }`}
+                              title={customer.userId?.role === 'admin' ? 'Revoke Admin' : 'Make Admin'}
+                            >
+                              {isUpdating === customer._id ? (
+                                <Loader2 className="animate-spin" size={14} />
+                              ) : (
+                                <Shield size={14} />
+                              )}
+                              <span className="text-[10px] font-bold uppercase tracking-widest whitespace-nowrap">
+                                {customer.userId?.role === 'admin' ? 'Revoke Admin' : 'Promote to Admin'}
+                              </span>
+                            </button>
+                          )}
                         </div>
                       </td>
                     </tr>

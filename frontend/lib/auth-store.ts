@@ -6,7 +6,7 @@ import { useRatingStore } from './rating-store';
 interface User {
   _id: string;
   email: string;
-  role: 'user' | 'admin';
+  role: 'user' | 'admin' | 'owner';
   name?: string;
 }
 
@@ -19,6 +19,7 @@ interface AuthState {
   clearAuth: () => void;
   checkAuth: () => Promise<void>;
   isAdmin: () => boolean;
+  isOwner: () => boolean;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -91,7 +92,12 @@ export const useAuthStore = create<AuthState>()(
 
       isAdmin: () => {
         const { user, isAuthenticated } = get();
-        return isAuthenticated && user?.role === 'admin';
+        return isAuthenticated && (user?.role === 'admin' || user?.role === 'owner');
+      },
+
+      isOwner: () => {
+        const { user, isAuthenticated } = get();
+        return isAuthenticated && user?.role === 'owner';
       },
     }),
     {

@@ -35,7 +35,7 @@ export interface AdminCustomer extends Omit<Customer, 'userId'> {
   userId: {
     _id: string;
     email: string;
-    role: 'user' | 'admin';
+    role: 'user' | 'admin' | 'owner';
   };
 }
 

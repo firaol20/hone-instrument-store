@@ -1,5 +1,5 @@
 import express from 'express';
-import { authenticate, requireAdmin } from '../middleware/auth';
+import { authenticate, requireAdmin, requireOwner } from '../middleware/auth';
 import * as adminController from '../controllers/adminController';
 
 const router = express.Router();
@@ -15,7 +15,7 @@ router.get('/orders/:id', authenticate, requireAdmin, adminController.getOrderBy
 router.put('/orders/:id', authenticate, requireAdmin, adminController.updateOrderStatus);
 router.delete('/orders/:id', authenticate, requireAdmin, adminController.deleteOrder);
 router.get('/customers', authenticate, requireAdmin, adminController.getCustomers);
-router.put('/customers/:id/toggle-admin', authenticate, requireAdmin, adminController.toggleAdminRole);
+router.put('/customers/:id/toggle-admin', authenticate, requireOwner, adminController.toggleAdminRole);
 router.delete('/customers/:id', authenticate, requireAdmin, adminController.deleteCustomer);
 
 router.get('/media', authenticate, requireAdmin, adminController.getMediaAssets);

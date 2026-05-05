@@ -102,7 +102,7 @@ function PromotionForm() {
         toast.success('Promotion updated');
       } else {
         await adminAPI.createPromotion(payload);
-        toast.success('Campaign launched!');
+        toast.success('Special offer launched!');
       }
       router.push('/admin/promotions');
     } catch {
@@ -116,7 +116,7 @@ function PromotionForm() {
     return (
       <div className="h-72 flex flex-col items-center justify-center gap-3 text-slate-400">
         <Loader2 className="animate-spin text-orange-600" size={28} />
-        <span className="text-[10px] font-bold uppercase tracking-widest">Loading campaign...</span>
+        <span className="text-[10px] font-bold uppercase tracking-widest">Loading offer...</span>
       </div>
     );
   }
@@ -140,7 +140,7 @@ function PromotionForm() {
             <span className="text-[9px] font-black uppercase tracking-[0.22em] text-slate-400">Marketing Hub</span>
           </div>
           <h1 className="text-xl sm:text-3xl font-black text-slate-900 uppercase tracking-tighter leading-none">
-            {id ? 'Edit' : 'New'} <span className="text-orange-600">Campaign.</span>
+            {id ? 'Edit' : 'New'} <span className="text-orange-600">Offer.</span>
           </h1>
         </div>
       </div>
@@ -152,7 +152,7 @@ function PromotionForm() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Title */}
           <div className="bg-white border border-slate-100 rounded-2xl p-4 sm:p-5 shadow-sm">
-            <FieldLabel icon={<Type className="w-3.5 h-3.5" />}>Campaign Title</FieldLabel>
+            <FieldLabel icon={<Type className="w-3.5 h-3.5" />}>Offer Title</FieldLabel>
             <input
               type="text"
               required
@@ -165,7 +165,7 @@ function PromotionForm() {
 
           {/* Type */}
           <div className="bg-white border border-slate-100 rounded-2xl p-4 sm:p-5 shadow-sm">
-            <FieldLabel icon={<Layout className="w-3.5 h-3.5" />}>Campaign Type</FieldLabel>
+            <FieldLabel icon={<Layout className="w-3.5 h-3.5" />}>Offer Type</FieldLabel>
             <select
               value={formData.type}
               onChange={e => patch('type', e.target.value)}
@@ -326,7 +326,7 @@ function PromotionForm() {
               : <Save className="w-5 h-5 group-hover:rotate-[-6deg] transition-transform duration-300" />
             }
             <span className="text-xs sm:text-sm font-black uppercase tracking-[0.2em]">
-              {isSaving ? 'Saving...' : id ? 'Commit Changes' : 'Launch Campaign'}
+              {isSaving ? 'Saving...' : id ? 'Commit Changes' : 'Launch Offer'}
             </span>
           </div>
         </button>

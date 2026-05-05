@@ -405,6 +405,10 @@ export const toggleAdminRole = async (req: AuthRequest, res: Response) => {
     if (!user) {
       throw new ApiError(404, 'User account not found');
     }
+
+    if (user.role === 'owner') {
+      throw new ApiError(403, 'Cannot modify Owner role');
+    }
     
     user.role = user.role === 'admin' ? 'user' : 'admin';
     await user.save();

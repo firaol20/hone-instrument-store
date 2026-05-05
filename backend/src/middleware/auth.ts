@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 
 export interface AuthRequest extends Request {
   userId?: string;
-  userRole?: 'user' | 'admin';
+  userRole?: 'user' | 'admin' | 'owner';
   body: any;
   query: any;
   params: any;
@@ -23,7 +23,7 @@ export const authenticate = (req: AuthRequest, res: Response, next: NextFunction
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret') as {
       userId: string;
-      role: 'user' | 'admin';
+      role: 'user' | 'admin' | 'owner';
     };
 
     req.userId = decoded.userId;
@@ -36,8 +36,15 @@ export const authenticate = (req: AuthRequest, res: Response, next: NextFunction
 };
 
 export const requireAdmin = (req: AuthRequest, res: Response, next: NextFunction) => {
-  if (req.userRole !== 'admin') {
+  if (req.userRole !== 'admin' && req.userRole !== 'owner') {
     return res.status(403).json({ error: 'Admin access required' });
+  }
+  next();
+};
+
+export const requireOwner = (req: AuthRequest, res: Response, next: NextFunction) => {
+  if (req.userRole !== 'owner') {
+    return res.status(403).json({ error: 'Owner access required' });
   }
   next();
 };

@@ -63,7 +63,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: 'Products', icon: <Box size={20} />, href: '/admin/products' },
     { name: 'Orders', icon: <ShoppingCart size={20} />, href: '/admin/orders' },
     { name: 'Customers', icon: <Users size={20} />, href: '/admin/customers' },
-    { name: 'Campaigns', icon: <ImageIcon size={20} />, href: '/admin/promotions' },
+    { name: 'Special Offers', icon: <ImageIcon size={20} />, href: '/admin/promotions' },
     { name: 'Settings', icon: <Settings size={20} />, href: '/admin/settings' },
   ];
 

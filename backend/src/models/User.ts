@@ -4,7 +4,7 @@ import bcryptjs from 'bcryptjs';
 export interface IUser extends Document {
   email: string;
   password: string;
-  role: 'user' | 'admin';
+  role: 'user' | 'admin' | 'owner';
   resetPasswordToken?: string;
   resetPasswordExpires?: Date;
   createdAt: Date;
@@ -30,7 +30,7 @@ const userSchema = new Schema<IUser>(
     },
     role: {
       type: String,
-      enum: ['user', 'admin'],
+      enum: ['user', 'admin', 'owner'],
       default: 'user',
     },
     resetPasswordToken: String,

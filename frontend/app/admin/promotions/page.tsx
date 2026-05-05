@@ -32,13 +32,13 @@ export default function PromotionsListPage() {
 
   const handleDelete = async (id: string, e: React.MouseEvent) => {
     e.preventDefault();
-    if (!window.confirm('Delete this campaign?')) return;
+    if (!window.confirm('Delete this special offer?')) return;
     try {
       await adminAPI.deletePromotion(id);
-      toast.success('Campaign deleted');
+      toast.success('Special offer deleted');
       setPromotions(prev => prev.filter(p => p._id !== id));
     } catch {
-      toast.error('Failed to delete campaign');
+      toast.error('Failed to delete special offer');
     }
   };
 
@@ -234,7 +234,7 @@ export default function PromotionsListPage() {
                 <Sparkles className="text-white h-4 w-4 sm:h-5 sm:w-5" />
               </div>
               <h1 className="text-xl sm:text-3xl lg:text-5xl font-black text-white uppercase tracking-tighter">
-                Campaigns<span className="text-orange-600">.</span>
+                Special Offers<span className="text-orange-600">.</span>
               </h1>
             </div>
             <p className="text-slate-400 text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em]">
@@ -266,7 +266,7 @@ export default function PromotionsListPage() {
               className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-6 py-2.5 sm:py-3 bg-orange-600 text-white rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-wider hover:bg-orange-500 active:scale-95 transition-all shadow-lg shadow-orange-600/30"
             >
               <Plus className="w-4 h-4" />
-              <span className="hidden sm:inline">New Campaign</span>
+              <span className="hidden sm:inline">New Offer</span>
               <span className="sm:hidden">New</span>
             </Link>
           </div>
@@ -301,7 +301,7 @@ export default function PromotionsListPage() {
           <div className="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center mx-auto mb-5 text-orange-600 rotate-3 shadow-inner">
             <Sparkles size={24} />
           </div>
-          <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight mb-2">No Campaigns Yet</h3>
+          <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight mb-2">No Special Offers Yet</h3>
           <p className="text-slate-400 text-sm font-medium mb-8 max-w-xs mx-auto leading-relaxed">
             Create your first banner to drive traffic and boost sales.
           </p>
@@ -310,7 +310,7 @@ export default function PromotionsListPage() {
             className="inline-flex items-center gap-2 px-6 py-3 bg-orange-600 text-white rounded-xl text-xs font-black uppercase tracking-wider hover:bg-orange-500 transition-all shadow-lg shadow-orange-600/20 active:scale-95"
           >
             <Plus size={14} />
-            Create Campaign
+            Create Special Offer
           </Link>
         </motion.div>
       ) : viewMode === 'grid' ? (
@@ -328,7 +328,7 @@ export default function PromotionsListPage() {
           {/* List header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 bg-slate-50/60">
             <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-              {promotions.length} Campaign{promotions.length !== 1 ? 's' : ''}
+              {promotions.length} Special Offer{promotions.length !== 1 ? 's' : ''}
             </span>
             <span className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">Actions</span>
           </div>
