@@ -119,31 +119,28 @@ export default function ProductDetailClient() {
     });
   };
 
-  const handleBuyNow = async () => {
-    if (!isAuthenticated) {
-      router.push(`/login?redirect=/products/${slug}`);
-      return;
-    }
-
-    try {
-      setBuyNowLoading(true);
-      const profileRes = await customersAPI.getProfile();
-      const customer = profileRes.data.data;
-
-      const orderData = {
-        items: [{ productId: product._id, quantity: 1 }],
-        address: customer?.addresses?.[0] || { street: '', city: '', state: '', zip: '', country: 'ET' },
-        deliveryOption: 'free_delivery',
-        notes: '',
-      };
-
-      const orderResponse = await ordersAPI.create(orderData);
-      router.push(`/checkout?orderId=${orderResponse.data.data._id}`);
-    } catch (error: any) {
-      toast.error(error.response?.data?.error || "Failed to process purchase");
-    } finally {
-      setBuyNowLoading(false);
-    }
+  const handleBuyNow = () => {
+    // Add to cart first
+    addItem({
+      productId: product._id,
+      name: product.name,
+      slug: slug as string,
+      price: product.price,
+      image: product.images?.[0] || "/placeholder.jpg",
+      quantity: 1,
+      sku: product.sku || "",
+      category: product.categoryId?.name || "Instrument",
+      status: product.status
+    });
+    
+    // Show guidance message
+    toast.info("Proceed to your cart to complete the order", {
+      description: "Item has been added! Please checkout from your cart page.",
+      action: {
+        label: "Open Cart",
+        onClick: () => router.push("/cart")
+      }
+    });
   };
 
   const handleRateQuick = async (val: number) => {
