@@ -5,6 +5,7 @@ import "./globals.css";
 import { TranslationProvider } from "@/components/TranslationProvider";
 import LanguageBody from "@/components/LanguageBody";
 import { Toaster } from "sonner";
+import FloatingChat from "@/components/FloatingChat";
 
 const geistSans = Geist({ subsets: ["latin"] });
 const geistMono = Geist_Mono({ subsets: ["latin"] });
@@ -87,6 +88,7 @@ export default function RootLayout({
         <Toaster position="top-right" richColors />
         <TranslationProvider>
           <LanguageBody>{children}</LanguageBody>
+          <FloatingChat />
         </TranslationProvider>
         <Analytics />
       </body>
