@@ -26,7 +26,7 @@ const FloatingChat = () => {
           <path d="M11.944 0C5.346 0 0 5.346 0 11.944s5.346 11.944 11.944 11.944 11.944-5.346 11.944-11.944S18.542 0 11.944 0zm5.862 7.533c-.183 1.923-1.025 7.155-1.45 9.444-.18.966-.537 1.289-.882 1.32-.759.07-1.334-.5-2.07-.983-1.152-.754-1.802-1.221-2.918-1.957-1.289-.85-.453-1.317.281-2.08.192-.2.3.51-1.336-3.532-1.874-2.523-2.28-2.62-2.613-2.627-.723-.014-1.24.484-1.24 1.114 0 .47.185.892.368 1.289.37.798 4.606 7.643 4.606 7.643s.517.863 1.24.863c.723 0 1.24-.863 1.24-.863s.185-.347.368-.892c.183-.545 1.025-4.606 1.025-4.606s.183-1.74-.882-1.74c-1.065 0-2.28 1.025-2.28 1.025s-.517.517-.517 1.24c0 .723.517 1.24.517 1.24s.183.183.368.517c.185.334.185.723 0 1.065-.185.342-.517.684-1.24.684-.723 0-1.24-.342-1.24-.342s-1.417-.863-1.417-2.62c0-1.757 1.597-3.532 3.868-3.532 2.271 0 3.868 1.775 3.868 3.532z" />
         </svg>
       ),
-      href: 'https://t.me/@honemusic1',
+      href: 'https://t.me/honemusic1',
       color: 'bg-[#0088cc]',
       label: 'Chat on Telegram'
     }
@@ -64,7 +64,7 @@ const FloatingChat = () => {
 
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`relative w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-2xl transition-all duration-300 ${isOpen ? 'bg-slate-900 rotate-90' : 'bg-orange-600 hover:bg-orange-700'
+        className={`relative w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-2xl transition-all duration-300 ${isOpen ? 'bg-orange-600 rotate-90' : 'bg-slate-950 hover:bg-slate-900'
           }`}
       >
         <motion.div
