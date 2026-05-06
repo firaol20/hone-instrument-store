@@ -71,7 +71,7 @@ const FloatingChat = () => {
 
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`relative w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-2xl transition-all duration-300 ${isOpen ? 'bg-orange-600 rotate-90' : 'bg-slate-950 hover:bg-slate-900'
+        className={`relative w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-2xl transition-all duration-300 ${isOpen ? 'bg-orange-600 rotate-90' : 'bg-emerald-500 hover:bg-emerald-600'
           }`}
       >
         <motion.div
