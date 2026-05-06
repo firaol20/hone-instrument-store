@@ -40,7 +40,11 @@ const FloatingChat = () => {
   ];
 
   return (
-    <div className="fixed bottom-6 right-6 z-[9999] flex flex-col items-end gap-4">
+    <div className={`fixed right-6 z-[9999] flex flex-col items-end gap-3 md:gap-4 transition-all duration-300 ${
+      pathname?.startsWith('/products/') 
+        ? 'bottom-28 md:bottom-6' 
+        : 'bottom-6'
+    }`}>
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -57,10 +61,10 @@ const FloatingChat = () => {
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 group"
               >
-                <span className="bg-white px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-600 shadow-xl border border-slate-100 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0">
+                <span className="bg-white px-3 py-1.5 rounded-xl text-[8px] md:text-[10px] font-black uppercase tracking-widest text-slate-600 shadow-xl border border-slate-100 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0">
                   {link.label}
                 </span>
-                <div className={`${link.color} w-10 h-10 rounded-2xl flex items-center justify-center text-white shadow-2xl hover:scale-110 transition-transform active:scale-95`}>
+                <div className={`${link.color} w-8 h-8 md:w-10 md:h-10 rounded-2xl flex items-center justify-center text-white shadow-2xl hover:scale-110 transition-transform active:scale-95`}>
                   {link.icon}
                 </div>
               </a>
@@ -71,14 +75,14 @@ const FloatingChat = () => {
 
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`relative w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-2xl transition-all duration-300 ${isOpen ? 'bg-orange-600 rotate-90' : 'bg-emerald-500 hover:bg-emerald-600'
+        className={`relative w-10 h-10 md:w-12 md:h-12 rounded-2xl flex items-center justify-center text-white shadow-2xl transition-all duration-300 ${isOpen ? 'bg-orange-600 rotate-90' : 'bg-emerald-500 hover:bg-emerald-600'
           }`}
       >
         <motion.div
           animate={{ scale: isOpen ? 1 : [1, 1.1, 1] }}
           transition={{ repeat: Infinity, duration: 2 }}
         >
-          {isOpen ? <X className="w-5 h-5" /> : <MessageCircle className="w-6 h-6" />}
+          {isOpen ? <X className="w-4 h-4 md:w-5 md:h-5" /> : <MessageCircle className="w-5 h-5 md:w-6 md:h-6" />}
         </motion.div>
 
         {!isOpen && (
