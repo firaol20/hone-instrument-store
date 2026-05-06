@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { productsAPI, categoriesAPI } from '@/lib/api';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://honestore.com';
+  const baseUrl = 'https://honemusics.com';
   
   // Static routes
   const routes = [

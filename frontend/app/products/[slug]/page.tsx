@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     description: 'View detailed information about our musical instruments and audio products.',
     images: [
       {
-        url: 'https://honestore.com/og-product.png',
+        url: 'https://res.cloudinary.com/dglvpzqcl/image/upload/v1778093864/hone_store/website.jpg',
         width: 1200,
         height: 630,
         alt: 'Hone Instruments Product Detail'

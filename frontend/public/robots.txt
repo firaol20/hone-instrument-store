@@ -9,4 +9,4 @@ Disallow: /api/
 Disallow: /checkout/
 
 # Sitemap
-Sitemap: https://honestore.com/sitemap.xml
+Sitemap: https://honemusics.com/sitemap.xml

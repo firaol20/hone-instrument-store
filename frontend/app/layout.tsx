@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Hone Musical Instruments - Best Traditional & Modern Instruments in Ethiopia",
     description: "Your premier destination for quality musical instruments and professional audio gear in Ethiopia. Traditional craftsmanship meets modern technology.",
-    url: "https://honestore.com",
+    url: "https://honemusics.com",
     siteName: "Hone Musical Instruments",
     type: "website",
     images: [
@@ -65,8 +65,8 @@ export default function RootLayout({
               "@type": "MusicStore",
               "name": "Hone Musical Instruments",
               "description": "The best musical instruments in Ethiopia, offering traditional and modern instruments, studio gear, and professional sound systems.",
-              "url": "https://honestore.com",
-              "logo": "https://honestore.com/logo.png",
+              "url": "https://honemusics.com",
+              "logo": "https://honemusics.com/logo.png",
               "contactPoint": {
                 "@type": "ContactPoint",
                 "telephone": "+251982616263",

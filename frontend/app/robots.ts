@@ -1,3 +1,5 @@
+import { MetadataRoute } from "next";
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
@@ -5,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/admin/', '/checkout/', '/cart/', '/account/', '/api/'],
     },
-    sitemap: 'https://honestore.com/sitemap.xml',
+    sitemap: 'https://honemusics.com/sitemap.xml',
   };
 }
