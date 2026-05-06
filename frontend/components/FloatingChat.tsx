@@ -9,8 +9,8 @@ const FloatingChat = () => {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
-  // Don't show the chat button on admin pages
-  if (pathname?.startsWith('/admin')) {
+  // Don't show the chat button on admin or login pages
+  if (pathname?.startsWith('/admin') || pathname?.startsWith('/login')) {
     return null;
   }
 
