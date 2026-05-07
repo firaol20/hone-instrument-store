@@ -257,7 +257,7 @@ export default function ProductDetailClient() {
             <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="relative aspect-square bg-slate-50 rounded-[2.5rem] overflow-hidden border border-slate-100">
               <Image 
                 src={product.images?.[activeImage] || "/placeholder.jpg"} 
-                alt={product.name} 
+                alt={`Hone Musical Instruments - ${product.categoryId?.name || "Instrument"} - ${product.name}`} 
                 fill 
                 className={`object-contain p-8 transition-all duration-500 ${product.status === 'sold' ? "grayscale opacity-50" : ""}`} 
                 priority 
@@ -269,7 +269,7 @@ export default function ProductDetailClient() {
             <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar">
               {product.images?.map((img: string, idx: number) => (
                 <button key={idx} onClick={() => setActiveImage(idx)} className={`relative w-24 h-24 rounded-2xl overflow-hidden border-2 transition-all flex-shrink-0 ${activeImage === idx ? "border-orange-600 scale-105" : "border-slate-100 opacity-60"}`}>
-                  <Image src={img} alt="thumbnail" fill className="object-cover" />
+                  <Image src={img} alt={`Hone Musical Instruments - ${product.name} gallery image ${idx + 1}`} fill className="object-cover" />
                 </button>
               ))}
             </div>
