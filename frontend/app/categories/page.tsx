@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     description: 'Explore musical instruments organized by category at Hone Musical Instruments',
     images: [
       {
-        url: 'https://honestore.com/og-categories.png',
+        url: 'https://res.cloudinary.com/dglvpzqcl/image/upload/v1778093864/hone_store/website.jpg',
         width: 1200,
         height: 630,
         alt: 'Hone Instruments Categories'

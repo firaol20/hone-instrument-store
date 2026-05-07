@@ -69,7 +69,7 @@ export default function RootLayout({
               "name": "Hone Musical Instruments",
               "description": "The best musical instruments in Ethiopia, offering traditional and modern instruments, studio gear, and professional sound systems.",
               "url": "https://honemusics.com",
-              "logo": "https://honemusics.com/logo.png",
+              "logo": "https://res.cloudinary.com/dglvpzqcl/image/upload/v1778093864/hone_store/website.jpg",
               "contactPoint": {
                 "@type": "ContactPoint",
                 "telephone": "+251982616263",

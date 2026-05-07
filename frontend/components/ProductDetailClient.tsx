@@ -84,7 +84,7 @@ export default function ProductDetailClient() {
     },
     offers: {
       '@type': 'Offer',
-      url: `https://honestore.com/products/${slug}`,
+      url: `https://honemusics.com/products/${slug}`,
       priceCurrency: 'ETB',
       price: product?.price || 0,
       itemCondition: 'https://schema.org/NewCondition',
