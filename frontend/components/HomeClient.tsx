@@ -47,6 +47,7 @@ export default function HomeClient({ initialProducts }: { initialProducts: any[]
     story: "Our Story",
     terms: "Terms of Service",
     privacy: "Privacy Policy",
+    returns: "Return Policy",
     support: "Support",
     contact: "Contact Us",
     helpCenter: "Help Center",
@@ -310,6 +311,11 @@ export default function HomeClient({ initialProducts }: { initialProducts: any[]
                   <li>
                     <Link href="/" className="hover:text-orange-600 transition-colors">
                       {content.terms}
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/returns" className="hover:text-orange-600 transition-colors">
+                      {content.returns}
                     </Link>
                   </li>
                   <li>

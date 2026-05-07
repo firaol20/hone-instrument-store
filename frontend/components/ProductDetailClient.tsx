@@ -163,7 +163,7 @@ export default function ProductDetailClient() {
      audioDemo: "Listen to Demo",
      shipping: "Free Shipping",
      warranty: "1 Year Warranty",
-     returns: "30-Day Returns",
+     returns: "7-Day Returns",
      callUs: "Call for Price",
      buyNow: "Buy Now",
      relatedProducts: "You May Also Like",
