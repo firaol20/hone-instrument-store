@@ -28,10 +28,10 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://res.cloudinary.com/dglvpzqcl/image/upload/v1778093864/hone_store/website.jpg",
+        url: "https://honemusics.com/social-banner.png", // Replace with your uploaded image URL
         width: 1200,
         height: 630,
-        alt: "Hone Musical Instruments Storefront",
+        alt: "Hone Musical Instruments - Premium Musical Instruments in Ethiopia",
       },
     ],
   },
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Hone Musical Instruments - Best Traditional & Modern Instruments in Ethiopia",
     description: "Your premier destination for quality musical instruments and professional audio gear in Ethiopia.",
-    images: ["https://res.cloudinary.com/dglvpzqcl/image/upload/v1778093864/hone_store/website.jpg"],
+    images: ["https://honemusics.com/social-banner.png"], // Replace with your uploaded image URL
   },
   robots: "index, follow",
   icons: {
