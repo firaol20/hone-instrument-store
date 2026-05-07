@@ -11,7 +11,6 @@ import { Sparkles, X, Plus, Star, Heart, Grid2X2, LayoutGrid, Trophy, Gem, Layer
 import { addToFavorites, isInFavorites, removeFromFavoritesById } from "@/components/FavoriteButton";
 import Image from 'next/image';
 import ModernTiltCard from '@/components/TiltCard';
-
 export default function ComparisonDuoPage() {
   const [mode, setMode] = useState<'duo' | 'quad'>('duo');
   const [slots, setSlots] = useState<any[]>([null, null, null, null]);
@@ -42,7 +41,27 @@ export default function ComparisonDuoPage() {
       [product._id]: { desc: "", loading: true }
     }));
 
+    // Simulate AI analysis delay
+    setTimeout(() => {
+      let insight = "";
+      const price = product.price;
+      const name = product.name.toLowerCase();
+      
+      if (price > 100000) {
+        insight = `The ${product.name} is a high-end professional instrument. Its premium price reflects superior build quality and tonal depth, making it ideal for recording studios and stage performances.`;
+      } else if (price > 40000) {
+        insight = `A versatile mid-range choice. The ${product.name} offers a perfect balance of performance and affordability, suitable for advanced students and gigging musicians.`;
+      } else if (price === 0) {
+        insight = `Contact our experts for special pricing on this model. It's one of our most requested items for its unique sound characteristics.`;
+      } else {
+        insight = `Excellent value for money. The ${product.name} is highly recommended for beginners and intermediate players who need a reliable instrument without a large investment.`;
+      }
 
+      setDynamicData((prev: any) => ({
+        ...prev,
+        [product._id]: { desc: insight, loading: false }
+      }));
+    }, 1500);
   };
 
   const handleSelect = (product: any, slotIndex: number) => {
@@ -215,7 +234,7 @@ export default function ComparisonDuoPage() {
         </div>
 
         <ModernTiltCard className="aspect-square relative mb-4 bg-slate-50 rounded-2xl p-2 cursor-pointer block group">
-          <Image src={product.images?.[0] || '/placeholder.jpg'} alt={product.name} fill className="object-contain drop-shadow-2xl transition-transform duration-500 group-hover:scale-110" />
+          <Image src={product.images?.[0] || '/placeholder.jpg'} alt={`Compare ${product.name} - Hone Musical Instruments`} fill className="object-contain drop-shadow-2xl transition-transform duration-500 group-hover:scale-110" />
         </ModernTiltCard>
 
         <h2 className="text-sm md:text-xl font-black uppercase tracking-tighter leading-tight mb-1">{product.name}</h2>
@@ -249,14 +268,14 @@ export default function ComparisonDuoPage() {
           </div>
         )}
         {/* AI Insight - Description */}
-        {/* <div className="mb-4 min-h-[60px]">
+        <div className="mb-4 min-h-[60px]">
           <div className="flex items-center gap-2 mb-2">
-            <Sparkles className={`w-3 h-3 ${aiInfo?.loading ? 'animate-pulse text-orange-500' : 'text-slate-400'}`} />
+            <Sparkles className={`w-3 h-3 ${dynamicData[product._id]?.loading ? 'animate-pulse text-orange-500' : 'text-slate-400'}`} />
             <span className="text-[8px] font-black uppercase tracking-widest text-slate-400">
-              {aiInfo?.loading ? 'Analyzing real-world data...' : 'Detailed AI Insight'}
+              {dynamicData[product._id]?.loading ? 'Analyzing real-world data...' : 'Detailed AI Insight'}
             </span>
           </div>
-          {aiInfo?.loading ? (
+          {dynamicData[product._id]?.loading ? (
             <div className="space-y-2">
               <div className="h-1.5 w-full bg-slate-100 animate-pulse rounded-full" />
               <div className="h-1.5 w-full bg-slate-100 animate-pulse rounded-full" />
@@ -264,10 +283,10 @@ export default function ComparisonDuoPage() {
             </div>
           ) : (
             <div className="text-[10px] md:text-[11px] leading-relaxed text-slate-600 italic max-h-[250px] overflow-y-auto pr-2 whitespace-pre-wrap custom-scrollbar">
-              {aiInfo?.desc}
+              {dynamicData[product._id]?.desc || "Select another instrument to see comparison insights."}
             </div>
           )}
-        </div> */}
+        </div>
 
         <Button
           onClick={() => addItem({
