@@ -43,7 +43,8 @@ export const metadata: Metadata = {
   },
   robots: "index, follow",
   icons: {
-    icon: "/favicon.ico",
+    icon: "https://res.cloudinary.com/dglvpzqcl/image/upload/c_fill,g_center,w_192,h_192,f_png,q_auto/v1778093864/hone_store/website.jpg",
+    apple: "https://res.cloudinary.com/dglvpzqcl/image/upload/c_fill,g_center,w_180,h_180,f_png,q_auto/v1778093864/hone_store/website.jpg",
   },
   verification: {
     google: "PiBaPAJoGg-ybLw1fQ7LQGeK1dj5Te2W6kegg5yQolo",
