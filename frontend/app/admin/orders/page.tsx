@@ -10,6 +10,7 @@ import {
   Truck,
   CheckCircle,
   MapPin,
+  Phone,
   Copy,
   Share2,
   ChevronLeft,
@@ -173,7 +174,23 @@ export default function OrdersPage() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="font-bold text-slate-800 uppercase tracking-tight text-xs">{order.customerId?.name || 'Guest User'}</div>
-                        <div className="text-[10px] text-slate-400 font-medium mt-0.5 truncate max-w-[120px]" title={`${order.address?.city}, ${order.address?.street}`}>
+                        {(order.customerPhone || order.customerId?.phone) && (
+                          <div className="flex items-center gap-2 mt-1">
+                            <div 
+                              className="text-[10px] font-black text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded flex items-center gap-1.5 group/phone cursor-pointer hover:bg-orange-100 hover:text-orange-700 transition-colors"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                navigator.clipboard.writeText(order.customerPhone || order.customerId?.phone || '');
+                                toast.success('Phone copied to registry clipboard');
+                              }}
+                            >
+                              <Phone size={10} className="text-slate-400 group-hover/phone:text-orange-600" />
+                              {order.customerPhone || order.customerId?.phone}
+                              <Copy size={10} className="opacity-0 group-hover/phone:opacity-100 transition-opacity" />
+                            </div>
+                          </div>
+                        )}
+                        <div className="text-[10px] text-slate-400 font-medium mt-1 truncate max-w-[120px]" title={`${order.address?.city}, ${order.address?.street}`}>
                           {order.address?.city}, {order.address?.street}
                         </div>
                       </td>

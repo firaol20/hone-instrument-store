@@ -15,7 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { ordersAPI, paymentsAPI, customersAPI } from '@/lib/api';
 import { toast } from 'sonner';
-import { ArrowLeft, Loader2, MapPin, Phone, Clock, ExternalLink, CreditCard, ShieldCheck, Truck, Check, Search, ArrowRight } from 'lucide-react';
+import { ArrowLeft, Loader2, MapPin, Phone, Mail, Clock, ExternalLink, CreditCard, ShieldCheck, Truck, Check, Search, ArrowRight } from 'lucide-react';
 import { HONE_SHOWROOM, getDirectionsUrl } from '@/lib/store-location';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCartStore } from '@/lib/cart-store';
@@ -110,6 +110,8 @@ export default function CheckoutPage() {
   const { items, getTotalPrice, clearCart } = useCartStore();
   const subtotal = getTotalPrice();
   const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
+  const [customerPhone, setCustomerPhone] = useState('');
+  const [customerEmail, setCustomerEmail] = useState('');
 
   useEffect(() => {
     if (items.length === 0 && step === 1) {
@@ -120,11 +122,14 @@ export default function CheckoutPage() {
     const loadCustomer = async () => {
       try {
         const response = await customersAPI.getProfile();
-        const addrs = response.data?.data?.addresses;
+        const customerData = response.data?.data;
+        const addrs = customerData?.addresses;
         if (addrs && addrs.length > 0) {
           setFormattedAddress(addrs[0].street || '');
           setSearchQuery(addrs[0].street || '');
         }
+        if (customerData?.phone) setCustomerPhone(customerData.phone);
+        if (customerData?.userId?.email) setCustomerEmail(customerData.userId.email);
       } catch (error: any) {
         if (error.response?.status === 401) {
           router.push('/login?redirect=/checkout');
@@ -158,13 +163,14 @@ export default function CheckoutPage() {
   const total = subtotal + shippingFee;
 
   const canProceed =
-    deliveryOption === 'pickup' ||
-    (deliveryOption === 'free_delivery' &&
-      coords !== null &&
-      typeof coords.lat === 'number' &&
-      typeof coords.lng === 'number' &&
-      !Number.isNaN(coords.lat) &&
-      !Number.isNaN(coords.lng));
+    (deliveryOption === 'pickup' ||
+      (deliveryOption === 'free_delivery' &&
+        coords !== null &&
+        typeof coords.lat === 'number' &&
+        typeof coords.lng === 'number' &&
+        !Number.isNaN(coords.lat) &&
+        !Number.isNaN(coords.lng))) &&
+    (deliveryOption !== 'free_delivery' || customerPhone.trim() !== '');
 
   const handleProceedToPayment = async () => {
     if (!canProceed || items.length === 0 || deliveryOption === 'pickup') return;
@@ -190,6 +196,8 @@ export default function CheckoutPage() {
         address,
         deliveryOption,
         notes,
+        customerPhone: customerPhone.trim(),
+        customerEmail: customerEmail.trim(),
       };
 
       const res = await ordersAPI.create(orderData);
@@ -258,6 +266,43 @@ export default function CheckoutPage() {
                       <h2 className="text-xl md:text-2xl font-black uppercase italic tracking-tighter">Delivery details</h2>
                     </CardHeader>
                     <CardContent className="px-6 md:px-8 pb-8 md:pb-10 space-y-8">
+                      {/* Customer Contact Info */}
+                      <div className="grid gap-6 sm:grid-cols-2">
+                        <div className="space-y-2">
+                          <Label htmlFor="phone" className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                            Phone Number {deliveryOption === 'free_delivery' && <span className="text-orange-600">*</span>}
+                          </Label>
+                          <div className="relative">
+                            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                            <Input
+                              id="phone"
+                              placeholder="e.g. 0911223344"
+                              value={customerPhone}
+                              onChange={(e) => setCustomerPhone(e.target.value)}
+                              className="pl-11 h-12 rounded-xl border-slate-200 focus:border-orange-500 focus:ring-orange-500/10 transition-all font-bold"
+                            />
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                            Email Address <span className="text-slate-300 font-medium">(Optional)</span>
+                          </Label>
+                          <div className="relative">
+                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                            <Input
+                              id="email"
+                              type="email"
+                              placeholder="your@email.com"
+                              value={customerEmail}
+                              onChange={(e) => setCustomerEmail(e.target.value)}
+                              className="pl-11 h-12 rounded-xl border-slate-200 focus:border-orange-500 focus:ring-orange-500/10 transition-all font-bold"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <Separator className="bg-slate-200" />
+
                       <RadioGroup
                         value={deliveryOption}
                         onValueChange={handleDeliveryChange}

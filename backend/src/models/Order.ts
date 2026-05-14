@@ -36,6 +36,8 @@ export interface IOrder extends Document {
   paymentId?: string;
   chapaTxRef?: string;
   notes?: string;
+  customerPhone: string;
+  customerEmail: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -139,6 +141,14 @@ const orderSchema = new Schema<IOrder>(
       sparse: true,
     },
     notes: {
+      type: String,
+      default: '',
+    },
+    customerPhone: {
+      type: String,
+      default: '',
+    },
+    customerEmail: {
       type: String,
       default: '',
     },

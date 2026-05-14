@@ -33,7 +33,7 @@ async function assertOrderOwnedByCustomer(orderId: string, userId: string) {
 
 export const createOrder = async (req: AuthRequest, res: Response) => {
   try {
-    const { items, address, deliveryOption, notes } = req.body;
+    const { items, address, deliveryOption, notes, customerPhone, customerEmail } = req.body;
 
     if (!items || items.length === 0) {
       throw new ApiError(400, 'Cart is empty');
@@ -44,10 +44,12 @@ export const createOrder = async (req: AuthRequest, res: Response) => {
     }
 
     // Get customer
-    const customer = await Customer.findOne({ userId: req.userId });
+    const customer = await Customer.findOne({ userId: req.userId }).populate('userId');
     if (!customer) {
       throw new ApiError(404, 'Customer not found');
     }
+
+    const user = customer.userId as any;
 
     // Calculate totals
     let subtotal = 0;
@@ -80,6 +82,8 @@ export const createOrder = async (req: AuthRequest, res: Response) => {
       total,
       status: 'pending',
       notes,
+      customerPhone: customerPhone || customer.phone || '',
+      customerEmail: customerEmail || user?.email || '',
     });
 
     await order.save();

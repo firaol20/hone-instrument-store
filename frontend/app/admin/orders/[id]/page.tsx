@@ -19,7 +19,8 @@ import {
   Loader2,
   AlertCircle,
   CreditCard,
-  ClipboardList
+  ClipboardList,
+  Copy
 } from 'lucide-react';
 import { adminAPI } from '@/lib/api';
 import { toast } from 'sonner';
@@ -355,7 +356,9 @@ export default function OrderDetailPage() {
                 </div>
                 <div className="overflow-hidden">
                   <div className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Email Communications</div>
-                  <div className="text-sm font-bold text-slate-900 truncate" title={order.customerId?.email}>{order.customerId?.email || 'No email registered'}</div>
+                  <div className="text-sm font-bold text-slate-900 truncate" title={order.customerEmail || order.customerId?.email}>
+                    {order.customerEmail || order.customerId?.email || 'No email registered'}
+                  </div>
                 </div>
               </div>
 
@@ -363,9 +366,25 @@ export default function OrderDetailPage() {
                 <div className="w-12 h-12 bg-slate-50 text-slate-400 rounded-2xl flex items-center justify-center group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all border border-slate-100">
                   <Phone size={20} />
                 </div>
-                <div>
+                <div className="flex-1">
                   <div className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Logistic Phone</div>
-                  <div className="text-sm font-black text-slate-900">{order.customerId?.phone || 'No phone provided'}</div>
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm font-black text-slate-900">
+                      {order.customerPhone || order.customerId?.phone || 'No phone provided'}
+                    </div>
+                    {(order.customerPhone || order.customerId?.phone) && (
+                      <button 
+                        onClick={() => {
+                          navigator.clipboard.writeText(order.customerPhone || order.customerId?.phone);
+                          toast.success('Phone copied to clipboard');
+                        }}
+                        className="p-1.5 text-slate-300 hover:text-emerald-600 transition-colors"
+                        title="Copy Phone"
+                      >
+                        <Copy size={14} />
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
