@@ -56,7 +56,7 @@ export function Header() {
           <div className="flex items-center gap-2 sm:gap-4">
             <LanguageSwitcher />
 
-            {isAuthenticated && user?.role === "admin" && (
+            {isAuthenticated && (user?.role === "admin" || user?.role === "owner") && (
               <Link
                 href="/admin"
                 className="p-2 text-slate-600 hover:text-orange-600 transition-colors"
@@ -176,6 +176,20 @@ export function Header() {
                   <Heart className={`w-5 h-5 ${pathname === "/favorite" ? "text-white" : "text-slate-500"}`} />
                   <span className="text-sm tracking-tight">Favorite</span>
                 </Link>
+
+                {isAuthenticated && (user?.role === "admin" || user?.role === "owner") && (
+                  <Link
+                    href="/admin"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`flex items-center gap-3 px-5 py-3.5 rounded-2xl font-bold transition-all ${pathname.startsWith("/admin")
+                      ? "bg-orange-600 text-white shadow-lg shadow-orange-950/20"
+                      : "text-slate-400 hover:bg-white/5 hover:text-white"
+                      }`}
+                  >
+                    <LayoutDashboard className={`w-5 h-5 ${pathname.startsWith("/admin") ? "text-white" : "text-slate-500"}`} />
+                    <span className="text-sm tracking-tight">Admin Dashboard</span>
+                  </Link>
+                )}
               </nav>
 
               <div className="mt-auto flex flex-col gap-2 pt-6 pb-12">

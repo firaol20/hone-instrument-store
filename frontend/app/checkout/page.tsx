@@ -266,43 +266,6 @@ export default function CheckoutPage() {
                       <h2 className="text-xl md:text-2xl font-black uppercase italic tracking-tighter">Delivery details</h2>
                     </CardHeader>
                     <CardContent className="px-6 md:px-8 pb-8 md:pb-10 space-y-8">
-                      {/* Customer Contact Info */}
-                      <div className="grid gap-6 sm:grid-cols-2">
-                        <div className="space-y-2">
-                          <Label htmlFor="phone" className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                            Phone Number {deliveryOption === 'free_delivery' && <span className="text-orange-600">*</span>}
-                          </Label>
-                          <div className="relative">
-                            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                            <Input
-                              id="phone"
-                              placeholder="e.g. 0911223344"
-                              value={customerPhone}
-                              onChange={(e) => setCustomerPhone(e.target.value)}
-                              className="pl-11 h-12 rounded-xl border-slate-200 focus:border-orange-500 focus:ring-orange-500/10 transition-all font-bold"
-                            />
-                          </div>
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                            Email Address <span className="text-slate-300 font-medium">(Optional)</span>
-                          </Label>
-                          <div className="relative">
-                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                            <Input
-                              id="email"
-                              type="email"
-                              placeholder="your@email.com"
-                              value={customerEmail}
-                              onChange={(e) => setCustomerEmail(e.target.value)}
-                              className="pl-11 h-12 rounded-xl border-slate-200 focus:border-orange-500 focus:ring-orange-500/10 transition-all font-bold"
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      <Separator className="bg-slate-200" />
-
                       <RadioGroup
                         value={deliveryOption}
                         onValueChange={handleDeliveryChange}
@@ -459,6 +422,43 @@ export default function CheckoutPage() {
                           </motion.div>
                         )}
                       </AnimatePresence>
+
+                      <Separator className="bg-slate-200" />
+
+                      {/* Customer Contact Info */}
+                      <div className="grid gap-6 sm:grid-cols-2 pt-2">
+                        <div className="space-y-2">
+                          <Label htmlFor="phone" className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                            Phone Number {deliveryOption === 'free_delivery' && <span className="text-orange-600">*</span>}
+                          </Label>
+                          <div className="relative">
+                            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                            <Input
+                              id="phone"
+                              placeholder="e.g. 0911223344"
+                              value={customerPhone}
+                              onChange={(e) => setCustomerPhone(e.target.value)}
+                              className="pl-11 h-12 rounded-xl border-slate-200 focus:border-orange-500 focus:ring-orange-500/10 transition-all font-bold"
+                            />
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                            Email Address <span className="text-slate-300 font-medium">(Optional)</span>
+                          </Label>
+                          <div className="relative">
+                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                            <Input
+                              id="email"
+                              type="email"
+                              placeholder="your@email.com"
+                              value={customerEmail}
+                              onChange={(e) => setCustomerEmail(e.target.value)}
+                              className="pl-11 h-12 rounded-xl border-slate-200 focus:border-orange-500 focus:ring-orange-500/10 transition-all font-bold"
+                            />
+                          </div>
+                        </div>
+                      </div>
 
                       <div className="flex flex-col sm:flex-row gap-3 pt-4">
                         <Button
